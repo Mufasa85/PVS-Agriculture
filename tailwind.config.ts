@@ -5,8 +5,12 @@ const config: Config = {
   theme: {
     extend: {
       screens: {
-        // Correspond aux media queries de la maquette d'origine
+        // Miroirs exacts des media queries de la maquette (style.css) :
+        // max-640, max-768, max-900, max-1080 -> min-width = borne + 1px
+        mid: "641px",
+        cards: "769px",
         nav: "901px",
+        wide: "1081px",
       },
       colors: {
         brand: {
