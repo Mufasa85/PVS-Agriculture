@@ -17,6 +17,7 @@ import type {
   Cta,
   FeaturePoint,
   NavLink,
+  Social,
   Stat,
   ValueProp,
 } from "./types";
@@ -242,6 +243,20 @@ export const pourquoiNousChoisir = {
   ] satisfies ValueProp[],
 };
 
+export const contactForm = {
+  title: "Demande d'information / devis",
+  subtitle: "Remplissez ce formulaire, nous revenons vers vous sous peu.",
+  fields: {
+    nom: { label: "Nom complet", placeholder: "Votre nom" },
+    telephone: { label: "Téléphone", placeholder: "+243 ..." },
+    email: { label: "Email", placeholder: "vous@exemple.com" },
+    sujet: { label: "Sujet" },
+    message: { label: "Message", placeholder: "Décrivez votre besoin..." },
+  },
+  submitLabel: "Envoyer le message",
+  successLabel: "Message envoyé ✓",
+};
+
 export const contact: ContactInfo = {
   eyebrow: "Contact",
   title: "Parlons de votre projet",
@@ -285,9 +300,27 @@ export const footer = {
     { label: "Pisciculture", href: "#pisciculture" },
     { label: "Produits pour animaux", href: "#produits" },
   ] satisfies NavLink[],
+  // 4e colonne du footer de la maquette (index.html)
+  contactLinks: [
+    { label: "+243 900 000 000", href: "tel:+243900000000" },
+    { label: "contact@pvs-ongd.org", href: "mailto:contact@pvs-ongd.org" },
+    { label: "Kinshasa, RDC", href: "#" },
+  ] satisfies NavLink[],
+  // [PLACEHOLDER] URLs des réseaux sociaux à fournir par le client.
+  socials: [
+    { network: "facebook", label: "Facebook", href: "#" },
+    { network: "instagram", label: "Instagram", href: "#" },
+    { network: "linkedin", label: "LinkedIn", href: "#" },
+  ] satisfies Social[],
   legalLinks: [
     { label: "Mentions légales", href: "#" }, // contenu à créer
     { label: "Politique de confidentialité", href: "#" }, // contenu à créer
   ] satisfies NavLink[],
-  copyright: "© PVS ONGD ASBL. Tous droits réservés.",
+  columnTitles: {
+    quickLinks: "Liens rapides",
+    activities: "Activités",
+    contact: "Coordonnées",
+  },
+  // L'année est injectée dynamiquement, comme le <span id="year"> de la maquette.
+  copyright: "PVS ONGD ASBL. Tous droits réservés.",
 };

@@ -27,6 +27,14 @@ export type Activity = {
   imageAlt: string;
 };
 
+export type SocialNetwork = "facebook" | "instagram" | "linkedin";
+
+export type Social = {
+  network: SocialNetwork;
+  label: string;
+  href: string;
+};
+
 export type ValueProp = {
   tag: string;
   title: string;
