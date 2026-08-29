@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+  }
+
+  body {
+    @apply bg-white font-sans text-ink-900 antialiased;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif text-brand-900;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  :focus-visible {
+    outline: 3px solid theme("colors.gold.500");
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-[90%] max-w-shell px-7;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[13px] font-bold uppercase tracking-[0.14em] text-brand-600;
+  }
+
+  .eyebrow::before {
+    content: "";
+    @apply inline-block h-0.5 w-[22px] bg-gold-500;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full px-7 py-[15px] text-[15px] font-bold transition-all duration-300 ease-pvs;
+  }
+
+  .btn-primary {
+    @apply bg-brand-600 text-white shadow-brand-btn hover:-translate-y-[3px] hover:bg-brand-700 hover:shadow-brand-btn-hover;
+  }
+
+  .btn-ghost {
+    @apply border-[1.5px] border-line bg-transparent text-brand-900 hover:-translate-y-[3px] hover:border-brand-600 hover:text-brand-600;
+  }
+
+  .btn-gold {
+    @apply bg-gold-500 text-brand-900 shadow-gold hover:-translate-y-[3px] hover:bg-gold-600;
+  }
+
+  .btn-sm {
+    @apply px-[18px] py-2.5 text-[13.5px];
+  }
+
+  /* Forme organique derrière l'image du hero (reprise de .hero-blob) */
+  .hero-blob {
+    border-radius: 44% 56% 62% 38% / 48% 42% 58% 52%;
+  }
+}
