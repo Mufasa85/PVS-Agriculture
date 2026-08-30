@@ -17,10 +17,13 @@ import type {
   ActivityPageContent,
   ContactInfo,
   Cta,
+  ElevagePageContent,
   FeaturePoint,
   NavLink,
+  PriceProduct,
   Social,
   Stat,
+  TarifsPageContent,
   ValueProp,
 } from "./types";
 
@@ -39,10 +42,11 @@ export const brand = {
 export const navLinks: NavLink[] = [
   { label: "Accueil", href: "/" },
   { label: "Agriculture", href: "/agriculture" },
-  { label: "Élevage", href: "#elevage" },
+  { label: "Élevage", href: "/elevage" },
   { label: "Pisciculture", href: "#pisciculture" },
   { label: "Produits pour animaux", href: "#produits" },
   { label: "À propos", href: "/a-propos" },
+  { label: "Nos tarifs", href: "/tarifs" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -142,7 +146,7 @@ export const activities: Activity[] = [
     title: "Élevage",
     description:
       "Un élevage suivi avec soin pour une croissance saine du cheptel.",
-    href: "#elevage", // maquette d'origine pointait vers #contact — à confirmer
+    href: "/elevage",
     imageSrc:
       "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=700&q=80",
     imageAlt: "Troupeau de bétail dans un pâturage",
@@ -293,12 +297,13 @@ export const footer = {
   quickLinks: [
     { label: "Accueil", href: "/" },
     { label: "À propos", href: "/a-propos" },
+    { label: "Nos tarifs", href: "/tarifs" },
     { label: "Nos activités", href: "/#activites" },
     { label: "Contact", href: "/#contact" },
   ] satisfies NavLink[],
   activityLinks: [
     { label: "Agriculture", href: "/agriculture" },
-    { label: "Élevage", href: "#elevage" },
+    { label: "Élevage", href: "/elevage" },
     { label: "Pisciculture", href: "#pisciculture" },
     { label: "Produits pour animaux", href: "#produits" },
   ] satisfies NavLink[],
@@ -572,6 +577,357 @@ export const aproposPage: AboutPageContent = {
     title: "Un projet en tête ?",
     text: "Parlons de vos besoins en agriculture, élevage, pisciculture ou approvisionnement. Notre équipe vous répond rapidement.",
     buttonLabel: "Nous contacter",
+    buttonHref: "/#contact",
+  },
+};
+
+export const elevagePage: ElevagePageContent = {
+  metaTitle: "Élevage — PVS ONGD ASBL",
+  metaDescription:
+    "Découvrez l'élevage de PVS ONGD ASBL : un cheptel suivi avec soin, des pratiques rigoureuses et un bien-être animal respecté, pour une production saine et durable à Kinshasa.",
+
+  hero: {
+    eyebrow: "Notre savoir-faire",
+    title: "Un élevage suivi avec soin et rigueur",
+    titleEmphasis: "soin",
+    titleLines: [
+      "Un élevage suivi",
+      "avec soin et rigueur.",
+    ],
+    paragraph:
+      "L'élevage est l'un des piliers de PVS ONGD ASBL. Nous assurons un suivi attentif du cheptel, avec des pratiques d'hygiène strictes et une alimentation contrôlée, pour garantir des produits sains et une croissance harmonieuse des animaux.",
+    // [PLACEHOLDER] Unsplash
+    imageSrc:
+      "https://images.unsplash.com/photo-1600428853876-6b57d20b9da6?auto=format&fit=crop&w=1600&q=80",
+    imageAlt: "Vaches paissant dans un pâturage verdoyant",
+  },
+
+  gallery: {
+    eyebrow: "Notre cheptel en images",
+    title: "Des animaux bien soignés, dans un environnement sain",
+    subtitle:
+      "Découvrez notre élevage à travers ces images : des conditions d'hébergement propres, un cheptel vigoureux et un suivi quotidien attentif.",
+    slides: [
+      {
+        // [PLACEHOLDER] Unsplash
+        src: "https://images.unsplash.com/photo-1600428853876-6b57d20b9da6?auto=format&fit=crop&w=1200&q=80",
+        alt: "Vaches dans un pâturage",
+        caption: "Bovins au pâturage",
+      },
+      {
+        // [PLACEHOLDER] Unsplash
+        src: "https://images.unsplash.com/photo-1516467508483-a7212febe7da?auto=format&fit=crop&w=1200&q=80",
+        alt: "Poules en élevage libre",
+        caption: "Volailles en élevage libre",
+      },
+      {
+        // [PLACEHOLDER] Unsplash
+        src: "https://images.unsplash.com/photo-1564492300010-3a6a3f4e1e1e?auto=format&fit=crop&w=1200&q=80",
+        alt: "Chèvres dans une étable",
+        caption: "Caprins en stabulation",
+      },
+      {
+        // [PLACEHOLDER] Unsplash
+        src: "https://images.unsplash.com/photo-1592875811445-9ad3c67b0c9e?auto=format&fit=crop&w=1200&q=80",
+        alt: "Moutons dans un enclos",
+        caption: "Ovins au repos",
+      },
+      {
+        // [PLACEHOLDER] Unsplash
+        src: "https://images.unsplash.com/photo-1543374996-3a5d6b3e5e4e?auto=format&fit=crop&w=1200&q=80",
+        alt: "Soignant s'occupant d'un animal",
+        caption: "Suivi vétérinaire quotidien",
+      },
+    ],
+  },
+
+  practices: {
+    eyebrow: "Nos pratiques d'élevage",
+    title: "Une approche rigoureuse à chaque étape",
+    paragraph:
+      "Notre élevage repose sur des principes simples mais exigeants : bien-être animal, hygiène stricte et alimentation de qualité. Chaque aspect est suivi de près pour garantir la santé du cheptel et la qualité des produits.",
+    items: [
+      {
+        icon: "check",
+        title: "Bien-être animal",
+        description:
+          "Des conditions d'hébergement adaptées, de l'espace et une attention quotidienne au comportement des animaux.",
+      },
+      {
+        icon: "lock",
+        title: "Hygiène stricte",
+        description:
+          "Nettoyage régulier des installations et protocoles sanitaires respectés à chaque étape de l'élevage.",
+      },
+      {
+        icon: "feedbag",
+        title: "Alimentation contrôlée",
+        description:
+          "Une alimentation équilibrée et tracée, adaptée à chaque espèce et à chaque stade de croissance.",
+      },
+      {
+        icon: "cycle",
+        title: "Suivi vétérinaire",
+        description:
+          "Des visites régulières et un suivi de santé rigoureux pour prévenir et traiter rapidement.",
+      },
+      {
+        icon: "barn",
+        title: "Hébergement adapté",
+        description:
+          "Des installations pensées pour le confort et la sécurité des animaux, en toutes saisons.",
+      },
+      {
+        icon: "check",
+        title: "Traçabilité",
+        description:
+          "Un suivi documenté de chaque animal, de la naissance à la commercialisation.",
+      },
+    ],
+  },
+
+  process: {
+    eyebrow: "Comment fonctionne notre élevage",
+    title: "Du choix des races à la commercialisation",
+    steps: [
+      {
+        number: "01",
+        title: "Sélection des races",
+        description:
+          "Choix de races adaptées au climat local et aux conditions d'élevage, pour une croissance saine et productive.",
+      },
+      {
+        number: "02",
+        title: "Hébergement & acclimatation",
+        description:
+          "Installation des animaux dans des infrastructures propres, spacieuses et sécurisées, avec une période d'adaptation surveillée.",
+      },
+      {
+        number: "03",
+        title: "Alimentation & croissance",
+        description:
+          "Rationnement équilibré et adapté à chaque stade, avec un suivi quotidien de la prise de poids et de la santé.",
+      },
+      {
+        number: "04",
+        title: "Suivi sanitaire",
+        description:
+          "Vaccinations, contrôles vétérinaires et protocoles d'hygiène appliqués rigoureusement tout au long du cycle.",
+      },
+      {
+        number: "05",
+        title: "Commercialisation",
+        description:
+          "Mise sur le marché d'animaux et de produits sains, issus d'un élevage maîtrisé et responsable.",
+      },
+    ],
+  },
+
+  stats: [
+    { value: "06", label: "Pratiques rigoureuses" },
+    { value: "05", label: "Étapes maîtrisées" },
+    { value: "100%", label: "Suivi vétérinaire" },
+  ],
+
+  cta: {
+    eyebrow: "Un élevage de confiance",
+    title: "Besoin d'animaux sains ou de conseils en élevage ?",
+    text: "Notre équipe vous accompagne dans vos projets d'élevage, de l'approvisionnement en animaux au conseil sanitaire. Contactez-nous pour en discuter.",
+    buttonLabel: "Demander un devis",
+    buttonHref: "/#contact",
+  },
+};
+
+export const tarifsPage: TarifsPageContent = {
+  metaTitle: "Nos tarifs — PVS ONGD ASBL",
+  metaDescription:
+    "Consultez les prix des produits de PVS ONGD ASBL : élevage bovin, caprin, pisciculture, volailles et produits pour animaux. Filtrez par catégorie pour trouver rapidement ce que vous cherchez.",
+
+  hero: {
+    eyebrow: "Nos tarifs",
+    title: "Un aperçu clair de nos prix",
+    titleEmphasis: "prix",
+    titleLines: [
+      "Un aperçu clair",
+      "de nos prix.",
+    ],
+    paragraph:
+      "Consultez les tarifs de nos produits par catégorie. Sélectionnez une catégorie pour filtrer les prix et trouver rapidement ce qui vous intéresse. Les prix sont indicatifs et peuvent varier selon la disponibilité et la saison.",
+  },
+
+  categories: [
+    { id: "tous", label: "Tous", icon: "check" },
+    { id: "bovin", label: "Bovins", icon: "cattle" },
+    { id: "capra", label: "Caprins", icon: "cattle" },
+    { id: "pisciculture", label: "Pisciculture", icon: "fish" },
+    { id: "volailles", label: "Volailles", icon: "cattle" },
+    { id: "produits", label: "Produits pour animaux", icon: "feedbag" },
+  ],
+
+  products: [
+    {
+      name: "Bœuf adulte",
+      description: "Bœuf élevé en pâturage, prêt pour la commercialisation.",
+      price: "1 200 000 FC",
+      unit: "/ tête",
+      category: "bovin",
+      imageSrc:
+        "https://images.unsplash.com/photo-1600428853876-6b57d20b9da6?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Bœuf au pâturage",
+    },
+    {
+      name: "Vache laitière",
+      description: "Vache laitière en pleine production, race locale adaptée.",
+      price: "1 500 000 FC",
+      unit: "/ tête",
+      category: "bovin",
+      imageSrc:
+        "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Vache laitière",
+    },
+    {
+      name: "Veau sevré",
+      description: "Veau sevré de 6 à 8 mois, en bonne santé et vacciné.",
+      price: "450 000 FC",
+      unit: "/ tête",
+      category: "bovin",
+      imageSrc:
+        "https://images.unsplash.com/photo-1570042225831-d1fa9b5c9b29?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Veau dans un pâturage",
+    },
+    {
+      name: "Chèvre adulte",
+      description: "Chèvre adulte en bonne santé, adaptée au climat local.",
+      price: "180 000 FC",
+      unit: "/ tête",
+      category: "capra",
+      imageSrc:
+        "https://images.unsplash.com/photo-1564492300010-3a6a3f4e1e1e?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Chèvre dans une étable",
+    },
+    {
+      name: "Bouc reproducteur",
+      description: "Bouc reproducteur sélectionné, robuste et bien constitué.",
+      price: "250 000 FC",
+      unit: "/ tête",
+      category: "capra",
+      imageSrc:
+        "https://images.unsplash.com/photo-1484557985045-edf25e08da73?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Bouc dans un enclos",
+    },
+    {
+      name: "Chevreau sevré",
+      description: "Chevreau de 3 à 4 mois, sevré et vacciné.",
+      price: "75 000 FC",
+      unit: "/ tête",
+      category: "capra",
+      imageSrc:
+        "https://images.unsplash.com/photo-1533418436585-5c2c24e0c5dc?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Chevreau au pâturage",
+    },
+    {
+      name: "Tilapia frais",
+      description: "Tilapia élevé en étang contrôlé, pêché du jour.",
+      price: "8 000 FC",
+      unit: "/ kg",
+      category: "pisciculture",
+      imageSrc:
+        "https://images.unsplash.com/photo-1535473895227-bdecb20fb373?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Tilapia frais",
+    },
+    {
+      name: "Alevins tilapia",
+      description: "Alevins de tilapia pour démarrer votre propre étang.",
+      price: "500 FC",
+      unit: "/ unité",
+      category: "pisciculture",
+      imageSrc:
+        "https://images.unsplash.com/photo-1559473242-3740c6c65e1e?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Alevins dans un bassin",
+    },
+    {
+      name: "Poisson-chat",
+      description: "Poisson-chat élevé en étang, chair ferme et savoureuse.",
+      price: "10 000 FC",
+      unit: "/ kg",
+      category: "pisciculture",
+      imageSrc:
+        "https://images.unsplash.com/photo-1574781330855-d0db8cc6a79c?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Poisson-chat",
+    },
+    {
+      name: "Poulet fermier",
+      description: "Poulet élevé en plein air, nourri aux céréales.",
+      price: "15 000 FC",
+      unit: "/ pièce",
+      category: "volailles",
+      imageSrc:
+        "https://images.unsplash.com/photo-1516467508483-a7212febe7da?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Poulet fermier",
+    },
+    {
+      name: "Poules pondeuses",
+      description: "Poules pondeuses en pleine production, vaccinées.",
+      price: "12 000 FC",
+      unit: "/ pièce",
+      category: "volailles",
+      imageSrc:
+        "https://images.unsplash.com/photo-1548559934-4e3a06e1d434?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Poules pondeuses",
+    },
+    {
+      name: "Œufs frais",
+      description: "Œufs frais de poules élevées en plein air.",
+      price: "3 000 FC",
+      unit: "/ douzaine",
+      category: "volailles",
+      imageSrc:
+        "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Œufs frais",
+    },
+    {
+      name: "Aliment poulet",
+      description: "Aliment complet pour poulets, riche en protéines.",
+      price: "25 000 FC",
+      unit: "/ sac 50 kg",
+      category: "produits",
+      imageSrc:
+        "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Sac d'aliment pour volailles",
+    },
+    {
+      name: "Aliment bovin",
+      description: "Complément alimentaire pour bovins, croissance et lait.",
+      price: "35 000 FC",
+      unit: "/ sac 50 kg",
+      category: "produits",
+      imageSrc:
+        "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Sac d'aliment pour bovins",
+    },
+    {
+      name: "Aliment poisson",
+      description: "Granulés pour poissons d'élevage, formulation équilibrée.",
+      price: "40 000 FC",
+      unit: "/ sac 25 kg",
+      category: "produits",
+      imageSrc:
+        "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+      imageAlt: "Granulés pour poissons",
+    },
+  ],
+
+  info: {
+    eyebrow: "Bon à savoir",
+    title: "Des prix transparents et justes",
+    text: "Nos tarifs reflètent la qualité de notre élevage et de nos produits. Ils peuvent varier selon la disponibilité, la saison et les quantités commandées. Pour les commandes en gros ou les partenariats durables, des tarifs préférentiels peuvent être appliqués. Contactez-nous pour un devis personnalisé.",
+  },
+
+  cta: {
+    eyebrow: "Besoin d'un devis ?",
+    title: "Contactez-nous pour un tarif personnalisé",
+    text: "Que vous cherchiez un animal, un produit ou un partenariat, notre équipe vous répond rapidement avec une offre adaptée.",
+    buttonLabel: "Demander un devis",
     buttonHref: "/#contact",
   },
 };
