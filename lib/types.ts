@@ -137,3 +137,84 @@ export type AboutPageContent = {
     buttonHref: string;
   };
 };
+
+export type ElevagePageContent = {
+  metaTitle: string;
+  metaDescription: string;
+  hero: {
+    eyebrow: string;
+    title: string;
+    titleEmphasis: string;
+    titleLines: string[];
+    paragraph: string;
+    imageSrc: string;
+    imageAlt: string;
+  };
+  gallery: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    slides: { src: string; alt: string; caption: string }[];
+  };
+  practices: {
+    eyebrow: string;
+    title: string;
+    paragraph: string;
+    items: { icon: string; title: string; description: string }[];
+  };
+  process: {
+    eyebrow: string;
+    title: string;
+    steps: { number: string; title: string; description: string }[];
+  };
+  stats: Stat[];
+  cta: {
+    eyebrow: string;
+    title: string;
+    text: string;
+    buttonLabel: string;
+    buttonHref: string;
+  };
+};
+
+export type PriceProduct = {
+  name: string;
+  description: string;
+  price: string;
+  unit: string;
+  category: string;
+  imageSrc: string;
+  imageAlt: string;
+};
+
+export type PriceCategory = {
+  id: string;
+  label: string;
+  icon: string;
+};
+
+export type TarifsPageContent = {
+  metaTitle: string;
+  metaDescription: string;
+  hero: {
+    eyebrow: string;
+    title: string;
+    titleEmphasis: string;
+    titleLines: string[];
+    paragraph: string;
+  };
+  categories: PriceCategory[];
+  products: PriceProduct[];
+  info: {
+    eyebrow: string;
+    title: string;
+    text: string;
+  };
+  cta: {
+    eyebrow: string;
+    title: string;
+    text: string;
+    buttonLabel: string;
+    buttonHref: string;
+  };
+};
