@@ -48,10 +48,10 @@ export const navLinks: NavLink[] = [
   { label: "Produits pour animaux", href: "#produits" },
   { label: "À propos", href: "/a-propos" },
   { label: "Nos tarifs", href: "/tarifs" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
-export const navCta: Cta = { label: "Nous contacter", href: "#contact" };
+export const navCta: Cta = { label: "Nous contacter", href: "/contact" };
 
 /** [PLACEHOLDER] Numéro WhatsApp à remplacer par le vrai numéro du client. */
 export const whatsappHref = "https://wa.me/243900000000";
@@ -300,7 +300,7 @@ export const footer = {
     { label: "À propos", href: "/a-propos" },
     { label: "Nos tarifs", href: "/tarifs" },
     { label: "Nos activités", href: "/#activites" },
-    { label: "Contact", href: "/#contact" },
+    { label: "Contact", href: "/contact" },
   ] satisfies NavLink[],
   activityLinks: [
     { label: "Agriculture", href: "/agriculture" },
@@ -967,6 +967,35 @@ export const pisciculturePage: PisciculturePageContent = {
     imageSrc:
       "https://images.unsplash.com/photo-1559473242-3740c6c65e1e?auto=format&fit=crop&w=800&q=80",
     imageAlt: "Bassin d'élevage de poissons",
+    products: [
+      {
+        name: "Tilapia",
+        description:
+          "Le tilapia est notre espèce phare. Élevé en étang contrôlé, il se distingue par sa chair blanche, tendre et savoureuse. Résistant et à croissance rapide, le tilapia s'adapte parfaitement au climat local et constitue une source de protéines saine et abordable pour les familles congolaises.",
+        // [PLACEHOLDER] Unsplash
+        imageSrc:
+          "https://images.unsplash.com/photo-1535473895227-bdecb20fb373?auto=format&fit=crop&w=800&q=80",
+        imageAlt: "Tilapia frais sur glace",
+      },
+      {
+        name: "Poisson-chat",
+        description:
+          "Le poisson-chat est apprécié pour sa chair ferme et son goût prononcé. Robuste et résistant aux maladies, il s'épanouit dans nos étangs avec une alimentation adaptée. C'est un poisson idéal pour la préparation de plats traditionnels congolais, riche en saveurs et en nutriments.",
+        // [PLACEHOLDER] Unsplash
+        imageSrc:
+          "https://images.unsplash.com/photo-1574781330855-d0db8cc6a79c?auto=format&fit=crop&w=800&q=80",
+        imageAlt: "Poisson-chat frais",
+      },
+      {
+        name: "Alevins",
+        description:
+          "Nous proposons des alevins de tilapia sains et vigoureux, issus de notre propre reproduction. Parfaits pour démarrer ou renforcer votre propre étang, nos alevins sont sélectionnés pour leur taux de survie élevé et leur croissance rapide. Un accompagnement technique est disponible pour les éleveurs débutants.",
+        // [PLACEHOLDER] Unsplash
+        imageSrc:
+          "https://images.unsplash.com/photo-1559473242-3740c6c65e1e?auto=format&fit=crop&w=800&q=80",
+        imageAlt: "Alevins dans un bassin d'élevage",
+      },
+    ],
   },
 
   features: {
