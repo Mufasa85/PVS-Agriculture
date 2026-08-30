@@ -12,7 +12,9 @@
  */
 
 import type {
+  AboutPageContent,
   Activity,
+  ActivityPageContent,
   ContactInfo,
   Cta,
   FeaturePoint,
@@ -31,16 +33,16 @@ export const siteMeta = {
 export const brand = {
   name: "PVS",
   tagline: "ONGD · ASBL",
-  homeHref: "#accueil",
+  homeHref: "/",
 };
 
 export const navLinks: NavLink[] = [
-  { label: "Accueil", href: "#accueil" },
-  { label: "Agriculture", href: "#agriculture" },
+  { label: "Accueil", href: "/" },
+  { label: "Agriculture", href: "/agriculture" },
   { label: "Élevage", href: "#elevage" },
   { label: "Pisciculture", href: "#pisciculture" },
   { label: "Produits pour animaux", href: "#produits" },
-  { label: "À propos", href: "#apropos" },
+  { label: "À propos", href: "/a-propos" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -130,7 +132,7 @@ export const activities: Activity[] = [
     title: "Agriculture",
     description:
       "Production et exploitation de cultures vivrières adaptées au terroir local.",
-    href: "#agriculture",
+    href: "/agriculture",
     imageSrc:
       "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=700&q=80",
     imageAlt: "Champ de maïs",
@@ -289,13 +291,13 @@ export const footer = {
   description:
     "Organisation congolaise dédiée à l'agriculture, l'élevage, la pisciculture, la porcherie et la vente de produits pour animaux, au service d'une production locale durable.",
   quickLinks: [
-    { label: "Accueil", href: "#accueil" },
-    { label: "À propos", href: "#apropos" },
-    { label: "Nos activités", href: "#activites" },
-    { label: "Contact", href: "#contact" },
+    { label: "Accueil", href: "/" },
+    { label: "À propos", href: "/a-propos" },
+    { label: "Nos activités", href: "/#activites" },
+    { label: "Contact", href: "/#contact" },
   ] satisfies NavLink[],
   activityLinks: [
-    { label: "Agriculture", href: "#agriculture" },
+    { label: "Agriculture", href: "/agriculture" },
     { label: "Élevage", href: "#elevage" },
     { label: "Pisciculture", href: "#pisciculture" },
     { label: "Produits pour animaux", href: "#produits" },
@@ -323,4 +325,253 @@ export const footer = {
   },
   // L'année est injectée dynamiquement, comme le <span id="year"> de la maquette.
   copyright: "PVS ONGD ASBL. Tous droits réservés.",
+};
+
+export const agriculturePage: ActivityPageContent = {
+  metaTitle: "Agriculture — PVS ONGD ASBL",
+  metaDescription:
+    "Découvrez l'engagement agricole de PVS ONGD ASBL : production de cultures vivrières, pratiques durables et suivi rigoureux, de la préparation du sol à la récolte.",
+
+  hero: {
+    eyebrow: "Notre cœur de métier",
+    title: "L'agriculture, au centre de notre engagement",
+    titleEmphasis: "engagement",
+    titleLines: [
+      "L'agriculture, au centre",
+      "de notre engagement.",
+    ],
+    paragraph:
+      "De la préparation du sol à la récolte, PVS ONGD ASBL met en œuvre des pratiques agricoles rigoureuses pour produire des cultures saines, tout en respectant les cycles naturels de la terre à Kinshasa.",
+    // [PLACEHOLDER] Unsplash
+    imageSrc:
+      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Champ agricole verdoyant au lever du soleil",
+    badge: "🌾 Agriculture d'abord",
+  },
+
+  features: {
+    eyebrow: "Nos pratiques agricoles",
+    title: "Une production organisée, du semis à la récolte",
+    paragraph:
+      "De la préparation du sol à la récolte, nous mettons en œuvre des pratiques agricoles rigoureuses pour produire des cultures saines, tout en respectant les cycles naturels de la terre.",
+    // [PLACEHOLDER] Unsplash
+    imageSrc:
+      "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Rangées de cultures dans une exploitation agricole",
+    points: [
+      {
+        title: "Production agricole",
+        description: "Une production organisée, suivie du semis à la récolte.",
+      },
+      {
+        title: "Cultures diversifiées",
+        description: "Un éventail de cultures adaptées au climat local.",
+      },
+      {
+        title: "Exploitation structurée",
+        description: "Une exploitation organisée pour un rendement stable.",
+      },
+      {
+        title: "Qualité des produits",
+        description: "Un contrôle attentif à chaque étape de production.",
+      },
+      {
+        title: "Production durable",
+        description: "Des méthodes respectueuses des sols et des ressources.",
+      },
+      {
+        title: "Suivi rigoureux",
+        description: "Une organisation qui accompagne chaque cycle agricole.",
+      },
+    ],
+  },
+
+  stats: [
+    { value: "6", label: "Points forts agricoles" },
+    { value: "100%", label: "Ancrage local" },
+    { value: "ONGD", label: "Engagement durable" },
+  ],
+
+  cta: {
+    eyebrow: "Un accompagnement complet",
+    title: "Un projet agricole en tête ?",
+    text: "Parlons de vos besoins en production agricole ou approvisionnement. Notre équipe vous accompagne à chaque étape.",
+    buttonLabel: "Demander un devis",
+    buttonHref: "/#contact",
+  },
+};
+
+export const aproposPage: AboutPageContent = {
+  metaTitle: "À propos — PVS ONGD ASBL",
+  metaDescription:
+    "Découvrez PVS ONGD ASBL : une organisation congolaise basée à Kinshasa, engagée pour une production locale durable en agriculture, élevage, pisciculture et porcherie.",
+
+  hero: {
+    eyebrow: "Qui sommes-nous",
+    title: "Une organisation locale engagée pour une production durable",
+    titleEmphasis: "durable",
+    titleLines: [
+      "Une organisation locale",
+      "engagée pour une production",
+      "durable.",
+    ],
+    paragraph:
+      "PVS ONGD ASBL est une organisation congolaise basée à Kinshasa, active dans l'agriculture, l'élevage, la pisciculture, la porcherie et la fourniture de produits pour animaux. Notre vocation est d'accompagner une production locale saine, structurée et durable.",
+    // [PLACEHOLDER] Unsplash
+    imageSrc:
+      "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Vue aérienne d'une exploitation agricole",
+  },
+
+  mission: {
+    eyebrow: "Notre mission",
+    title: "Accompagner une production locale saine et durable",
+    statement:
+      "« Nous croyons qu'une production maîtrisée à chaque étape profite autant aux communautés qu'à la terre. Notre rôle est de mettre notre expérience de terrain au service de partenaires et de clients exigeants, pour une agriculture responsable et un élevage sain. »",
+    signature: "L'équipe PVS ONGD ASBL",
+    signatureRole: "Organisation non gouvernementale de développement",
+  },
+
+  vision: {
+    eyebrow: "Notre vision",
+    title: "Une production maîtrisée au service des communautés",
+    paragraphs: [
+      "PVS ONGD ASBL est une organisation basée à Kinshasa, active dans l'agriculture, l'élevage, la pisciculture, la porcherie et la fourniture de produits pour animaux. Notre vocation est d'accompagner une production locale saine, structurée et durable.",
+      "Notre vision repose sur une conviction simple : une production maîtrisée à chaque étape profite autant aux communautés qu'à la terre. Nous mettons notre expérience de terrain au service de partenaires et de clients exigeants.",
+    ],
+    tags: ["Vision durable", "Expertise terrain", "Ancrage local"],
+    images: [
+      {
+        // [PLACEHOLDER] Unsplash
+        src: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=700&q=80",
+        alt: "Vue aérienne d'une exploitation agricole",
+      },
+      {
+        // [PLACEHOLDER] Unsplash
+        src: "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=500&q=80",
+        alt: "Travailleur agricole au champ",
+      },
+    ],
+  },
+
+  expertise: {
+    eyebrow: "Nos domaines",
+    title: "Cinq domaines d'expertise complémentaires",
+    subtitle:
+      "Du champ à l'élevage, en passant par l'eau et l'approvisionnement, nous couvrons l'ensemble de la chaîne de production locale.",
+    items: [
+      {
+        icon: "sprout",
+        title: "Agriculture",
+        description:
+          "Production et exploitation de cultures vivrières adaptées au terroir local.",
+      },
+      {
+        icon: "cattle",
+        title: "Élevage",
+        description:
+          "Un élevage suivi avec soin pour une croissance saine du cheptel.",
+      },
+      {
+        icon: "fish",
+        title: "Pisciculture",
+        description:
+          "Élevage de poissons en étangs contrôlés pour une production maîtrisée.",
+      },
+      {
+        icon: "pig",
+        title: "Porcherie",
+        description:
+          "Une porcherie gérée selon des normes d'hygiène et de bien-être animal strictes.",
+      },
+      {
+        icon: "feedbag",
+        title: "Produits pour animaux",
+        description:
+          "Vente de produits et d'aliments de qualité pour un élevage performant.",
+      },
+    ],
+  },
+
+  approach: {
+    eyebrow: "Notre approche",
+    title: "Une méthode rigoureuse, de la terre à l'assiette",
+    steps: [
+      {
+        number: "01",
+        title: "Analyse du terrain",
+        description:
+          "Évaluation des sols, du climat et des besoins locaux pour définir les cultures et élevages les plus adaptés.",
+      },
+      {
+        number: "02",
+        title: "Planification",
+        description:
+          "Élaboration d'un plan de production structuré, respectueux des cycles naturels et des ressources disponibles.",
+      },
+      {
+        number: "03",
+        title: "Mise en œuvre",
+        description:
+          "Application de pratiques agricoles et d'élevage rigoureuses, avec un suivi constant à chaque étape.",
+      },
+      {
+        number: "04",
+        title: "Suivi & accompagnement",
+        description:
+          "Contrôle qualité, conseil et accompagnement des partenaires et clients sur le long terme.",
+      },
+    ],
+  },
+
+  values: {
+    eyebrow: "Nos engagements",
+    title: "Pourquoi nous choisir ?",
+    items: [
+      {
+        tag: "Qualité",
+        title: "Des produits contrôlés",
+        description:
+          "Un suivi rigoureux à chaque étape, de la production à la livraison.",
+      },
+      {
+        tag: "Expertise",
+        title: "Un savoir-faire de terrain",
+        description:
+          "Une connaissance concrète de l'agriculture et de l'élevage local.",
+      },
+      {
+        tag: "Production",
+        title: "Des capacités diversifiées",
+        description:
+          "Cinq activités complémentaires pour répondre à vos besoins.",
+      },
+      {
+        tag: "Fiabilité",
+        title: "Un partenaire de confiance",
+        description:
+          "Une organisation présente sur le long terme, aux côtés de ses partenaires.",
+      },
+      {
+        tag: "Accompagnement",
+        title: "À votre écoute",
+        description:
+          "Une équipe disponible pour conseiller et orienter chaque projet.",
+      },
+    ],
+  },
+
+  stats: [
+    { value: "05", label: "Domaines d'activité" },
+    { value: "100%", label: "Ancrage local" },
+    { value: "ONGD", label: "Engagement durable" },
+  ],
+
+  cta: {
+    eyebrow: "Travaillons ensemble",
+    title: "Un projet en tête ?",
+    text: "Parlons de vos besoins en agriculture, élevage, pisciculture ou approvisionnement. Notre équipe vous répond rapidement.",
+    buttonLabel: "Nous contacter",
+    buttonHref: "/#contact",
+  },
 };
