@@ -9,19 +9,47 @@ const fieldClass =
 const labelClass =
   "mb-[7px] block text-[13px] font-bold text-brand-900";
 
-export default function ContactForm() {
-  const [sent, setSent] = useState(false);
+type Status = "idle" | "submitting" | "success" | "error";
 
-  /**
-   * ⚠️ Envoi non branché : reproduit pour l'instant le retour visuel de la
-   * maquette (script.js). Le backend (Route Handler + service d'email) reste
-   * à décider — voir CLAUDE.md, règle 4.
-   */
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+export default function ContactForm() {
+  const [status, setStatus] = useState<Status>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    event.currentTarget.reset();
-    setSent(true);
-    window.setTimeout(() => setSent(false), 2600);
+    setStatus("submitting");
+    setErrorMsg("");
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const payload = {
+      nom: formData.get("nom"),
+      telephone: formData.get("telephone"),
+      email: formData.get("email"),
+      sujet: formData.get("sujet"),
+      message: formData.get("message"),
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? "Échec de l'envoi.");
+      }
+
+      form.reset();
+      setStatus("success");
+      window.setTimeout(() => setStatus("idle"), 4000);
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Une erreur est survenue.");
+      setStatus("error");
+      window.setTimeout(() => setStatus("idle"), 5000);
+    }
   };
 
   return (
@@ -101,14 +129,27 @@ export default function ContactForm() {
 
       <button
         type="submit"
+        disabled={status === "submitting"}
         className={`btn mt-1.5 w-full ${
-          sent
+          status === "success"
             ? "bg-[#2f9e5e] text-white"
-            : "btn-primary"
-        }`}
+            : status === "error"
+              ? "bg-red-600 text-white"
+              : "btn-primary"
+        } ${status === "submitting" ? "opacity-70" : ""}`}
       >
-        {sent ? contactForm.successLabel : contactForm.submitLabel}
+        {status === "submitting"
+          ? "Envoi en cours..."
+          : status === "success"
+            ? contactForm.successLabel
+            : status === "error"
+              ? "Échec de l'envoi"
+              : contactForm.submitLabel}
       </button>
+
+      {status === "error" && errorMsg && (
+        <p className="mt-3 text-center text-sm text-red-600">{errorMsg}</p>
+      )}
 
       <p className="mt-3.5 text-center text-xs text-ink-500">
         {contact.consentText}
