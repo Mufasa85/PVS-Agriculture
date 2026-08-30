@@ -20,6 +20,7 @@ import type {
   ElevagePageContent,
   FeaturePoint,
   NavLink,
+  PisciculturePageContent,
   PriceProduct,
   Social,
   Stat,
@@ -43,7 +44,7 @@ export const navLinks: NavLink[] = [
   { label: "Accueil", href: "/" },
   { label: "Agriculture", href: "/agriculture" },
   { label: "Élevage", href: "/elevage" },
-  { label: "Pisciculture", href: "#pisciculture" },
+  { label: "Pisciculture", href: "/pisciculture" },
   { label: "Produits pour animaux", href: "#produits" },
   { label: "À propos", href: "/a-propos" },
   { label: "Nos tarifs", href: "/tarifs" },
@@ -156,7 +157,7 @@ export const activities: Activity[] = [
     title: "Pisciculture",
     description:
       "Élevage de poissons en étangs contrôlés pour une production maîtrisée.",
-    href: "#pisciculture", // maquette d'origine pointait vers #contact — à confirmer
+    href: "/pisciculture",
     imageSrc:
       "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=700&q=80",
     imageAlt: "Étang de pisciculture",
@@ -304,7 +305,7 @@ export const footer = {
   activityLinks: [
     { label: "Agriculture", href: "/agriculture" },
     { label: "Élevage", href: "/elevage" },
-    { label: "Pisciculture", href: "#pisciculture" },
+    { label: "Pisciculture", href: "/pisciculture" },
     { label: "Produits pour animaux", href: "#produits" },
   ] satisfies NavLink[],
   // 4e colonne du footer de la maquette (index.html)
@@ -927,6 +928,153 @@ export const tarifsPage: TarifsPageContent = {
     eyebrow: "Besoin d'un devis ?",
     title: "Contactez-nous pour un tarif personnalisé",
     text: "Que vous cherchiez un animal, un produit ou un partenariat, notre équipe vous répond rapidement avec une offre adaptée.",
+    buttonLabel: "Demander un devis",
+    buttonHref: "/#contact",
+  },
+};
+
+export const pisciculturePage: PisciculturePageContent = {
+  metaTitle: "Pisciculture — PVS ONGD ASBL",
+  metaDescription:
+    "Découvrez la pisciculture de PVS ONGD ASBL : élevage de poissons en étangs contrôlés, tilapia et poisson-chat, avec des prix transparents et une production maîtrisée à Kinshasa.",
+
+  hero: {
+    eyebrow: "Notre savoir-faire",
+    title: "Une pisciculture maîtrisée en étangs contrôlés",
+    titleEmphasis: "maîtrisée",
+    titleLines: [
+      "Une pisciculture",
+      "maîtrisée en étangs",
+      "contrôlés.",
+    ],
+    paragraph:
+      "La pisciculture est l'un de nos métiers de cœur. Nous élevons des poissons en étangs contrôlés, avec une gestion rigoureuse de la qualité de l'eau, de l'alimentation et du suivi sanitaire, pour une production saine et durable.",
+    // [PLACEHOLDER] Unsplash
+    imageSrc:
+      "https://images.unsplash.com/photo-1535473895227-bdecb20fb373?auto=format&fit=crop&w=1600&q=80",
+    imageAlt: "Étang de pisciculture avec poissons",
+  },
+
+  overview: {
+    eyebrow: "La pisciculture chez PVS",
+    title: "Des étangs contrôlés pour une production saine",
+    paragraphs: [
+      "Notre exploitation piscicole repose sur des étangs aménagés et contrôlés, où chaque paramètre — qualité de l'eau, oxygénation, densité, alimentation — est suivi de près pour garantir la santé et la croissance des poissons.",
+      "Nous élevons principalement du tilapia et du poisson-chat, deux espèces bien adaptées au climat local et appréciées pour leur chair. Notre objectif est de fournir un poisson frais, sain et issu d'une production responsable.",
+    ],
+    tags: ["Tilapia", "Poisson-chat", "Étangs contrôlés", "Eau de qualité", "Production locale"],
+    // [PLACEHOLDER] Unsplash
+    imageSrc:
+      "https://images.unsplash.com/photo-1559473242-3740c6c65e1e?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Bassin d'élevage de poissons",
+  },
+
+  features: {
+    eyebrow: "Nos pratiques piscicoles",
+    title: "Une approche rigoureuse à chaque étape",
+    subtitle:
+      "De la gestion de l'eau à la commercialisation, chaque aspect de notre pisciculture est suivi avec attention pour garantir la qualité du poisson.",
+    items: [
+      {
+        icon: "check",
+        title: "Qualité de l'eau",
+        description:
+          "Contrôle régulier des paramètres de l'eau : pH, oxygène, température, pour un environnement sain.",
+      },
+      {
+        icon: "feedbag",
+        title: "Alimentation adaptée",
+        description:
+          "Granulés équilibrés et dosés selon l'espèce et le stade de croissance, pour une croissance optimale.",
+      },
+      {
+        icon: "cycle",
+        title: "Densité maîtrisée",
+        description:
+          "Un nombre de poissons par étang calculé pour éviter la surpopulation et garantir le bien-être.",
+      },
+      {
+        icon: "lock",
+        title: "Suivi sanitaire",
+        description:
+          "Observation quotidienne, prévention des maladies et intervention rapide en cas de besoin.",
+      },
+      {
+        icon: "fish",
+        title: "Espèces adaptées",
+        description:
+          "Tilapia et poisson-chat, choisis pour leur résistance et leur adaptation au climat local.",
+      },
+      {
+        icon: "check",
+        title: "Pêche du jour",
+        description:
+          "Un poisson pêché le jour même, frais et savoureux, directement disponible à la vente.",
+      },
+    ],
+  },
+
+  pricing: {
+    eyebrow: "Nos prix",
+    title: "Tarifs de nos produits de pisciculture",
+    subtitle:
+      "Un aperçu des prix de nos poissons et alevins. Les prix sont indicatifs et peuvent varier selon la disponibilité et la saison.",
+    items: [
+      {
+        name: "Tilapia frais",
+        description: "Tilapia élevé en étang contrôlé, pêché du jour.",
+        price: "8 000 FC",
+        unit: "/ kg",
+        // [PLACEHOLDER] Unsplash
+        imageSrc:
+          "https://images.unsplash.com/photo-1535473895227-bdecb20fb373?auto=format&fit=crop&w=600&q=80",
+        imageAlt: "Tilapia frais",
+        badge: "Best-seller",
+      },
+      {
+        name: "Poisson-chat",
+        description: "Poisson-chat élevé en étang, chair ferme et savoureuse.",
+        price: "10 000 FC",
+        unit: "/ kg",
+        // [PLACEHOLDER] Unsplash
+        imageSrc:
+          "https://images.unsplash.com/photo-1574781330855-d0db8cc6a79c?auto=format&fit=crop&w=600&q=80",
+        imageAlt: "Poisson-chat",
+      },
+      {
+        name: "Alevins tilapia",
+        description: "Alevins de tilapia pour démarrer votre propre étang.",
+        price: "500 FC",
+        unit: "/ unité",
+        // [PLACEHOLDER] Unsplash
+        imageSrc:
+          "https://images.unsplash.com/photo-1559473242-3740c6c65e1e?auto=format&fit=crop&w=600&q=80",
+        imageAlt: "Alevins dans un bassin",
+        badge: "Dès",
+      },
+      {
+        name: "Aliment poisson",
+        description: "Granulés pour poissons d'élevage, formulation équilibrée.",
+        price: "40 000 FC",
+        unit: "/ sac 25 kg",
+        // [PLACEHOLDER] Unsplash
+        imageSrc:
+          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+        imageAlt: "Granulés pour poissons",
+      },
+    ],
+  },
+
+  stats: [
+    { value: "02", label: "Espèces élevées" },
+    { value: "06", label: "Pratiques rigoureuses" },
+    { value: "100%", label: "Eau contrôlée" },
+  ],
+
+  cta: {
+    eyebrow: "Poisson frais garanti",
+    title: "Besoin de poisson frais ou d'alevins ?",
+    text: "Notre équipe vous accompagne dans vos besoins en pisciculture, de l'achat de poisson frais au démarrage de votre propre étang. Contactez-nous pour en discuter.",
     buttonLabel: "Demander un devis",
     buttonHref: "/#contact",
   },

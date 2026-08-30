@@ -177,6 +177,48 @@ export type ElevagePageContent = {
   };
 };
 
+export type PisciculturePageContent = {
+  metaTitle: string;
+  metaDescription: string;
+  hero: {
+    eyebrow: string;
+    title: string;
+    titleEmphasis: string;
+    titleLines: string[];
+    paragraph: string;
+    imageSrc: string;
+    imageAlt: string;
+  };
+  overview: {
+    eyebrow: string;
+    title: string;
+    paragraphs: string[];
+    tags: string[];
+    imageSrc: string;
+    imageAlt: string;
+  };
+  features: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    items: { icon: string; title: string; description: string }[];
+  };
+  pricing: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    items: { name: string; description: string; price: string; unit: string; imageSrc: string; imageAlt: string; badge?: string }[];
+  };
+  stats: Stat[];
+  cta: {
+    eyebrow: string;
+    title: string;
+    text: string;
+    buttonLabel: string;
+    buttonHref: string;
+  };
+};
+
 export type PriceProduct = {
   name: string;
   description: string;
