@@ -196,6 +196,7 @@ export type PisciculturePageContent = {
     tags: string[];
     imageSrc: string;
     imageAlt: string;
+    products: { name: string; description: string; imageSrc: string; imageAlt: string }[];
   };
   features: {
     eyebrow: string;
