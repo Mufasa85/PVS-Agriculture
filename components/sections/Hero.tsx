@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import Reveal from "@/components/ui/Reveal";
 import FloatingBadge from "@/components/sections/HeroFloatingBadge";
+import HeroImageCarousel from "@/components/sections/HeroImageCarousel";
 import { hero } from "@/lib/content";
 
 function TitleLine({ line }: { line: string }) {
@@ -80,14 +80,7 @@ export default function Hero() {
           />
 
           <div className="relative z-[1] aspect-[4/4.6] overflow-hidden rounded-pvs-lg bg-gradient-to-br from-brand-500 to-brand-700 shadow-float">
-            <Image
-              src={hero.imageSrc}
-              alt={hero.imageAlt}
-              fill
-              priority
-              sizes="(max-width: 900px) 420px, 45vw"
-              className="object-cover"
-            />
+            <HeroImageCarousel images={hero.images} />
           </div>
 
           <FloatingBadge>{hero.badge}</FloatingBadge>
