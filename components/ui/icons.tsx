@@ -108,6 +108,20 @@ export function LinesIcon(props: IconProps) {
 
 /* ---------- Cartes Activités ---------- */
 
+export function ChevronDownIcon(props: IconProps) {
+  return (
+    <svg {...svgProps(props)}>
+      <path
+        d="M6 9l6 6 6-6"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function SproutIcon(props: IconProps) {
   return (
     <svg {...svgProps(props)}>
