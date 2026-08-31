@@ -21,7 +21,10 @@ import type {
   FeaturePoint,
   NavLink,
   PisciculturePageContent,
+  PorcheriePageContent,
   PriceProduct,
+  ProduitsAnimauxPageContent,
+  ServiceLink,
   Social,
   Stat,
   TarifsPageContent,
@@ -45,10 +48,53 @@ export const navLinks: NavLink[] = [
   { label: "Agriculture", href: "/agriculture" },
   { label: "Élevage", href: "/elevage" },
   { label: "Pisciculture", href: "/pisciculture" },
-  { label: "Produits pour animaux", href: "#produits" },
+  { label: "Porcherie", href: "/porcherie" },
+  { label: "Produits pour animaux", href: "/produits-animaux" },
   { label: "À propos", href: "/a-propos" },
   { label: "Nos tarifs", href: "/tarifs" },
   { label: "Contact", href: "/contact" },
+];
+
+/** Liens principaux affichés en dehors du dropdown "Services" sur grand écran. */
+export const primaryNavLinks: NavLink[] = [
+  { label: "Accueil", href: "/" },
+  { label: "À propos", href: "/a-propos" },
+  { label: "Nos tarifs", href: "/tarifs" },
+  { label: "Contact", href: "/contact" },
+];
+
+/** Contenu du mega-menu "Services" (desktop), regroupant nos 4 activités. */
+export const servicesLinks: ServiceLink[] = [
+  {
+    label: "Agriculture",
+    description: "Cultures vivrières et pratiques agricoles durables.",
+    href: "/agriculture",
+    icon: "sprout",
+  },
+  {
+    label: "Élevage",
+    description: "Élevage bovin et caprin suivi avec rigueur.",
+    href: "/elevage",
+    icon: "cattle",
+  },
+  {
+    label: "Pisciculture",
+    description: "Poissons élevés en étangs contrôlés et sains.",
+    href: "/pisciculture",
+    icon: "fish",
+  },
+  {
+    label: "Porcherie",
+    description: "Élevage porcin selon des normes d'hygiène strictes.",
+    href: "/porcherie",
+    icon: "pig",
+  },
+  {
+    label: "Produits pour animaux",
+    description: "Aliments et compléments pour tous vos animaux.",
+    href: "/produits-animaux",
+    icon: "feedbag",
+  },
 ];
 
 export const navCta: Cta = { label: "Nous contacter", href: "/contact" };
@@ -82,6 +128,25 @@ export const hero = {
   imageSrc:
     "https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=900&q=80",
   imageAlt: "Champ agricole verdoyant au lever du soleil",
+  // Carrousel d'images du hero : alterne entre nos différentes activités.
+  images: [
+    {
+      src: "https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=900&q=80",
+      alt: "Champ agricole verdoyant au lever du soleil",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80",
+      alt: "Vache dans un pâturage au coucher du soleil",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80",
+      alt: "Étang de pisciculture",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=900&q=80",
+      alt: "Porcherie moderne et propre",
+    },
+  ],
   badge: "🌾 Agriculture d'abord",
   floatingCardTitle: "Production durable",
   floatingCardText: "Une agriculture responsable, ancrée localement",
@@ -167,7 +232,7 @@ export const activities: Activity[] = [
     title: "Porcherie",
     description:
       "Une porcherie gérée selon des normes d'hygiène et de bien-être animal strictes.",
-    href: "#contact",
+    href: "/porcherie",
     imageSrc:
       "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=700&q=80",
     imageAlt: "Porcherie moderne",
@@ -177,7 +242,7 @@ export const activities: Activity[] = [
     title: "Produits & aliments pour animaux",
     description:
       "Vente de produits et d'aliments de qualité pour un élevage performant.",
-    href: "#produits",
+    href: "/produits-animaux",
     imageSrc:
       "https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=700&q=80",
     imageAlt: "Sacs d'aliments pour animaux",
@@ -306,7 +371,8 @@ export const footer = {
     { label: "Agriculture", href: "/agriculture" },
     { label: "Élevage", href: "/elevage" },
     { label: "Pisciculture", href: "/pisciculture" },
-    { label: "Produits pour animaux", href: "#produits" },
+    { label: "Porcherie", href: "/porcherie" },
+    { label: "Produits pour animaux", href: "/produits-animaux" },
   ] satisfies NavLink[],
   // 4e colonne du footer de la maquette (index.html)
   contactLinks: [
@@ -1106,5 +1172,346 @@ export const pisciculturePage: PisciculturePageContent = {
     text: "Notre équipe vous accompagne dans vos besoins en pisciculture, de l'achat de poisson frais au démarrage de votre propre étang. Contactez-nous pour en discuter.",
     buttonLabel: "Demander un devis",
     buttonHref: "/#contact",
+  },
+};
+
+export const produitsAnimauxPage: ProduitsAnimauxPageContent = {
+  metaTitle: "Produits pour animaux — PVS ONGD ASBL",
+  metaDescription:
+    "Découvrez les produits pour animaux de PVS ONGD ASBL : aliments pour bovins, caprins, volailles et poissons, avec des prix transparents et une livraison adaptée.",
+
+  hero: {
+    eyebrow: "Nos produits",
+    title: "Une alimentation saine et adaptée pour vos animaux",
+    titleEmphasis: "saine",
+    titleLines: [
+      "Une alimentation",
+      "saine et adaptée",
+      "pour vos animaux.",
+    ],
+    paragraph:
+      "PVS ONGD ASBL propose une gamme de produits pour animaux pensée pour répondre aux besoins nutritionnels de vos bovins, caprins, volailles et poissons. Qualité, traçabilité et prix justes : tout pour nourrir au mieux votre élevage.",
+    imageSrc:
+      "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=1600&q=80",
+    imageAlt: "Sacs d'aliment pour animaux",
+  },
+
+  overview: {
+    eyebrow: "Nos produits pour animaux",
+    title: "Des aliments adaptés à chaque espèce",
+    paragraphs: [
+      "Nous sélectionnons et formulons des aliments complets et des compléments nutritionnels pour accompagner la croissance, la santé et la production de vos animaux.",
+      "Nos produits sont conçus avec des ingrédients de qualité, dosés selon l'espèce et le stade de développement. Bovins, caprins, volailles ou poissons : chaque animal trouve son aliment chez PVS.",
+    ],
+    tags: ["Bovins", "Caprins", "Volailles", "Poissons", "Croissance", "Livraison"],
+    imageSrc:
+      "https://images.unsplash.com/photo-1589923188651-268a976c1753?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Granulés d'aliment pour animaux",
+    products: [
+      {
+        name: "Aliment pour bovins",
+        description:
+          "Formulation riche en fibres et énergie pour soutenir la croissance des jeunes bovins et la production laitière des vaches. Nos aliments bovins favorisent une digestion saine et un développement musculaire optimal.",
+        imageSrc:
+          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=800&q=80",
+        imageAlt: "Aliment pour bovins",
+      },
+      {
+        name: "Aliment pour caprins",
+        description:
+          "Granulés équilibrés spécialement adaptés aux chèvres et boucs. Cet aliment complète le pâturage et apporte les protéines, minéraux et vitamines nécessaires à la santé et à la reproduction du troupeau.",
+        imageSrc:
+          "https://images.unsplash.com/photo-1589923188651-268a976c1753?auto=format&fit=crop&w=800&q=80",
+        imageAlt: "Aliment pour caprins",
+      },
+      {
+        name: "Aliment pour volailles",
+        description:
+          "Mélange complet pour poulets, poules pondeuses et autres volailles. Riche en protéines et en acides aminés essentiels, il assure une croissance rapide, une bonne conversion alimentaire et une production d'œufs régulière.",
+        imageSrc:
+          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=800&q=80",
+        imageAlt: "Aliment pour volailles",
+      },
+      {
+        name: "Aliment pour poissons",
+        description:
+          "Granulés flottants et coulants pour tilapia et poisson-chat. Formulation équilibrée en protéines et lipides pour une croissance rapide, une meilleure santé et un rendement optimal en étang.",
+        imageSrc:
+          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=800&q=80",
+        imageAlt: "Aliment pour poissons",
+      },
+    ],
+  },
+
+  features: {
+    eyebrow: "Pourquoi choisir nos produits",
+    title: "Qualité, traçabilité et résultats",
+    subtitle:
+      "Chaque sac que nous vendons est le fruit d'un travail rigoureux pour offrir le meilleur à vos animaux et à votre exploitation.",
+    items: [
+      {
+        icon: "check",
+        title: "Formulation adaptée",
+        description:
+          "Des recettes pensées pour chaque espèce et chaque stade de croissance.",
+      },
+      {
+        icon: "feedbag",
+        title: "Ingrédients de qualité",
+        description:
+          "Sélection rigoureuse des matières premières pour des aliments sains et efficaces.",
+      },
+      {
+        icon: "lock",
+        title: "Stockage contrôlé",
+        description:
+          "Sacs conservés dans un environnement sec et aéré pour préserver leurs qualités.",
+      },
+      {
+        icon: "cycle",
+        title: "Livraison adaptée",
+        description:
+          "Possibilité de commande au détail ou en gros, avec une livraison sur mesure.",
+      },
+      {
+        icon: "check",
+        title: "Conseil personnalisé",
+        description:
+          "Notre équipe vous aide à choisir l'aliment le plus adapté à votre élevage.",
+      },
+      {
+        icon: "cattle",
+        title: "Toutes espèces",
+        description:
+          "Bovins, caprins, volailles, poissons : un produit pour chaque animal.",
+      },
+    ],
+  },
+
+  pricing: {
+    eyebrow: "Nos prix",
+    title: "Tarifs de nos produits pour animaux",
+    subtitle:
+      "Un aperçu de nos tarifs. Les prix sont indicatifs et peuvent varier selon les quantités et la disponibilité.",
+    items: [
+      {
+        name: "Aliment poulet",
+        description: "Aliment complet pour poulets, riche en protéines.",
+        price: "25 000 FC",
+        unit: "/ sac 50 kg",
+        imageSrc:
+          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+        imageAlt: "Sac d'aliment pour volailles",
+        badge: "Best-seller",
+      },
+      {
+        name: "Aliment bovin",
+        description: "Complément alimentaire pour bovins, croissance et lait.",
+        price: "35 000 FC",
+        unit: "/ sac 50 kg",
+        imageSrc:
+          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+        imageAlt: "Sac d'aliment pour bovins",
+      },
+      {
+        name: "Aliment poisson",
+        description: "Granulés pour poissons d'élevage, formulation équilibrée.",
+        price: "40 000 FC",
+        unit: "/ sac 25 kg",
+        imageSrc:
+          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+        imageAlt: "Granulés pour poissons",
+      },
+      {
+        name: "Aliment caprin",
+        description: "Mélange équilibré pour chèvres et boucs.",
+        price: "28 000 FC",
+        unit: "/ sac 50 kg",
+        imageSrc:
+          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+        imageAlt: "Sac d'aliment pour caprins",
+      },
+    ],
+  },
+
+  stats: [
+    { value: "04", label: "Types d'aliments" },
+    { value: "50 kg", label: "Conditionnement standard" },
+    { value: "100%", label: "Conseil inclus" },
+  ],
+
+  cta: {
+    eyebrow: "Commandez vos produits",
+    title: "Besoin d'aliments pour votre élevage ?",
+    text: "Contactez-nous pour passer commande ou obtenir un conseil personnalisé sur les produits adaptés à vos animaux.",
+    buttonLabel: "Demander un devis",
+    buttonHref: "/contact",
+  },
+};
+
+export const porcheriePage: PorcheriePageContent = {
+  metaTitle: "Porcherie — PVS ONGD ASBL",
+  metaDescription:
+    "Découvrez la porcherie de PVS ONGD ASBL : élevage porcin rigoureux, hygiène irréprochable et porcs sains, prêts pour votre boucherie ou votre exploitation. Demandez votre devis dès aujourd'hui.",
+
+  hero: {
+    eyebrow: "Élevage porcin",
+    title: "Des porcs sains, élevés dans les meilleures conditions",
+    titleEmphasis: "sains",
+    titleLines: [
+      "Des porcs sains, élevés",
+      "dans les meilleures",
+      "conditions.",
+    ],
+    paragraph:
+      "PVS ONGD ASBL exploite une porcherie moderne à Kinshasa, où hygiène, alimentation contrôlée et bien-être animal se conjuguent pour produire une viande de qualité. Ne cherchez plus : commandez dès maintenant vos porcs ou lancez votre propre élevage avec notre accompagnement.",
+    imageSrc:
+      "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=1600&q=80",
+    imageAlt: "Porcherie moderne et propre",
+  },
+
+  overview: {
+    eyebrow: "Notre porcherie",
+    title: "Une porcherie pensée pour la performance et l'hygiène",
+    paragraphs: [
+      "Notre porcherie repose sur des normes d'hygiène strictes et un suivi vétérinaire régulier. Chaque enclos est nettoyé et désinfecté avec soin pour prévenir les maladies et garantir des animaux en pleine santé.",
+      "De la naissance à l'engraissement, nos porcs bénéficient d'une alimentation équilibrée et d'un espace adapté à chaque étape de leur croissance. Résultat : une viande savoureuse, produite dans le respect du bien-être animal.",
+    ],
+    tags: ["Hygiène stricte", "Suivi vétérinaire", "Alimentation contrôlée", "Bien-être animal", "Production locale"],
+    imageSrc:
+      "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Porcs élevés dans un enclos propre",
+    products: [
+      {
+        name: "Porcs charcutiers",
+        description:
+          "Des porcs élevés jusqu'au poids optimal pour la boucherie, à la chair tendre et bien persillée. Idéal pour les grossistes, restaurateurs et particuliers en quête d'une viande fraîche et locale.",
+        imageSrc:
+          "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=800&q=80",
+        imageAlt: "Porcs charcutiers en enclos",
+      },
+      {
+        name: "Porcelets",
+        description:
+          "Nos porcelets sont sevrés dans des conditions optimales et sélectionnés pour leur vigueur. Parfaits pour démarrer ou renforcer votre propre élevage, avec un accompagnement technique sur demande.",
+        imageSrc:
+          "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=800&q=80",
+        imageAlt: "Porcelets en bonne santé",
+      },
+      {
+        name: "Reproducteurs",
+        description:
+          "Truies et verrats sélectionnés pour leurs qualités génétiques : croissance rapide, fertilité élevée et robustesse. Un investissement sûr pour développer durablement votre exploitation porcine.",
+        imageSrc:
+          "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=800&q=80",
+        imageAlt: "Porcs reproducteurs sélectionnés",
+      },
+    ],
+  },
+
+  features: {
+    eyebrow: "Pourquoi choisir notre porcherie",
+    title: "Une élevage rigoureux, des résultats garantis",
+    subtitle:
+      "Chaque détail compte pour produire des porcs sains et une viande de qualité supérieure. Voici ce qui fait la différence chez PVS.",
+    items: [
+      {
+        icon: "lock",
+        title: "Hygiène irréprochable",
+        description:
+          "Nettoyage et désinfection réguliers des enclos pour prévenir toute maladie.",
+      },
+      {
+        icon: "check",
+        title: "Suivi vétérinaire",
+        description:
+          "Un contrôle sanitaire constant pour garantir la santé de chaque animal.",
+      },
+      {
+        icon: "feedbag",
+        title: "Alimentation équilibrée",
+        description:
+          "Une ration adaptée à chaque étape de croissance pour un développement optimal.",
+      },
+      {
+        icon: "cycle",
+        title: "Cycle maîtrisé",
+        description:
+          "De la naissance à l'engraissement, chaque étape est suivie avec précision.",
+      },
+      {
+        icon: "pig",
+        title: "Bien-être animal",
+        description:
+          "Des espaces adaptés qui respectent le confort et les besoins naturels des porcs.",
+      },
+      {
+        icon: "check",
+        title: "Disponibilité rapide",
+        description:
+          "Des porcs prêts à la vente et une équipe réactive pour répondre à vos besoins.",
+      },
+    ],
+  },
+
+  pricing: {
+    eyebrow: "Nos prix",
+    title: "Des tarifs clairs pour passer à l'action dès aujourd'hui",
+    subtitle:
+      "Ne remettez pas votre projet à demain. Découvrez nos tarifs et réservez vos porcs ou porcelets dès maintenant.",
+    items: [
+      {
+        name: "Porc charcutier",
+        description: "Porc élevé jusqu'au poids optimal, prêt pour la boucherie.",
+        price: "180 000 FC",
+        unit: "/ unité",
+        imageSrc:
+          "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=600&q=80",
+        imageAlt: "Porc charcutier",
+        badge: "Best-seller",
+      },
+      {
+        name: "Porcelet sevré",
+        description: "Jeune porcelet sain, idéal pour démarrer votre élevage.",
+        price: "45 000 FC",
+        unit: "/ unité",
+        imageSrc:
+          "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=600&q=80",
+        imageAlt: "Porcelet sevré",
+        badge: "Dès",
+      },
+      {
+        name: "Truie reproductrice",
+        description: "Truie sélectionnée pour sa fertilité et sa robustesse.",
+        price: "250 000 FC",
+        unit: "/ unité",
+        imageSrc:
+          "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=600&q=80",
+        imageAlt: "Truie reproductrice",
+      },
+      {
+        name: "Verrat reproducteur",
+        description: "Verrat robuste, choisi pour ses qualités génétiques.",
+        price: "280 000 FC",
+        unit: "/ unité",
+        imageSrc:
+          "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=600&q=80",
+        imageAlt: "Verrat reproducteur",
+      },
+    ],
+  },
+
+  stats: [
+    { value: "03", label: "Catégories de porcs" },
+    { value: "06", label: "Engagements qualité" },
+    { value: "100%", label: "Hygiène contrôlée" },
+  ],
+
+  cta: {
+    eyebrow: "Ne laissez pas passer votre chance",
+    title: "Réservez vos porcs dès aujourd'hui",
+    text: "Que vous soyez boucher, restaurateur, ou souhaitiez démarrer votre propre élevage, notre équipe vous accompagne à chaque étape. Contactez-nous maintenant pour un devis rapide et sans engagement.",
+    buttonLabel: "Demander un devis",
+    buttonHref: "/contact",
   },
 };
