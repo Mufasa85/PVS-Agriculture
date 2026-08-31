@@ -192,6 +192,16 @@ export default function Navbar() {
             transition={{ duration: 0.45, ease: [0.16, 0.8, 0.24, 1] }}
             className="fixed inset-0 z-[1050] flex flex-col justify-center overflow-y-auto bg-white p-10 nav:hidden"
           >
+            <button
+              type="button"
+              onClick={() => setMenuOpen(false)}
+              aria-label="Fermer le menu"
+              className="absolute right-6 top-6 flex h-11 w-11 items-center justify-center rounded-full border border-line text-brand-900 transition-colors hover:bg-brand-50"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M5 5l10 10M15 5L5 15" />
+              </svg>
+            </button>
             {navLinks.map((link) => (
               <Link
                 key={link.href}
