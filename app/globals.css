@@ -72,5 +72,50 @@
   /* Forme organique derrière l'image du hero (reprise de .hero-blob) */
   .hero-blob {
     border-radius: 44% 56% 62% 38% / 48% 42% 58% 52%;
+    animation: blob-morph 14s ease-in-out infinite;
+  }
+
+  /* Ondulation continue des séparateurs "sillon" (FurrowDivider) */
+  .wave-drift {
+    animation: wave-drift 11s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-blob {
+      animation: none;
+    }
+
+    .wave-drift {
+      animation: none;
+    }
+  }
+}
+
+@keyframes wave-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes blob-morph {
+  0%,
+  100% {
+    border-radius: 44% 56% 62% 38% / 48% 42% 58% 52%;
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    border-radius: 58% 42% 40% 60% / 60% 48% 52% 40%;
+    transform: rotate(8deg) scale(1.04);
+  }
+  50% {
+    border-radius: 40% 60% 55% 45% / 45% 60% 40% 55%;
+    transform: rotate(-6deg) scale(0.97);
+  }
+  75% {
+    border-radius: 62% 38% 45% 55% / 40% 55% 45% 60%;
+    transform: rotate(4deg) scale(1.02);
   }
 }
