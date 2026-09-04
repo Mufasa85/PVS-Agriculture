@@ -522,3 +522,17 @@ export function TagIcon(props: IconProps) {
     </svg>
   );
 }
+
+export function SearchIcon(props: IconProps) {
+  return (
+    <svg {...svgProps(props)}>
+      <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.6" />
+      <path
+        d="m21 21-4.35-4.35"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
