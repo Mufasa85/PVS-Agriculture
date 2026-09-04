@@ -99,8 +99,7 @@ export const servicesLinks: ServiceLink[] = [
 
 export const navCta: Cta = { label: "Nous contacter", href: "/contact" };
 
-/** [PLACEHOLDER] Numéro WhatsApp à remplacer par le vrai numéro du client. */
-export const whatsappHref = "https://wa.me/243900000000";
+export const whatsappHref = "https://wa.me/243999916552";
 
 export const hero = {
   eyebrow: "Agriculture · Élevage · Pisciculture",
@@ -334,13 +333,13 @@ export const contact: ContactInfo = {
   title: "Parlons de votre projet",
   subtitle:
     "Une question, une demande de devis ou un besoin en agriculture, élevage ou pisciculture ? Notre équipe vous répond rapidement.",
-  // ⚠️ [PLACEHOLDER] — remplacer par les vraies coordonnées du client
-  phone: "+243 900 000 000",
-  phoneHref: "tel:+243900000000",
-  whatsappHref: "https://wa.me/243900000000",
-  email: "contact@pvs-ongd.org",
-  address: "Kinshasa, République Démocratique du Congo",
-  hours: "Lun – Sam · 8h00 – 17h00",
+  phone: "+243 999 916 552",
+  phoneHref: "tel:+243999916552",
+  whatsappHref: "https://wa.me/243999916552",
+  // Non fourni par le client — masqué dans l'UI tant qu'il n'est pas communiqué.
+  email: "",
+  address: "3 Avenue Dokolo, Q/ Kimwenza gare, C/ Mont Ngafula, Kinshasa",
+  hours: "8h00 – 17h00",
   formSubjects: [
     "Demande d'information",
     "Demande de devis",
@@ -376,10 +375,10 @@ export const footer = {
   ] satisfies NavLink[],
   // 4e colonne du footer de la maquette (index.html)
   contactLinks: [
-    { label: "+243 900 000 000", href: "tel:+243900000000" },
-    { label: "contact@pvs-ongd.org", href: "mailto:contact@pvs-ongd.org" },
-    { label: "Kinshasa, RDC", href: "#" },
+    { label: "+243 999 916 552", href: "tel:+243999916552" },
+    { label: "3 Av. Dokolo, Kimwenza, Mont Ngafula", href: "#" },
   ] satisfies NavLink[],
+  legalInfo: "ASBL — Arrêté ministériel N°088/CAB/MIN/J&DH/2013 du 04 avril 2013 · Depuis 2013",
   // [PLACEHOLDER] URLs des réseaux sociaux à fournir par le client.
   socials: [
     { network: "facebook", label: "Facebook", href: "#" },
