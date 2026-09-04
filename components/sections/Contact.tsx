@@ -23,12 +23,16 @@ const infoItems = [
     href: contact.whatsappHref,
     external: true,
   },
-  {
-    icon: MailIcon,
-    title: "Email",
-    value: contact.email,
-    href: `mailto:${contact.email}`,
-  },
+  ...(contact.email
+    ? [
+        {
+          icon: MailIcon,
+          title: "Email",
+          value: contact.email,
+          href: `mailto:${contact.email}`,
+        },
+      ]
+    : []),
   { icon: PinIcon, title: "Adresse", value: contact.address },
   { icon: ClockIcon, title: "Horaires", value: contact.hours },
 ];
