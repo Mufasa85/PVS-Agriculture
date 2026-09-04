@@ -3,32 +3,47 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
+import type { Product } from "@prisma/client";
 
 import {
   CattleIcon,
   CheckIcon,
+  EggIcon,
   FeedBagIcon,
   FishIcon,
+  PigIcon,
+  SproutIcon,
 } from "@/components/ui/icons";
-import { tarifsPage } from "@/lib/content";
+import { formatProductPrice } from "@/lib/products";
 
 const categoryIcons: Record<string, (props: { size?: number }) => React.ReactElement> = {
   cattle: CattleIcon,
   fish: FishIcon,
   feedbag: FeedBagIcon,
   check: CheckIcon,
+  egg: EggIcon,
+  pig: PigIcon,
+  sprout: SproutIcon,
 };
 
-export default function TarifsFilter() {
-  const { categories, products } = tarifsPage;
-  const [active, setActive] = useState("tous");
+type Category = { id: string; icon: string; name: string };
+
+export default function TarifsFilter({
+  products,
+  categories,
+}: {
+  products: Product[];
+  categories: Category[];
+}) {
+  const [active, setActive] = useState<string>("tous");
 
   const filtered = useMemo(() => {
     if (active === "tous") return products;
     return products.filter((p) => p.category === active);
   }, [active, products]);
 
-  const activeLabel = categories.find((c) => c.id === active)?.label ?? "Tous";
+  const activeLabel =
+    active === "tous" ? "Tous" : categories.find((c) => c.id === active)?.name ?? active;
 
   return (
     <section className="bg-brand-50 py-[76px] nav:py-[110px]">
@@ -49,7 +64,7 @@ export default function TarifsFilter() {
                 }`}
               >
                 <Icon size={18} />
-                {cat.label}
+                {cat.id === "tous" ? "Tous" : cat.name}
               </button>
             );
           })}
@@ -72,7 +87,7 @@ export default function TarifsFilter() {
           >
             {filtered.map((product) => (
               <div
-                key={product.name}
+                key={product.id}
                 className="group overflow-hidden rounded-pvs-lg border border-line bg-white shadow-sm transition-all duration-[350ms] ease-pvs hover:-translate-y-1.5 hover:shadow-card"
               >
                 <div className="relative aspect-[4/3] overflow-hidden bg-brand-100">
@@ -96,14 +111,16 @@ export default function TarifsFilter() {
                   <div className="flex items-end justify-between border-t border-line pt-4">
                     <div>
                       <span className="block font-serif text-[22px] font-bold text-brand-700">
-                        {product.price}
+                        {formatProductPrice(product)}
                       </span>
-                      <span className="text-[12px] text-ink-500">
-                        {product.unit}
-                      </span>
+                      {product.unit && (
+                        <span className="text-[12px] text-ink-500">
+                          {product.unit}
+                        </span>
+                      )}
                     </div>
                     <span className="rounded-full bg-brand-50 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.04em] text-brand-600">
-                      {categories.find((c) => c.id === product.category)?.label}
+                      {categories.find((c) => c.id === product.category)?.name ?? product.category}
                     </span>
                   </div>
                 </div>
