@@ -120,10 +120,13 @@ export default function Footer() {
 
       {/* Bas de page */}
       <div className="border-t border-white/[0.08]">
-        <div className="shell flex flex-col items-center justify-between gap-4 py-6 mid:flex-row">
-          <p className="text-[13px] text-muted">
-            © {new Date().getFullYear()} {footer.copyright}
-          </p>
+        <div className="shell flex flex-col items-center justify-between gap-2 py-6 mid:flex-row">
+          <div>
+            <p className="text-[13px] text-muted">
+              © {new Date().getFullYear()} {footer.copyright}
+            </p>
+            <p className="mt-1 text-[11.5px] text-muted/70">{footer.legalInfo}</p>
+          </div>
           <ul className="flex gap-5">
             {footer.legalLinks.map((link) => (
               <li key={link.label}>
