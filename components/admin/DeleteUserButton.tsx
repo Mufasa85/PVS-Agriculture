@@ -31,10 +31,14 @@ export default function DeleteUserButton({ id, name }: { id: number; name: strin
       type="button"
       onClick={handleDelete}
       disabled={loading}
-      className="inline-flex items-center gap-1.5 rounded-[8px] border border-red-200 px-3 py-1.5 text-[12.5px] font-semibold text-red-600 transition-colors hover:border-red-300 hover:bg-red-50 disabled:opacity-50"
+      title="Supprimer"
+      className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-red-200 text-red-500 transition-colors hover:border-red-300 hover:bg-red-50 disabled:opacity-50"
     >
-      <TrashIcon size={14} />
-      {loading ? "..." : "Supprimer"}
+      {loading ? (
+        <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-red-300 border-t-red-500" />
+      ) : (
+        <TrashIcon size={14} />
+      )}
     </button>
   );
 }
