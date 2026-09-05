@@ -536,3 +536,120 @@ export function SearchIcon(props: IconProps) {
     </svg>
   );
 }
+
+export function BarChartIcon(props: IconProps) {
+  return (
+    <svg {...svgProps(props)}>
+      <path
+        d="M12 20V10M18 20V4M6 20v-4"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function TrendingUpIcon(props: IconProps) {
+  return (
+    <svg {...svgProps(props)}>
+      <polyline
+        points="23 6 13.5 15.5 8.5 10.5 1 18"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <polyline
+        points="17 6 23 6 23 12"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function GlobeIcon(props: IconProps) {
+  return (
+    <svg {...svgProps(props)}>
+      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.6" />
+      <path
+        d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+    </svg>
+  );
+}
+
+export function SmartphoneIcon(props: IconProps) {
+  return (
+    <svg {...svgProps(props)}>
+      <rect
+        x="5"
+        y="2"
+        width="14"
+        height="20"
+        rx="2"
+        ry="2"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <line x1="12" y1="18" x2="12.01" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function MonitorIcon(props: IconProps) {
+  return (
+    <svg {...svgProps(props)}>
+      <rect
+        x="2"
+        y="3"
+        width="20"
+        height="14"
+        rx="2"
+        ry="2"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  );
+}
+
+export function EyeIcon(props: IconProps) {
+  return (
+    <svg {...svgProps(props)}>
+      <path
+        d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  );
+}
+
+export function ArrowUpRightIcon(props: IconProps) {
+  return (
+    <svg {...svgProps(props)}>
+      <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <polyline points="7 7 17 7 17 17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function ArrowDownRightIcon(props: IconProps) {
+  return (
+    <svg {...svgProps(props)}>
+      <line x1="7" y1="7" x2="17" y2="17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <polyline points="17 7 17 17 7 17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
