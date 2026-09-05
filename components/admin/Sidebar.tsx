@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import {
+  BarChartIcon,
   ExternalLinkIcon,
   GridIcon,
   LogoutIcon,
@@ -25,9 +26,11 @@ type NavItem = {
 
 const PRIMARY_NAV: NavItem[] = [
   { href: "/admin", label: "Vue d'ensemble", icon: GridIcon, exact: true },
+  { href: "/admin/analytics", label: "Analytics & Suivi", icon: BarChartIcon },
   { href: "/admin/products", label: "Produits & tarifs", icon: PackageIcon },
   { href: "/admin/categories", label: "Catégories", icon: TagIcon },
 ];
+
 
 const TEAM_NAV: NavItem = {
   href: "/admin/users",
