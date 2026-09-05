@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import ImageUploader from "@/components/admin/ImageUploader";
 import type { CategoryInfo } from "@/lib/products";
 
 type GalleryImage = {
@@ -271,30 +272,15 @@ export default function ProductForm({
         </div>
       </div>
 
-      <div className="grid gap-5 mid:grid-cols-2">
-        <div>
-          <label className="mb-1.5 block text-[13px] font-bold text-brand-900">
-            URL de l&apos;image
-          </label>
-          <input
-            required
-            value={values.imageSrc}
-            onChange={(e) => update("imageSrc", e.target.value)}
-            className="w-full rounded-[10px] border border-line bg-white px-4 py-3 text-[14.5px] text-brand-900 outline-none transition-colors placeholder:text-ink-500/50 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15"
-          />
-        </div>
-
-        <div>
-          <label className="mb-1.5 block text-[13px] font-bold text-brand-900">
-            Texte alternatif de l&apos;image
-          </label>
-          <input
-            required
-            value={values.imageAlt}
-            onChange={(e) => update("imageAlt", e.target.value)}
-            className="w-full rounded-[10px] border border-line bg-white px-4 py-3 text-[14.5px] text-brand-900 outline-none transition-colors placeholder:text-ink-500/50 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15"
-          />
-        </div>
+      <div>
+        <ImageUploader
+          label="Image principale"
+          required
+          url={values.imageSrc}
+          alt={values.imageAlt}
+          onUrlChange={(url) => update("imageSrc", url)}
+          onAltChange={(alt) => update("imageAlt", alt)}
+        />
       </div>
 
       <div className="max-w-[200px]">
@@ -310,7 +296,7 @@ export default function ProductForm({
       </div>
 
       <div>
-        <div className="mb-1.5 flex items-center justify-between">
+        <div className="mb-3 flex items-center justify-between">
           <label className="block text-[13px] font-bold text-brand-900">
             Galerie d&apos;images supplémentaires (optionnel)
           </label>
@@ -322,37 +308,25 @@ export default function ProductForm({
             + Ajouter une image
           </button>
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           {values.images.map((img, index) => (
-            <div key={index} className="grid gap-3 mid:grid-cols-[1fr_1fr_auto]">
-              <input
-                value={img.url}
-                placeholder="URL de l'image"
-                onChange={(e) => {
-                  const next = [...values.images];
-                  next[index] = { ...next[index], url: e.target.value };
-                  update("images", next);
-                }}
-                className="w-full rounded-[10px] border border-line bg-white px-4 py-3 text-[14.5px] text-brand-900 outline-none transition-colors placeholder:text-ink-500/50 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15"
-              />
-              <input
-                value={img.alt}
-                placeholder="Texte alternatif"
-                onChange={(e) => {
-                  const next = [...values.images];
-                  next[index] = { ...next[index], alt: e.target.value };
-                  update("images", next);
-                }}
-                className="w-full rounded-[10px] border border-line bg-white px-4 py-3 text-[14.5px] text-brand-900 outline-none transition-colors placeholder:text-ink-500/50 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15"
-              />
-              <button
-                type="button"
-                onClick={() => update("images", values.images.filter((_, i) => i !== index))}
-                className="inline-flex items-center justify-center rounded-[8px] border border-red-200 px-3 py-2 text-[12.5px] font-semibold text-red-600 transition-colors hover:border-red-300 hover:bg-red-50"
-              >
-                Retirer
-              </button>
-            </div>
+            <ImageUploader
+              key={index}
+              compact
+              url={img.url}
+              alt={img.alt}
+              onUrlChange={(url) => {
+                const next = [...values.images];
+                next[index] = { ...next[index], url };
+                update("images", next);
+              }}
+              onAltChange={(alt) => {
+                const next = [...values.images];
+                next[index] = { ...next[index], alt };
+                update("images", next);
+              }}
+              onRemove={() => update("images", values.images.filter((_, i) => i !== index))}
+            />
           ))}
           {values.images.length === 0 && (
             <p className="text-[13px] text-ink-500">Aucune image supplémentaire.</p>
