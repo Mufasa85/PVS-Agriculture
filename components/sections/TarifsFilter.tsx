@@ -15,6 +15,7 @@ import {
   SproutIcon,
 } from "@/components/ui/icons";
 import { formatProductPrice } from "@/lib/products";
+import { trackEvent, trackProductView } from "@/lib/track";
 
 const categoryIcons: Record<string, (props: { size?: number }) => React.ReactElement> = {
   cattle: CattleIcon,
@@ -45,6 +46,13 @@ export default function TarifsFilter({
   const activeLabel =
     active === "tous" ? "Tous" : categories.find((c) => c.id === active)?.name ?? active;
 
+  const handleCategoryClick = (cat: Category) => {
+    setActive(cat.id);
+    if (cat.id !== "tous") {
+      trackEvent("CATEGORY_VIEW", "/tarifs", { categoryName: cat.name });
+    }
+  };
+
   return (
     <section className="bg-brand-50 py-[76px] nav:py-[110px]">
       <div className="shell">
@@ -56,7 +64,7 @@ export default function TarifsFilter({
             return (
               <button
                 key={cat.id}
-                onClick={() => setActive(cat.id)}
+                onClick={() => handleCategoryClick(cat)}
                 className={`flex items-center gap-2.5 rounded-full border px-[20px] py-3 text-[14px] font-bold transition-all duration-300 ${
                   isActive
                     ? "border-brand-600 bg-brand-600 text-white shadow-card"
@@ -85,11 +93,14 @@ export default function TarifsFilter({
             transition={{ duration: 0.35, ease: [0.16, 0.8, 0.24, 1] }}
             className="grid grid-cols-1 gap-6 mid:grid-cols-2 nav:grid-cols-3"
           >
-            {filtered.map((product) => (
-              <div
-                key={product.id}
-                className="group overflow-hidden rounded-pvs-lg border border-line bg-white shadow-sm transition-all duration-[350ms] ease-pvs hover:-translate-y-1.5 hover:shadow-card"
-              >
+            {filtered.map((product) => {
+              const catName = categories.find((c) => c.id === product.category)?.name ?? product.category;
+              return (
+                <div
+                  key={product.id}
+                  onClick={() => trackProductView(product.name, catName, "/tarifs")}
+                  className="group cursor-pointer overflow-hidden rounded-pvs-lg border border-line bg-white shadow-sm transition-all duration-[350ms] ease-pvs hover:-translate-y-1.5 hover:shadow-card"
+                >
                 <div className="relative aspect-[4/3] overflow-hidden bg-brand-100">
                   <Image
                     src={product.imageSrc}
@@ -125,7 +136,8 @@ export default function TarifsFilter({
                   </div>
                 </div>
               </div>
-            ))}
+            );
+          })}
           </motion.div>
         </AnimatePresence>
 
