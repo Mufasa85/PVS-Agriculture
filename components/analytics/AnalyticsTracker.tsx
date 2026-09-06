@@ -17,10 +17,19 @@ export default function AnalyticsTracker() {
 
     lastTracked.current = fullUrl;
 
+    const utmSource = searchParams.get("utm_source");
+    const utmMedium = searchParams.get("utm_medium");
+    const utmCampaign = searchParams.get("utm_campaign");
+
     const body = {
       type: "PAGE_VIEW",
       path: fullUrl,
       referrer: typeof document !== "undefined" ? document.referrer : "",
+      metadata: {
+        ...(utmSource ? { utm_source: utmSource } : {}),
+        ...(utmMedium ? { utm_medium: utmMedium } : {}),
+        ...(utmCampaign ? { utm_campaign: utmCampaign } : {}),
+      },
     };
 
     fetch("/api/track", {
@@ -30,6 +39,21 @@ export default function AnalyticsTracker() {
     }).catch(() => {
       // Ignorer silencieusement les erreurs de télémesure
     });
+
+    // Si des paramètres de recherche sont présents (?q=... ou ?search=...)
+    const query = searchParams.get("q") || searchParams.get("search");
+    if (query && query.trim()) {
+      fetch("/api/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "SEARCH",
+          path: fullUrl,
+          referrer: typeof document !== "undefined" ? document.referrer : "",
+          metadata: { query: query.trim() },
+        }),
+      }).catch(() => {});
+    }
   }, [pathname, searchParams]);
 
   return null;
