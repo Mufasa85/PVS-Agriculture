@@ -30,8 +30,10 @@ const emptyValues: UserFormValues = {
 
 export default function UserForm({
   initialValues,
+  onClose,
 }: {
   initialValues?: UserFormValues;
+  onClose?: () => void;
 }) {
   const router = useRouter();
   const [values, setValues] = useState<UserFormValues>(initialValues ?? emptyValues);
@@ -76,7 +78,11 @@ export default function UserForm({
         return;
       }
 
-      router.push("/admin/users");
+      if (onClose) {
+        onClose();
+      } else {
+        router.push("/admin/users");
+      }
       router.refresh();
     } catch {
       setError("Une erreur est survenue. Veuillez réessayer.");
@@ -165,7 +171,7 @@ export default function UserForm({
         </button>
         <button
           type="button"
-          onClick={() => router.push("/admin/users")}
+          onClick={() => (onClose ? onClose() : router.push("/admin/users"))}
           className="inline-flex items-center justify-center rounded-[10px] border border-line bg-white px-5 py-2.5 text-[13.5px] font-bold text-brand-900 transition-colors hover:bg-brand-50"
         >
           Annuler
