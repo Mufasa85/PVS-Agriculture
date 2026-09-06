@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { contact, contactForm } from "@/lib/content";
+import { trackQuoteRequest } from "@/lib/track";
 
 const fieldClass =
   "w-full rounded-[10px] border-[1.5px] border-line bg-brand-50 px-[15px] py-[13px] font-sans text-[14.5px] text-ink-900 transition-colors duration-300 focus:border-brand-600 focus:bg-white focus:outline-none";
@@ -22,11 +23,12 @@ export default function ContactForm() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+    const sujetStr = String(formData.get("sujet") || "");
     const payload = {
       nom: formData.get("nom"),
       telephone: formData.get("telephone"),
       email: formData.get("email"),
-      sujet: formData.get("sujet"),
+      sujet: sujetStr,
       message: formData.get("message"),
     };
 
@@ -41,6 +43,12 @@ export default function ContactForm() {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error ?? "Échec de l'envoi.");
       }
+
+      // Track quote request event for analytics
+      trackQuoteRequest({
+        sujet: sujetStr,
+        productName: sujetStr.includes("Devis") || sujetStr.includes("Commande") ? sujetStr : undefined,
+      });
 
       form.reset();
       setStatus("success");
