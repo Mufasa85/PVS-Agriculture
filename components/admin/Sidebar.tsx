@@ -10,8 +10,10 @@ import {
   ExternalLinkIcon,
   GridIcon,
   LogoutIcon,
+  MailIcon,
   MenuIcon,
   PackageIcon,
+  ShieldIcon,
   TagIcon,
   UsersIcon,
   XIcon,
@@ -29,6 +31,8 @@ const PRIMARY_NAV: NavItem[] = [
   { href: "/admin/analytics", label: "Analytics & Suivi", icon: BarChartIcon },
   { href: "/admin/products", label: "Produits & tarifs", icon: PackageIcon },
   { href: "/admin/categories", label: "Catégories", icon: TagIcon },
+  { href: "/admin/messages", label: "Messages", icon: MailIcon },
+  { href: "/admin/audit-logs", label: "Journal d'audit", icon: ShieldIcon },
 ];
 
 
