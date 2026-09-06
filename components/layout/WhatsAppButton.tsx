@@ -1,12 +1,20 @@
+"use client";
+
 import { whatsappHref } from "@/lib/content";
+import { trackContactClick, trackQuoteRequest } from "@/lib/track";
 
 export default function WhatsAppButton() {
+  const handleClick = () => {
+    trackContactClick("whatsapp", "Bouton Flottant WhatsApp");
+  };
+
   return (
     <a
       href={whatsappHref}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Écrire sur WhatsApp"
+      onClick={handleClick}
       className="group fixed bottom-[26px] right-[26px] z-[900] flex h-[60px] w-[60px] items-center justify-center rounded-full bg-whatsapp shadow-whatsapp transition-transform duration-300 ease-pvs hover:scale-[1.08]"
     >
       <span
