@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
+import { prisma } from "@/lib/prisma";
+
 export const runtime = "nodejs";
 
 type ContactPayload = {
@@ -112,6 +114,16 @@ export async function POST(request: Request) {
         sujet: sujet ?? "Non précisé",
         message,
       }),
+    });
+
+    await prisma.contactMessage.create({
+      data: {
+        nom: nom.trim(),
+        telephone: telephone.trim(),
+        email: email.trim(),
+        sujet: sujet?.trim() || null,
+        message: message.trim(),
+      },
     });
 
     return NextResponse.json({ success: true });
