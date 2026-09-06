@@ -1,3 +1,5 @@
+"use client";
+
 import ContactForm from "@/components/sections/ContactForm";
 import Reveal from "@/components/ui/Reveal";
 import {
@@ -8,6 +10,7 @@ import {
   WhatsAppOutlineIcon,
 } from "@/components/ui/icons";
 import { contact } from "@/lib/content";
+import { trackContactClick } from "@/lib/track";
 
 const infoItems = [
   {
@@ -15,6 +18,7 @@ const infoItems = [
     title: "Téléphone",
     value: contact.phone,
     href: contact.phoneHref,
+    channel: "phone" as const,
   },
   {
     icon: WhatsAppOutlineIcon,
@@ -22,6 +26,7 @@ const infoItems = [
     value: contact.phone,
     href: contact.whatsappHref,
     external: true,
+    channel: "whatsapp" as const,
   },
   ...(contact.email
     ? [
@@ -30,6 +35,7 @@ const infoItems = [
           title: "Email",
           value: contact.email,
           href: `mailto:${contact.email}`,
+          channel: "email" as const,
         },
       ]
     : []),
@@ -71,6 +77,7 @@ export default function Contact() {
                       {item.href ? (
                         <a
                           href={item.href}
+                          onClick={() => item.channel && trackContactClick(item.channel, `${item.title} : ${item.value}`)}
                           {...(item.external
                             ? { target: "_blank", rel: "noopener noreferrer" }
                             : {})}
@@ -90,11 +97,16 @@ export default function Contact() {
             </ul>
 
             <div className="flex flex-wrap gap-3.5">
-              <a href={contact.phoneHref} className="btn btn-gold btn-sm">
+              <a
+                href={contact.phoneHref}
+                onClick={() => trackContactClick("phone", `Appel : ${contact.phone}`)}
+                className="btn btn-gold btn-sm"
+              >
                 Appeler maintenant
               </a>
               <a
                 href={contact.whatsappHref}
+                onClick={() => trackContactClick("whatsapp", "Bouton WhatsApp Section Contact")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-sm border-[1.5px] border-white/25 text-white hover:-translate-y-[3px] hover:border-gold-500 hover:text-gold-500"
