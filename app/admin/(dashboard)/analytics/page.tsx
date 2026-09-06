@@ -50,6 +50,7 @@ export default function AdminAnalyticsPage() {
   const [days, setDays] = useState<7 | 30 | 90>(30);
   const [data, setData] = useState<AnalyticsState | null>(null);
   const [loading, setLoading] = useState(true);
+  const [resetting, setResetting] = useState(false);
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
 
   async function fetchAnalytics(selectedDays: number) {
@@ -64,6 +65,27 @@ export default function AdminAnalyticsPage() {
       console.error("Failed to load analytics", e);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleReset(action: "clear" | "seed") {
+    if (action === "clear" && !confirm("Voulez-vous vraiment effacer tous les événements enregistrés ?")) {
+      return;
+    }
+    setResetting(true);
+    try {
+      const res = await fetch("/api/admin/analytics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
+      if (res.ok) {
+        await fetchAnalytics(days);
+      }
+    } catch (e) {
+      console.error("Failed to reset analytics", e);
+    } finally {
+      setResetting(false);
     }
   }
 
@@ -114,26 +136,45 @@ export default function AdminAnalyticsPage() {
           </p>
         </div>
 
-        {/* Sélecteur de période */}
-        <div className="flex items-center gap-2 rounded-[12px] border border-line bg-white p-1.5 shadow-soft">
-          {[
-            { label: "7 jours", value: 7 },
-            { label: "30 jours", value: 30 },
-            { label: "90 jours", value: 90 },
-          ].map((item) => (
-            <button
-              key={item.value}
-              type="button"
-              onClick={() => setDays(item.value as 7 | 30 | 90)}
-              className={`rounded-[8px] px-3.5 py-1.5 text-[12.5px] font-bold transition-all ${
-                days === item.value
-                  ? "bg-brand-600 text-white shadow-brand-btn"
-                  : "text-ink-500 hover:bg-brand-50 hover:text-brand-700"
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
+        {/* Actions Admin & Sélecteur de période */}
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            type="button"
+            disabled={resetting}
+            onClick={() => handleReset("clear")}
+            className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-1.5 text-[12px] font-bold text-red-600 hover:bg-red-100 transition-colors disabled:opacity-50"
+          >
+            Vider les données
+          </button>
+          <button
+            type="button"
+            disabled={resetting}
+            onClick={() => handleReset("seed")}
+            className="rounded-[10px] border border-brand-200 bg-brand-50 px-3 py-1.5 text-[12px] font-bold text-brand-700 hover:bg-brand-100 transition-colors disabled:opacity-50"
+          >
+            Générer démo (60j)
+          </button>
+
+          <div className="flex items-center gap-1.5 rounded-[12px] border border-line bg-white p-1 shadow-soft">
+            {[
+              { label: "7j", value: 7 },
+              { label: "30j", value: 30 },
+              { label: "90j", value: 90 },
+            ].map((item) => (
+              <button
+                key={item.value}
+                type="button"
+                onClick={() => setDays(item.value as 7 | 30 | 90)}
+                className={`rounded-[8px] px-3 py-1 text-[12px] font-bold transition-all ${
+                  days === item.value
+                    ? "bg-brand-600 text-white shadow-brand-btn"
+                    : "text-ink-500 hover:bg-brand-50 hover:text-brand-700"
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -229,7 +270,7 @@ export default function AdminAnalyticsPage() {
         </div>
       </div>
 
-      {/* ── Graphique temporel principal (Courbes & Barres SVG) ── */}
+      {/* ── Graphique temporel principal (Courbes & Survol SVG) ── */}
       <div className="rounded-[16px] border border-line bg-white p-6 shadow-soft">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -240,62 +281,23 @@ export default function AdminAnalyticsPage() {
               Volume de pages vues et de visiteurs uniques par jour sur {days} jours.
             </p>
           </div>
-          <div className="flex items-center gap-4 text-[12px] font-semibold text-ink-600">
-            <span className="flex items-center gap-1.5">
-              <span className="h-3 w-3 rounded-full bg-brand-500" /> Pages vues
+          <div className="flex items-center gap-5 text-[12px] font-semibold text-ink-600">
+            <span className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded-full bg-brand-600 shadow-sm" /> Pages vues
             </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-3 w-3 rounded-full bg-emerald-400" /> Visiteurs uniques
+            <span className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded-full bg-emerald-500 shadow-sm" /> Visiteurs uniques
             </span>
           </div>
         </div>
 
         {/* Visualisation SVG Interactive du Graphique */}
-        <div className="relative mt-6 h-64 w-full">
-          <div className="flex h-full items-end gap-1.5 sm:gap-2">
-            {traffic.map((t, idx) => {
-              const heightPercent = Math.max(Math.round((t.pageviews / maxPageviews) * 100), 4);
-              const visitorHeightPercent = Math.max(Math.round((t.visitors / maxPageviews) * 100), 2);
-
-              return (
-                <div
-                  key={t.rawDate}
-                  className="group relative flex flex-1 flex-col items-center h-full justify-end"
-                  onMouseEnter={() => setHoveredPoint(idx)}
-                  onMouseLeave={() => setHoveredPoint(null)}
-                >
-                  {/* Tooltip Hover */}
-                  {hoveredPoint === idx && (
-                    <div className="absolute -top-14 z-20 flex flex-col items-center rounded-lg bg-brand-900 px-3 py-1.5 text-center text-[11px] font-semibold text-white shadow-lg whitespace-nowrap pointer-events-none">
-                      <span className="font-bold text-gold-400">{t.date}</span>
-                      <span>{t.pageviews} vues • {t.visitors} visiteurs</span>
-                    </div>
-                  )}
-
-                  {/* Barres empilées/juxtaposées */}
-                  <div className="relative w-full max-w-[28px] flex items-end justify-center rounded-t-sm overflow-hidden bg-brand-50 hover:bg-brand-100 transition-colors">
-                    {/* Barre Pageviews */}
-                    <div
-                      style={{ height: `${heightPercent}%` }}
-                      className="w-full bg-gradient-to-t from-brand-600 to-brand-400 rounded-t-sm transition-all duration-300 group-hover:from-brand-700 group-hover:to-brand-500"
-                    />
-                    {/* Barre Overlay Visiteurs */}
-                    <div
-                      style={{ height: `${visitorHeightPercent}%` }}
-                      className="absolute bottom-0 w-full bg-emerald-400/80 rounded-t-sm transition-all"
-                    />
-                  </div>
-
-                  {/* Label Date en bas (1 sur 3 ou 1 sur 5 selon largeur) */}
-                  {(traffic.length <= 14 || idx % Math.ceil(traffic.length / 10) === 0) && (
-                    <span className="mt-2 text-[10.5px] font-semibold text-ink-500 truncate w-full text-center">
-                      {t.date}
-                    </span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+        <div className="relative mt-6 w-full">
+          <TrafficChart
+            traffic={traffic}
+            hoveredIndex={hoveredPoint}
+            onHover={setHoveredPoint}
+          />
         </div>
       </div>
 
@@ -498,5 +500,133 @@ function GrowthBadge({ growth }: { growth: number }) {
       {isPositive ? <ArrowUpRightIcon size={14} /> : <ArrowDownRightIcon size={14} />}
       {isPositive ? `+${growth}%` : `${growth}%`}
     </span>
+  );
+}
+
+function TrafficChart({
+  traffic,
+  hoveredIndex,
+  onHover,
+}: {
+  traffic: Array<{ date: string; pageviews: number; visitors: number }>;
+  hoveredIndex: number | null;
+  onHover: (idx: number | null) => void;
+}) {
+  if (!traffic || traffic.length === 0) {
+    return (
+      <div className="flex h-64 items-center justify-center rounded-[12px] border border-dashed border-line bg-brand-50/50">
+        <p className="text-[13px] text-ink-500 font-medium">Aucune donnée de trafic disponible pour cette période.</p>
+      </div>
+    );
+  }
+
+  const maxVal = Math.max(...traffic.map((t) => Math.max(t.pageviews, t.visitors)), 1);
+  const gridSteps = [0, Math.round(maxVal * 0.33), Math.round(maxVal * 0.66), maxVal];
+
+  const width = 1000;
+  const height = 220;
+  const padding = { top: 20, bottom: 35, left: 40, right: 20 };
+  const graphW = width - padding.left - padding.right;
+  const graphH = height - padding.top - padding.bottom;
+
+  const points = traffic.map((t, idx) => {
+    const x = padding.left + (idx / Math.max(traffic.length - 1, 1)) * graphW;
+    const yPv = padding.top + graphH - (t.pageviews / maxVal) * graphH;
+    const yVis = padding.top + graphH - (t.visitors / maxVal) * graphH;
+    return { x, yPv, yVis, ...t };
+  });
+
+  const pathPv = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.yPv}`).join(" ");
+  const areaPv = `${pathPv} L ${points[points.length - 1].x} ${height - padding.bottom} L ${points[0].x} ${height - padding.bottom} Z`;
+
+  const pathVis = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.yVis}`).join(" ");
+  const areaVis = `${pathVis} L ${points[points.length - 1].x} ${height - padding.bottom} L ${points[0].x} ${height - padding.bottom} Z`;
+
+  return (
+    <div className="relative w-full overflow-hidden select-none">
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto overflow-visible">
+        <defs>
+          <linearGradient id="pvGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#1e5138" stopOpacity="0.30" />
+            <stop offset="100%" stopColor="#1e5138" stopOpacity="0.0" />
+          </linearGradient>
+          <linearGradient id="visGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#10b981" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
+          </linearGradient>
+        </defs>
+
+        {/* Lignes de grille horizontales */}
+        {gridSteps.map((val) => {
+          const y = padding.top + graphH - (val / maxVal) * graphH;
+          return (
+            <g key={val}>
+              <line x1={padding.left} y1={y} x2={width - padding.right} y2={y} stroke="#e2e8f0" strokeDasharray="4 4" />
+              <text x={padding.left - 10} y={y + 4} textAnchor="end" className="text-[10px] fill-gray-400 font-semibold">
+                {val}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Zones remplies */}
+        <path d={areaPv} fill="url(#pvGradient)" />
+        <path d={areaVis} fill="url(#visGradient)" />
+
+        {/* Lignes principales */}
+        <path d={pathPv} fill="none" stroke="#1e5138" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+        <path d={pathVis} fill="none" stroke="#10b981" strokeWidth="2.5" strokeDasharray="4 4" strokeLinecap="round" strokeLinejoin="round" />
+
+        {/* Points interactifs */}
+        {points.map((p, idx) => {
+          const isHovered = hoveredIndex === idx;
+          return (
+            <g key={idx} onMouseEnter={() => onHover(idx)} onMouseLeave={() => onHover(null)} className="cursor-pointer">
+              <rect
+                x={p.x - graphW / Math.max(traffic.length * 2, 1)}
+                y={padding.top}
+                width={graphW / Math.max(traffic.length, 1)}
+                height={graphH}
+                fill="transparent"
+              />
+
+              {isHovered && (
+                <line x1={p.x} y1={padding.top} x2={p.x} y2={height - padding.bottom} stroke="#1e5138" strokeWidth="1.5" strokeDasharray="3 3" />
+              )}
+
+              <circle cx={p.x} cy={p.yPv} r={isHovered ? 6 : 3.5} fill="#1e5138" stroke="#ffffff" strokeWidth="2" />
+              <circle cx={p.x} cy={p.yVis} r={isHovered ? 5 : 3} fill="#10b981" stroke="#ffffff" strokeWidth="1.5" />
+
+              {(traffic.length <= 14 || idx % Math.ceil(traffic.length / 10) === 0) && (
+                <text x={p.x} y={height - 8} textAnchor="middle" className="text-[10.5px] fill-gray-500 font-semibold">
+                  {p.date}
+                </text>
+              )}
+            </g>
+          );
+        })}
+      </svg>
+
+      {/* Tooltip Hover positionné */}
+      {hoveredIndex !== null && points[hoveredIndex] && (
+        <div
+          style={{
+            left: `${((points[hoveredIndex].x - padding.left) / graphW) * 85 + 7}%`,
+            top: "10%",
+          }}
+          className="pointer-events-none absolute z-30 -translate-x-1/2 rounded-xl bg-brand-900 px-3.5 py-2 text-white shadow-xl transition-all duration-150"
+        >
+          <div className="text-[11px] font-bold text-gold-400">{points[hoveredIndex].date}</div>
+          <div className="mt-0.5 flex flex-col text-[12px] gap-0.5">
+            <span className="font-semibold text-emerald-300">
+              ● {points[hoveredIndex].pageviews} pages vues
+            </span>
+            <span className="text-emerald-100">
+              ○ {points[hoveredIndex].visitors} visiteurs uniques
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
