@@ -21,8 +21,17 @@ import {
   Background,
   ChartBrushLayout,
   ChartTooltip,
+  Legend,
+  LegendItem,
+  LegendLabel,
+  LegendMarker,
+  LegendProgress,
+  LegendValue,
   Line,
   LineChart,
+  Ring,
+  RingCenter,
+  RingChart,
   XAxis,
 } from "@/components/charts";
 
@@ -62,6 +71,7 @@ export default function AdminAnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [resetting, setResetting] = useState(false);
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
+  const [sourceHovered, setSourceHovered] = useState<number | null>(null);
 
   async function fetchAnalytics(selectedDays: number) {
     setLoading(true);
@@ -136,6 +146,13 @@ export default function AdminAnalyticsPage() {
   });
 
   const maxProductViews = Math.max(...(data?.topProducts.map((p) => p.count) || [1]), 1);
+
+  const sourceRingData = [
+    { label: "Accès Direct", value: data?.sources.Direct || 0, maxValue: totalSourceEvents, color: "#3a45c4" },
+    { label: "Recherche (SEO)", value: data?.sources.Recherche || 0, maxValue: totalSourceEvents, color: "#10b981" },
+    { label: "Réseaux Sociaux", value: data?.sources["Réseaux Sociaux"] || 0, maxValue: totalSourceEvents, color: "#f59e0b" },
+    { label: "Sites Référents", value: data?.sources.Références || 0, maxValue: totalSourceEvents, color: "#6366f1" },
+  ];
 
   return (
     <div className="flex flex-col gap-6">
@@ -453,26 +470,33 @@ export default function AdminAnalyticsPage() {
           <h2 className="font-serif text-[17px] font-bold text-brand-900 mb-4">
             Sources d'Acquisition
           </h2>
-          <div className="flex flex-col gap-3">
-            {[
-              { label: "Accès Direct", count: data?.sources.Direct || 0, color: "bg-brand-600" },
-              { label: "Moteurs de Recherche (SEO)", count: data?.sources.Recherche || 0, color: "bg-emerald-500" },
-              { label: "Réseaux Sociaux", count: data?.sources["Réseaux Sociaux"] || 0, color: "bg-amber-500" },
-              { label: "Sites Référents", count: data?.sources.Références || 0, color: "bg-indigo-500" },
-            ].map((src) => {
-              const pct = Math.round((src.count / totalSourceEvents) * 100);
-              return (
-                <div key={src.label} className="flex flex-col gap-1">
-                  <div className="flex justify-between text-[13px] font-medium">
-                    <span className="text-brand-900">{src.label}</span>
-                    <span className="font-bold text-brand-700">{pct}% ({src.count})</span>
-                  </div>
-                  <div className="h-2.5 w-full overflow-hidden rounded-full bg-brand-50">
-                    <div style={{ width: `${pct}%` }} className={`h-full rounded-full ${src.color}`} />
-                  </div>
-                </div>
-              );
-            })}
+          <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
+            <div className="flex w-1/2 justify-center">
+              <RingChart
+                data={sourceRingData}
+                hoveredIndex={sourceHovered}
+                onHoverChange={setSourceHovered}
+              >
+                {sourceRingData.map((_, i) => (
+                  <Ring index={i} key={i} />
+                ))}
+                <RingCenter defaultLabel="Sources" />
+              </RingChart>
+            </div>
+
+            <Legend
+              hoveredIndex={sourceHovered}
+              items={sourceRingData}
+              onHoverChange={setSourceHovered}
+              className="flex-1"
+            >
+              <LegendItem>
+                <LegendMarker />
+                <LegendLabel />
+                <LegendValue showPercentage />
+                <LegendProgress />
+              </LegendItem>
+            </Legend>
           </div>
         </div>
       </div>
