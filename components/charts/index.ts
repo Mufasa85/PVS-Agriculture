@@ -10,3 +10,18 @@ export { ChartBrush } from "./chart-brush";
 
 export { ChartLegend } from "./chart-legend";
 export { ChartTooltip } from "./tooltip";
+
+// Ring chart components
+export { RingChart } from "./ring-chart";
+export { Ring } from "./ring";
+export { RingCenter } from "./ring-center";
+
+// Legend components
+export {
+  Legend,
+  LegendItem,
+  LegendLabel,
+  LegendMarker,
+  LegendValue,
+  LegendProgress,
+} from "./legend";
