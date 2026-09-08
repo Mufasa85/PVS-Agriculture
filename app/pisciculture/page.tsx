@@ -14,6 +14,10 @@ import {
   LockIcon,
 } from "@/components/ui/icons";
 import { pisciculturePage } from "@/lib/content";
+import { prisma } from "@/lib/prisma";
+import { formatProductPrice } from "@/lib/products";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: pisciculturePage.metaTitle,
@@ -47,8 +51,13 @@ const featureIcons: Record<string, ComponentType<{ size?: number; className?: st
   fish: FishIcon,
 };
 
-export default function PisciculturePage() {
+export default async function PisciculturePage() {
   const { hero, overview, features, pricing, stats, cta } = pisciculturePage;
+
+  const pricingItems = await prisma.product.findMany({
+    where: { category: "poissons", deletedAt: null, isPublished: true },
+    orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+  });
 
   return (
     <>
@@ -261,9 +270,9 @@ export default function PisciculturePage() {
           </Reveal>
 
           <div className="grid grid-cols-1 gap-6 mid:grid-cols-2 nav:grid-cols-4">
-            {pricing.items.map((item, index) => (
+            {pricingItems.map((item, index) => (
               <Reveal
-                key={item.name}
+                key={item.id}
                 delay={index * 0.08}
                 className="group overflow-hidden rounded-pvs-lg border border-white/10 bg-white/[0.06] backdrop-blur-sm transition-all duration-[350ms] ease-pvs hover:-translate-y-1.5 hover:border-white/20 hover:bg-white/[0.1]"
               >
@@ -293,11 +302,13 @@ export default function PisciculturePage() {
                   <div className="flex items-end justify-between border-t border-white/10 pt-4">
                     <div>
                       <span className="block font-serif text-[20px] font-bold text-gold-500">
-                        {item.price}
+                        {formatProductPrice(item)}
                       </span>
-                      <span className="text-[12px] text-white/50">
-                        {item.unit}
-                      </span>
+                      {item.unit && (
+                        <span className="text-[12px] text-white/50">
+                          {item.unit}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
