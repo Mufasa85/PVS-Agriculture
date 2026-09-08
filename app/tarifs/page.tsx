@@ -5,6 +5,10 @@ import Footer from "@/components/layout/Footer";
 import TarifsFilter from "@/components/sections/TarifsFilter";
 import Reveal from "@/components/ui/Reveal";
 import { tarifsPage } from "@/lib/content";
+import { prisma } from "@/lib/prisma";
+import { getActiveCategories } from "@/lib/products";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: tarifsPage.metaTitle,
@@ -30,8 +34,21 @@ function TitleLine({ line }: { line: string }) {
   );
 }
 
-export default function TarifsPage() {
+export default async function TarifsPage() {
   const { hero, info, cta } = tarifsPage;
+
+  const [products, categories] = await Promise.all([
+    prisma.product.findMany({
+      where: { deletedAt: null, isPublished: true },
+      orderBy: [{ category: "asc" }, { sortOrder: "asc" }, { name: "asc" }],
+    }),
+    getActiveCategories(),
+  ]);
+
+  const filterCategories = [
+    { id: "tous" as const, icon: "check", name: "Tous" },
+    ...categories.map((cat) => ({ id: cat.slug, icon: cat.icon, name: cat.name })),
+  ];
 
   return (
     <>
@@ -58,7 +75,7 @@ export default function TarifsPage() {
       </section>
 
       {/* ── Filtre + grille de produits ── */}
-      <TarifsFilter />
+      <TarifsFilter products={products} categories={filterCategories} />
 
       {/* ── Info ── */}
       <section className="bg-white py-[76px] nav:py-[110px]">
