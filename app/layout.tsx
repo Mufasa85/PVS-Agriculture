@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import type { ReactNode } from "react";
+import { Suspense } from "react";
 
-import Navbar from "@/components/layout/Navbar";
-import WhatsAppButton from "@/components/layout/WhatsAppButton";
+import AnalyticsTracker from "@/components/analytics/AnalyticsTracker";
+import SiteChrome from "@/components/layout/SiteChrome";
 import { siteMeta } from "@/lib/content";
 
 import "./globals.css";
@@ -33,9 +34,11 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${inter.variable} ${fraunces.variable}`}>
       <body>
-        <Navbar />
+        <SiteChrome />
         <main>{children}</main>
-        <WhatsAppButton />
+        <Suspense fallback={null}>
+          <AnalyticsTracker />
+        </Suspense>
       </body>
     </html>
   );
