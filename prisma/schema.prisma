@@ -101,3 +101,35 @@ model Product {
   @@map("products")
 }
 
+model ContactMessage {
+  id        Int       @id @default(autoincrement())
+  nom       String
+  telephone String
+  email     String
+  sujet     String?
+  message   String    @db.Text
+  isRead    Boolean   @default(false)
+  isStarred Boolean   @default(false)
+  createdAt DateTime  @default(now())
+
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("contact_messages")
+}
+
+model AnalyticsEvent {
+  id        Int      @id @default(autoincrement())
+  type      String   // PAGE_VIEW, PRODUCT_VIEW, SEARCH, CATEGORY_VIEW, QUOTE_REQUEST
+  path      String
+  referrer  String?  @db.Text
+  userAgent String?  @db.Text
+  ipAddress String?
+  metadata  Json?    // { productId, categorySlug, query, device, country, browser }
+  createdAt DateTime @default(now())
+
+  @@index([type])
+  @@index([createdAt])
+  @@index([path])
+  @@map("analytics_events")
+}
+
