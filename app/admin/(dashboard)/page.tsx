@@ -1,14 +1,10 @@
 import Link from "next/link";
 
-import {
-  PackageIcon,
-  UsersIcon,
-  ActivityIcon,
-  PlusIcon,
-  TagIcon,
-} from "@/components/ui/icons";
+import { Activity, Package, Plus, Tag, Users } from "lucide-react";
+
+import { CategoryIcon } from "@/components/admin/CategoryIcon";
 import { prisma } from "@/lib/prisma";
-import { getCategoryLabels } from "@/lib/products";
+import { getAllCategories } from "@/lib/products";
 
 export const dynamic = "force-dynamic";
 
@@ -124,7 +120,7 @@ function KpiCard({
 /* ─────────────────────── Page principale ───────────────────────── */
 
 export default async function AdminDashboardPage() {
-  const [products, users, auditLogs, categoryLabels] = await Promise.all([
+  const [products, users, auditLogs, categories] = await Promise.all([
     prisma.product.findMany({
       where: { deletedAt: null },
       select: {
@@ -141,8 +137,10 @@ export default async function AdminDashboardPage() {
       orderBy: { createdAt: "desc" },
       include: { user: { select: { name: true } } },
     }),
-    getCategoryLabels(),
+    getAllCategories(),
   ]);
+
+  const categoryMap = new Map(categories.map((c) => [c.slug, c]));
 
   const published = products.filter((p) => p.isPublished).length;
   const drafts = products.filter((p) => !p.isPublished).length;
@@ -170,7 +168,7 @@ export default async function AdminDashboardPage() {
           href="/admin/products/new"
           className="inline-flex items-center gap-2 rounded-[10px] bg-brand-600 px-4 py-2.5 text-[13.5px] font-bold text-white shadow-brand-btn transition-all hover:bg-brand-700 hover:shadow-brand-btn-hover hover:-translate-y-0.5"
         >
-          <PlusIcon size={16} />
+          <Plus size={16} />
           Nouveau produit
         </Link>
       </div>
@@ -180,7 +178,7 @@ export default async function AdminDashboardPage() {
         <KpiCard
           label="Produits actifs"
           value={published}
-          icon={PackageIcon}
+          icon={Package}
           iconBg="bg-brand-100"
           iconColor="text-brand-600"
           href="/admin/products"
@@ -190,7 +188,7 @@ export default async function AdminDashboardPage() {
         <KpiCard
           label="Brouillons"
           value={drafts}
-          icon={PackageIcon}
+          icon={Package}
           iconBg="bg-amber-100"
           iconColor="text-amber-600"
           href="/admin/products"
@@ -200,7 +198,7 @@ export default async function AdminDashboardPage() {
         <KpiCard
           label="À venir"
           value={comingSoon}
-          icon={ActivityIcon}
+          icon={Activity}
           iconBg="bg-gold-500/15"
           iconColor="text-gold-600"
           href="/admin/products"
@@ -210,7 +208,7 @@ export default async function AdminDashboardPage() {
         <KpiCard
           label="Utilisateurs"
           value={users}
-          icon={UsersIcon}
+          icon={Users}
           iconBg="bg-purple-50"
           iconColor="text-purple-600"
           href="/admin/users"
@@ -227,7 +225,7 @@ export default async function AdminDashboardPage() {
           <div className="mb-5 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-brand-50">
-                <TagIcon size={16} className="text-brand-600" />
+                <Tag size={16} className="text-brand-600" />
               </div>
               <h2 className="font-serif text-[17px] font-bold text-brand-900">
                 Répartition par catégorie
@@ -241,7 +239,7 @@ export default async function AdminDashboardPage() {
           {products.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
-                <PackageIcon size={22} className="text-brand-400" />
+                <Package size={22} className="text-brand-400" />
               </div>
               <p className="text-[13.5px] text-ink-500">Aucun produit pour le moment.</p>
             </div>
@@ -253,8 +251,9 @@ export default async function AdminDashboardPage() {
                   <div key={category}>
                     <div className="mb-2 flex items-center justify-between">
                       <div className="flex items-center gap-2">
+                        <CategoryIcon icon={categoryMap.get(category)?.icon ?? "sprout"} size={15} className="text-brand-600" />
                         <span className="text-[13.5px] font-semibold text-ink-700">
-                          {categoryLabels[category] ?? category}
+                          {categoryMap.get(category)?.name ?? category}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -283,7 +282,7 @@ export default async function AdminDashboardPage() {
         <section className="rounded-[16px] border border-line bg-white p-6 shadow-soft">
           <div className="mb-5 flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-brand-50">
-              <ActivityIcon size={16} className="text-brand-600" />
+              <Activity size={16} className="text-brand-600" />
             </div>
             <h2 className="font-serif text-[17px] font-bold text-brand-900">
               Activité récente
@@ -346,7 +345,7 @@ export default async function AdminDashboardPage() {
         {[
           {
             href: "/admin/products/new",
-            icon: PackageIcon,
+            icon: Package,
             label: "Ajouter un produit",
             desc: "Créer une nouvelle fiche produit",
             color: "bg-brand-50",
@@ -354,7 +353,7 @@ export default async function AdminDashboardPage() {
           },
           {
             href: "/admin/categories",
-            icon: TagIcon,
+            icon: Tag,
             label: "Gérer les catégories",
             desc: "Organiser le catalogue",
             color: "bg-amber-50",
@@ -362,7 +361,7 @@ export default async function AdminDashboardPage() {
           },
           {
             href: "/admin/users",
-            icon: UsersIcon,
+            icon: Users,
             label: "Gérer les utilisateurs",
             desc: "Équipe et permissions",
             color: "bg-purple-50",
