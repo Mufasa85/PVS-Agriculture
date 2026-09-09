@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 
+import { Pencil, Plus, Tag } from "lucide-react";
+
+import { CategoryIcon } from "@/components/admin/CategoryIcon";
 import CategoryModal, { type CategoryModalData } from "@/components/admin/CategoryModal";
 import DeleteCategoryButton from "@/components/admin/DeleteCategoryButton";
-import { PlusIcon, PencilIcon, TagIcon } from "@/components/ui/icons";
 
 type CategoryRow = {
   id: number;
@@ -69,7 +71,7 @@ export default function CategoriesTable({
           onClick={openCreate}
           className="inline-flex items-center gap-2 rounded-[10px] bg-brand-600 px-4 py-2.5 text-[13.5px] font-bold text-white shadow-brand-btn transition-all hover:bg-brand-700 hover:shadow-brand-btn-hover hover:-translate-y-0.5"
         >
-          <PlusIcon size={16} />
+          <Plus size={16} />
           Nouvelle catégorie
         </button>
       </div>
@@ -115,7 +117,7 @@ export default function CategoriesTable({
         {/* Toolbar */}
         <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
           <div className="flex items-center gap-2">
-            <TagIcon size={15} className="text-ink-500" />
+            <Tag size={15} className="text-ink-500" />
             <span className="text-[13px] font-semibold text-ink-700">
               {categories.length} catégorie{categories.length > 1 ? "s" : ""}
             </span>
@@ -152,8 +154,8 @@ export default function CategoriesTable({
                   {/* Nom + icône */}
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-brand-50 text-[18px]">
-                        {cat.icon}
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-brand-50 text-brand-600">
+                        <CategoryIcon icon={cat.icon} size={18} />
                       </div>
                       <span className="text-[13.5px] font-bold text-brand-900">
                         {cat.name}
@@ -199,7 +201,7 @@ export default function CategoriesTable({
                         title="Éditer"
                         className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-line text-ink-500 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
                       >
-                        <PencilIcon size={14} />
+                        <Pencil size={14} />
                       </button>
                       <DeleteCategoryButton id={cat.id} name={cat.name} />
                     </div>
@@ -212,7 +214,7 @@ export default function CategoriesTable({
                   <td colSpan={5} className="px-5 py-16 text-center">
                     <div className="flex flex-col items-center gap-3">
                       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-50">
-                        <TagIcon size={24} className="text-brand-400" />
+                        <Tag size={24} className="text-brand-400" />
                       </div>
                       <p className="text-[14px] font-semibold text-ink-700">
                         Aucune catégorie
