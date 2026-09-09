@@ -25,3 +25,24 @@ export {
   LegendValue,
   LegendProgress,
 } from "./legend";
+
+// Choropleth chart components
+export {
+  ChoroplethChart,
+  type ChoroplethChartProps,
+  ChoroplethFeatureComponent,
+  type ChoroplethFeatureProps,
+  ChoroplethGraticule,
+  type ChoroplethGraticuleProps,
+  ChoroplethTooltip,
+  type ChoroplethTooltipProps,
+  type ChoroplethContextValue,
+  type ChoroplethFeature,
+  type ChoroplethFeatureProperties,
+  type ChoroplethTooltipData,
+  choroplethCssVars,
+  defaultChoroplethColors,
+  type Margin,
+  useChoropleth,
+  useChoroplethZoom,
+} from "./choropleth";
