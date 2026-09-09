@@ -40,9 +40,9 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         }}
       />
 
-      <div className="nav:pl-[248px]">
-        {/* Barre top desktop (sticky) */}
-        <div className="sticky top-0 z-20">
+      <div className="nav:pl-[272px]">
+        {/* Barre top (sticky, flottante) */}
+        <div className="sticky top-3 z-20 px-3 pt-3 nav:px-6">
           <AdminTopBar userName={userName} userRole={userRole} />
         </div>
 
