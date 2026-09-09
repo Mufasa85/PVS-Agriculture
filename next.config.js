@@ -5,6 +5,7 @@ const nextConfig = {
   turbopack: {
     root: __dirname,
   },
+  serverExternalPackages: ["geoip-lite", "i18n-iso-countries"],
   images: {
     remotePatterns: [
       {
