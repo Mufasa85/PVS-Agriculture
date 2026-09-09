@@ -1,4 +1,15 @@
+import geoip from "geoip-lite";
+import countries from "i18n-iso-countries";
+import frLocale from "i18n-iso-countries/langs/fr.json";
 import { prisma } from "@/lib/prisma";
+
+countries.registerLocale(frLocale);
+
+// Build reverse lookup: alpha-2 → numeric code
+const alpha2ToNumeric: Record<string, string> = {};
+for (const [numeric, alpha2] of Object.entries(countries.getNumericCodes())) {
+  alpha2ToNumeric[alpha2 as string] = numeric;
+}
 
 export type EventType =
   | "PAGE_VIEW"
@@ -141,6 +152,8 @@ export async function getAnalyticsData(days: AnalyticsTimeframe = 30) {
   const productViewCounts: Record<string, { name: string; count: number; category: string }> = {};
   // Top Search Terms
   const searchCounts: Record<string, number> = {};
+  // Visitors by Country (ISO-2 code)
+  const countryCounts: Record<string, number> = {};
 
   events.forEach((e) => {
     const meta = (e.metadata as Record<string, any>) || {};
@@ -207,6 +220,17 @@ export async function getAnalyticsData(days: AnalyticsTimeframe = 30) {
       const q = meta.query.trim().toLowerCase();
       if (q) searchCounts[q] = (searchCounts[q] || 0) + 1;
     }
+
+    // Country (from metadata or IP lookup)
+    let country = meta.country as string | undefined;
+    if (!country && e.ipAddress && e.ipAddress !== "127.0.0.1") {
+      const geo = geoip.lookup(e.ipAddress);
+      country = geo?.country || undefined;
+    }
+    if (country) {
+      const numeric = alpha2ToNumeric[country] || country;
+      countryCounts[numeric] = (countryCounts[numeric] || 0) + 1;
+    }
   });
 
   const topProducts = Object.values(productViewCounts)
@@ -246,6 +270,7 @@ export async function getAnalyticsData(days: AnalyticsTimeframe = 30) {
     topProducts,
     topSearches,
     recentEvents,
+    visitorsByCountry: countryCounts,
   };
 }
 
