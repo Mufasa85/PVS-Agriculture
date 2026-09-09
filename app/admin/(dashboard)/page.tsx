@@ -117,6 +117,19 @@ function KpiCard({
   return inner;
 }
 
+const CATEGORY_COLORS: Record<string, string> = {
+  egg: "#f59e0b",
+  cattle: "#b45309",
+  pig: "#e11d48",
+  fish: "#0ea5e9",
+  sprout: "#16a34a",
+  feedbag: "#d97706",
+};
+
+function getCategoryColor(icon: string): string {
+  return CATEGORY_COLORS[icon] ?? "#3a45c4";
+}
+
 /* ─────────────────────── Page principale ───────────────────────── */
 
 export default async function AdminDashboardPage() {
@@ -247,13 +260,15 @@ export default async function AdminDashboardPage() {
             <div className="flex flex-col gap-4">
               {Object.entries(byCategory).map(([category, count]) => {
                 const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+                const catInfo = categoryMap.get(category);
+                const barColor = getCategoryColor(catInfo?.icon ?? "sprout");
                 return (
                   <div key={category}>
                     <div className="mb-2 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <CategoryIcon icon={categoryMap.get(category)?.icon ?? "sprout"} size={15} className="text-brand-600" />
+                        <CategoryIcon icon={catInfo?.icon ?? "sprout"} size={15} className="text-brand-600" />
                         <span className="text-[13.5px] font-semibold text-ink-700">
-                          {categoryMap.get(category)?.name ?? category}
+                          {catInfo?.name ?? category}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -265,11 +280,13 @@ export default async function AdminDashboardPage() {
                         </span>
                       </div>
                     </div>
-                    <div className="h-1.5 overflow-hidden rounded-full bg-brand-50">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600 transition-all duration-700"
-                        style={{ width: `${pct}%` }}
-                      />
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 flex-1 overflow-hidden rounded-full bg-brand-50">
+                        <div
+                          className="h-full rounded-full transition-all duration-700"
+                          style={{ width: `${pct}%`, backgroundColor: barColor }}
+                        />
+                      </div>
                     </div>
                   </div>
                 );
