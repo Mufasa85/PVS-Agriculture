@@ -6,18 +6,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import {
-  BarChartIcon,
-  ExternalLinkIcon,
-  GridIcon,
-  LogoutIcon,
-  MailIcon,
-  MenuIcon,
-  PackageIcon,
-  ShieldIcon,
-  TagIcon,
-  UsersIcon,
-  XIcon,
-} from "@/components/ui/icons";
+  BarChart3,
+  ExternalLink,
+  LayoutGrid,
+  LogOut,
+  Mail,
+  Menu,
+  Package,
+  Shield,
+  Tag,
+  Users,
+  X,
+} from "lucide-react";
 
 type NavItem = {
   href: string;
@@ -27,19 +27,19 @@ type NavItem = {
 };
 
 const PRIMARY_NAV: NavItem[] = [
-  { href: "/admin", label: "Vue d'ensemble", icon: GridIcon, exact: true },
-  { href: "/admin/analytics", label: "Analytics & Suivi", icon: BarChartIcon },
-  { href: "/admin/products", label: "Produits & tarifs", icon: PackageIcon },
-  { href: "/admin/categories", label: "Catégories", icon: TagIcon },
-  { href: "/admin/messages", label: "Messages", icon: MailIcon },
-  { href: "/admin/audit-logs", label: "Journal d'audit", icon: ShieldIcon },
+  { href: "/admin", label: "Vue d'ensemble", icon: LayoutGrid, exact: true },
+  { href: "/admin/analytics", label: "Analytics & Suivi", icon: BarChart3 },
+  { href: "/admin/products", label: "Produits & tarifs", icon: Package },
+  { href: "/admin/categories", label: "Catégories", icon: Tag },
+  { href: "/admin/messages", label: "Messages", icon: Mail },
+  { href: "/admin/audit-logs", label: "Journal d'audit", icon: Shield },
 ];
 
 
 const TEAM_NAV: NavItem = {
   href: "/admin/users",
   label: "Utilisateurs",
-  icon: UsersIcon,
+  icon: Users,
 };
 
 const ROLE_LABELS: Record<string, string> = {
@@ -139,7 +139,7 @@ export default function Sidebar({
           className="ml-auto flex h-8 w-8 items-center justify-center rounded-full text-ink-500 hover:bg-brand-50 hover:text-brand-700 nav:hidden"
           aria-label="Fermer le menu"
         >
-          <XIcon size={18} />
+          <X size={18} />
         </button>
       </div>
 
@@ -165,7 +165,7 @@ export default function Sidebar({
           target="_blank"
           className="flex items-center gap-3 rounded-[10px] px-3.5 py-2.5 text-[13px] font-semibold text-ink-500 transition-colors hover:bg-brand-50 hover:text-brand-700"
         >
-          <ExternalLinkIcon size={17} className="text-ink-500/60" />
+          <ExternalLink size={17} className="text-ink-500/60" />
           Voir le site public
         </Link>
 
@@ -191,17 +191,17 @@ export default function Sidebar({
   return (
     <>
       {/* Barre mobile */}
-      <div className="sticky top-0 z-30 flex items-center gap-3 border-b border-line bg-white px-5 py-3.5 shadow-soft nav:hidden">
+      <div className="sticky top-0 z-30 flex items-center gap-3 border-b border-white/40 bg-white/70 px-5 py-3.5 shadow-soft backdrop-blur-xl nav:hidden">
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="flex h-9 w-9 items-center justify-center rounded-[10px] border border-line text-brand-900 hover:border-brand-300 hover:bg-brand-50"
+          className="flex h-9 w-9 items-center justify-center rounded-[10px] border border-line text-brand-900 transition-all hover:border-brand-300 hover:bg-brand-50 active:scale-95"
           aria-label="Ouvrir le menu"
         >
-          <MenuIcon size={19} />
+          <Menu size={19} />
         </button>
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-[8px] bg-brand-600 font-serif text-[11px] font-bold text-white">
+          <div className="flex h-7 w-7 items-center justify-center rounded-[8px] bg-brand-600 font-serif text-[11px] font-bold text-white shadow-brand">
             PVS
           </div>
           <span className="font-serif text-[15px] font-bold text-brand-900">
@@ -211,7 +211,7 @@ export default function Sidebar({
       </div>
 
       {/* Sidebar desktop */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-[248px] border-r border-line bg-white shadow-soft nav:block">
+      <aside className="fixed inset-y-3 left-3 z-30 hidden w-[248px] overflow-hidden rounded-[16px] border border-white/50 bg-white/70 shadow-float backdrop-blur-xl nav:block">
         {sidebarContent}
       </aside>
 
@@ -219,11 +219,11 @@ export default function Sidebar({
       {open && (
         <div className="fixed inset-0 z-40 nav:hidden">
           <div
-            className="absolute inset-0 bg-brand-900/30 backdrop-blur-sm"
+            className="absolute inset-0 animate-overlay-in bg-brand-900/40 backdrop-blur-md"
             onClick={() => setOpen(false)}
             aria-hidden="true"
           />
-          <aside className="absolute inset-y-0 left-0 w-[280px] bg-white shadow-float">
+          <aside className="absolute inset-y-3 left-3 w-[280px] animate-drawer-in overflow-hidden rounded-[16px] border border-white/50 bg-white/80 shadow-float backdrop-blur-xl">
             {sidebarContent}
           </aside>
         </div>
@@ -247,7 +247,7 @@ function LogoutTrigger({ compact }: { compact?: boolean }) {
         className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px] text-ink-500 transition-colors hover:bg-red-50 hover:text-red-500"
         aria-label="Se déconnecter"
       >
-        <LogoutIcon size={15} />
+        <LogOut size={15} />
       </button>
     );
   }
@@ -258,7 +258,7 @@ function LogoutTrigger({ compact }: { compact?: boolean }) {
       onClick={handleLogout}
       className="mt-3 flex w-full items-center gap-3 rounded-[10px] px-3.5 py-2.5 text-[13.5px] font-semibold text-ink-500 transition-colors hover:bg-red-50 hover:text-red-500"
     >
-      <LogoutIcon size={18} className="text-ink-500/60" />
+      <LogOut size={18} className="text-ink-500/60" />
       Se déconnecter
     </button>
   );
