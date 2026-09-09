@@ -20,6 +20,8 @@ import { curveCatmullRom } from "@visx/curve";
 import { feature } from "topojson-client";
 import worldData from "world-atlas/countries-110m.json";
 import type { FeatureCollection, Geometry } from "geojson";
+import countries from "i18n-iso-countries";
+import frLocale from "i18n-iso-countries/langs/fr.json";
 import {
   Background,
   ChartBrushLayout,
@@ -42,6 +44,14 @@ import {
   RingChart,
   XAxis,
 } from "@/components/charts";
+
+countries.registerLocale(frLocale);
+
+// Build numeric → French name lookup
+const numericToName: Record<string, string> = {};
+for (const [numeric, alpha2] of Object.entries(countries.getNumericCodes())) {
+  numericToName[numeric] = countries.getName(alpha2 as string, "fr") || (alpha2 as string);
+}
 
 type AnalyticsState = {
   timeframe: number;
@@ -91,6 +101,11 @@ function getVisitorColor(feature: ChoroplethFeature, _index: number) {
   const g = Math.round(230 - ratio * 180);
   const b = Math.round(250 - ratio * 60);
   return `rgb(${r}, ${g}, ${b})`;
+}
+
+function getFeatureName(feature: ChoroplethFeature, _index: number) {
+  const id = String(feature.id ?? "");
+  return numericToName[id] || feature.properties?.name || `Pays ${id}`;
 }
 
 function getVisitorValue(feature: ChoroplethFeature, _index: number) {
@@ -562,19 +577,68 @@ export default function AdminAnalyticsPage() {
             <GlobeIcon size={14} />
           </div>
         </div>
-        <div className="w-full">
-          <ChoroplethChart
-            aspectRatio="2 / 1"
-            data={geojson}
-            margin={{ top: 8, right: 8, bottom: 40, left: 8 }}
-          >
-            <ChoroplethGraticule />
-            <ChoroplethFeatureComponent getFeatureColor={getVisitorColor} />
-            <ChoroplethTooltip
-              getFeatureValue={getVisitorValue}
-              valueLabel="Visiteurs"
-            />
-          </ChoroplethChart>
+        <div className="flex flex-col gap-4 lg:flex-row">
+          {/* Map à gauche */}
+          <div className="min-w-0 flex-1">
+            <ChoroplethChart
+              aspectRatio="2 / 1"
+              data={geojson}
+              margin={{ top: 8, right: 8, bottom: 40, left: 8 }}
+            >
+              <ChoroplethGraticule />
+              <ChoroplethFeatureComponent getFeatureColor={getVisitorColor} />
+              <ChoroplethTooltip
+                getFeatureName={getFeatureName}
+                getFeatureValue={getVisitorValue}
+                valueLabel="Visiteurs"
+                backgroundColor="rgba(255, 255, 255, 0.95)"
+                panelStyle={{
+                  color: "#1e293b",
+                  ["--chart-tooltip-foreground" as string]: "#1e293b",
+                  ["--chart-tooltip-muted" as string]: "#64748b",
+                }}
+              />
+            </ChoroplethChart>
+          </div>
+
+          {/* Liste des pays à droite */}
+          <div className="w-full shrink-0 lg:w-64">
+            <div className="mb-2 text-[12px] font-bold uppercase tracking-wide text-ink-500">
+              Top pays
+            </div>
+            <div className="flex max-h-[320px] flex-col gap-1.5 overflow-y-auto pr-1">
+              {Object.entries(data?.visitorsByCountry || {})
+                .sort(([, a], [, b]) => b - a)
+                .map(([numeric, count]) => {
+                  const total = Object.values(data?.visitorsByCountry || {}).reduce((s, v) => s + v, 0) || 1;
+                  const pct = Math.round((count / total) * 100);
+                  const name = numericToName[numeric] || numeric;
+                  return (
+                    <div
+                      key={numeric}
+                      className="flex items-center justify-between rounded-lg px-2.5 py-1.5 transition-colors hover:bg-brand-50/60"
+                    >
+                      <span className="truncate text-[13px] font-medium text-brand-900">
+                        {name}
+                      </span>
+                      <span className="flex shrink-0 items-center gap-2">
+                        <span className="text-[12.5px] font-bold text-brand-700">
+                          {count}
+                        </span>
+                        <span className="text-[11px] font-semibold text-ink-500">
+                          {pct}%
+                        </span>
+                      </span>
+                    </div>
+                  );
+                })}
+              {Object.keys(data?.visitorsByCountry || {}).length === 0 && (
+                <p className="py-4 text-center text-[12.5px] text-ink-500">
+                  Aucune donnée géographique disponible.
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
