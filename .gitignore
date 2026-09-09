@@ -16,3 +16,6 @@ yarn-error.log*
 
 .vercel
 *.tsbuildinfo
+
+# Uploaded files
+public/uploads/
