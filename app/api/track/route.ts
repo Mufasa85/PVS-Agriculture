@@ -1,3 +1,4 @@
+import geoip from "geoip-lite";
 import { NextResponse } from "next/server";
 import { recordAnalyticsEvent } from "@/lib/analytics";
 
@@ -25,9 +26,14 @@ export async function POST(request: Request) {
       device = "Tablet";
     }
 
+    // Geolocate IP to country
+    const geo = geoip.lookup(ipAddress);
+    const country = geo?.country || null;
+
     const mergedMetadata = {
       ...(metadata || {}),
       device,
+      ...(country ? { country } : {}),
     };
 
     const event = await recordAnalyticsEvent({
