@@ -5,9 +5,11 @@ import { useState } from "react";
 import type { Currency } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
 
+import { Package, Pencil, Plus, Search, X } from "lucide-react";
+
+import { CategoryIcon } from "@/components/admin/CategoryIcon";
 import DeleteProductButton from "@/components/admin/DeleteProductButton";
 import ProductModal from "@/components/admin/ProductModal";
-import { PlusIcon, PencilIcon, PackageIcon, SearchIcon } from "@/components/ui/icons";
 import { formatProductPrice } from "@/lib/products";
 import type { CategoryInfo } from "@/lib/products";
 
@@ -100,7 +102,7 @@ export default function ProductsTable({
           onClick={openCreate}
           className="inline-flex items-center gap-2 rounded-[10px] bg-brand-600 px-4 py-2.5 text-[13.5px] font-bold text-white shadow-brand-btn transition-all hover:bg-brand-700 hover:shadow-brand-btn-hover hover:-translate-y-0.5"
         >
-          <PlusIcon size={17} />
+          <Plus size={17} />
           Nouveau produit
         </button>
       </div>
@@ -127,7 +129,7 @@ export default function ProductsTable({
       {/* ── Barre de recherche ── */}
       <div className="flex flex-col gap-2">
         <div className="relative">
-          <SearchIcon
+          <Search
             size={17}
             className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-500/60"
           />
@@ -145,9 +147,7 @@ export default function ProductsTable({
               className="absolute right-3 top-1/2 -translate-y-1/2 flex h-6 w-6 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-brand-50 hover:text-brand-700"
               aria-label="Effacer la recherche"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-              </svg>
+              <X size={14} />
             </button>
           )}
         </div>
@@ -182,7 +182,7 @@ export default function ProductsTable({
                 : "border border-line bg-white text-ink-500 hover:border-brand-300 hover:text-brand-600"
             }`}
           >
-            {category.icon} {category.name}
+            <CategoryIcon icon={category.icon} size={13} /> {category.name}
             <span
               className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[10.5px] font-bold ${
                 activeTab === category.slug
@@ -200,7 +200,7 @@ export default function ProductsTable({
       {displayProducts.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-[16px] border border-dashed border-line bg-white py-16 text-center">
           <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-brand-50">
-            <PackageIcon size={24} className="text-brand-400" />
+            <Package size={24} className="text-brand-400" />
           </div>
           <p className="text-[14px] font-semibold text-ink-700">
             {q ? "Aucun résultat" : "Aucun produit"}
@@ -235,7 +235,7 @@ export default function ProductsTable({
                 {/* Nom */}
                 <div className="flex flex-[3] items-center gap-3 min-w-0">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] bg-brand-50">
-                    <PackageIcon size={14} className="text-brand-500" />
+                    <Package size={14} className="text-brand-500" />
                   </div>
                   <span className="truncate text-[13.5px] font-semibold text-brand-900">
                     {product.name}
@@ -245,7 +245,7 @@ export default function ProductsTable({
                 {/* Catégorie */}
                 <div className="hidden flex-[2] nav:flex items-center gap-1.5 text-[12.5px]">
                   <span className="inline-flex items-center gap-1.5 rounded-md bg-brand-50/70 px-2.5 py-1 text-[11.5px] font-medium text-brand-700 border border-brand-100">
-                    <span>{product.categoryInfo.icon}</span>
+                    <CategoryIcon icon={product.categoryInfo.icon} size={13} />
                     <span>{product.categoryInfo.name}</span>
                   </span>
                 </div>
@@ -286,7 +286,7 @@ export default function ProductsTable({
                     title="Éditer"
                     className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-line text-ink-500 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
                   >
-                    <PencilIcon size={13} />
+                    <Pencil size={13} />
                   </button>
                   <DeleteProductButton id={product.id} name={product.name} />
                 </div>
