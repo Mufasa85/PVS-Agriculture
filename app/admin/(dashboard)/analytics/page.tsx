@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   ArrowDownRightIcon,
@@ -17,10 +17,18 @@ import {
 } from "@/components/ui/icons";
 
 import { curveCatmullRom } from "@visx/curve";
+import { feature } from "topojson-client";
+import worldData from "world-atlas/countries-110m.json";
+import type { FeatureCollection, Geometry } from "geojson";
 import {
   Background,
   ChartBrushLayout,
   ChartTooltip,
+  ChoroplethChart,
+  ChoroplethFeatureComponent,
+  type ChoroplethFeature,
+  ChoroplethGraticule,
+  ChoroplethTooltip,
   Legend,
   LegendItem,
   LegendLabel,
@@ -63,7 +71,31 @@ type AnalyticsState = {
     timeAgo: string;
     createdAt: string;
   }>;
+  visitorsByCountry: Record<string, number>;
 };
+
+const baseGeojson = feature(
+  worldData as any,
+  (worldData as any).objects.countries
+) as unknown as FeatureCollection<
+  Geometry,
+  { name?: string; visitors?: number }
+>;
+
+function getVisitorColor(feature: ChoroplethFeature, _index: number) {
+  const visitors = (feature.properties.visitors as number) ?? 0;
+  if (visitors === 0) return "#e8e8e8";
+  const maxVisitors = 1000;
+  const ratio = Math.min(visitors / maxVisitors, 1);
+  const r = Math.round(220 - ratio * 170);
+  const g = Math.round(230 - ratio * 180);
+  const b = Math.round(250 - ratio * 60);
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+function getVisitorValue(feature: ChoroplethFeature, _index: number) {
+  return (feature.properties.visitors as number) ?? 0;
+}
 
 export default function AdminAnalyticsPage() {
   const [days, setDays] = useState<7 | 30 | 90>(30);
@@ -72,6 +104,20 @@ export default function AdminAnalyticsPage() {
   const [resetting, setResetting] = useState(false);
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
   const [sourceHovered, setSourceHovered] = useState<number | null>(null);
+
+  const geojson = useMemo(() => {
+    const visitorsByCountry = data?.visitorsByCountry || {};
+    return {
+      ...baseGeojson,
+      features: baseGeojson.features.map((f) => ({
+        ...f,
+        properties: {
+          ...f.properties,
+          visitors: visitorsByCountry[String(f.id)] || 0,
+        },
+      })),
+    };
+  }, [data?.visitorsByCountry]);
 
   async function fetchAnalytics(selectedDays: number) {
     setLoading(true);
@@ -498,6 +544,37 @@ export default function AdminAnalyticsPage() {
               </LegendItem>
             </Legend>
           </div>
+        </div>
+      </div>
+
+      {/* ── Carte Choropleth : Visiteurs par pays ── */}
+      <div className="rounded-[16px] border border-line bg-white p-6 shadow-soft">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h2 className="font-serif text-[17px] font-bold text-brand-900">
+              Visiteurs par pays
+            </h2>
+            <p className="text-[12.5px] text-ink-500">
+              Répartition géographique du trafic visiteur.
+            </p>
+          </div>
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-50 text-brand-600">
+            <GlobeIcon size={14} />
+          </div>
+        </div>
+        <div className="w-full">
+          <ChoroplethChart
+            aspectRatio="2 / 1"
+            data={geojson}
+            margin={{ top: 8, right: 8, bottom: 40, left: 8 }}
+          >
+            <ChoroplethGraticule />
+            <ChoroplethFeatureComponent getFeatureColor={getVisitorColor} />
+            <ChoroplethTooltip
+              getFeatureValue={getVisitorValue}
+              valueLabel="Visiteurs"
+            />
+          </ChoroplethChart>
         </div>
       </div>
 
