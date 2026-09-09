@@ -54,15 +54,15 @@ export default function AdminTopBar({
     .join("");
 
   return (
-    <header className="hidden border-b border-line bg-white/80 px-8 py-4 backdrop-blur-sm nav:flex nav:items-center nav:justify-between">
+    <header className="flex items-center justify-between rounded-[16px] border border-white/50 bg-white/70 px-4 py-3 shadow-soft backdrop-blur-xl nav:px-8 nav:py-4">
       {/* Gauche : titre + date */}
       <div>
         {info && (
-          <h1 className="font-serif text-[22px] font-bold leading-tight text-brand-900">
+          <h1 className="font-serif text-[18px] font-bold leading-tight text-brand-900 nav:text-[22px]">
             {info.title}
           </h1>
         )}
-        <p className="mt-0.5 text-[12.5px] text-ink-500 first-letter:capitalize">
+        <p className="mt-0.5 hidden text-[12.5px] text-ink-500 first-letter:capitalize nav:block">
           {getDateFr()}
         </p>
       </div>
