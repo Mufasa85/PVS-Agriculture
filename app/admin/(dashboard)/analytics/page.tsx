@@ -5,15 +5,9 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ArrowDownRightIcon,
   ArrowUpRightIcon,
-  BarChartIcon,
   ClockIcon,
-  EyeIcon,
   GlobeIcon,
-  MonitorIcon,
-  PackageIcon,
   SearchIcon,
-  SmartphoneIcon,
-  TrendingUpIcon,
 } from "@/components/ui/icons";
 
 import { curveCatmullRom } from "@visx/curve";
@@ -112,6 +106,57 @@ function getVisitorValue(feature: ChoroplethFeature, _index: number) {
   return (feature.properties.visitors as number) ?? 0;
 }
 
+function Sparkline({
+  data,
+  color,
+  width = 80,
+  height = 32,
+}: {
+  data: number[];
+  color: string;
+  width?: number;
+  height?: number;
+}) {
+  if (data.length < 2) {
+    return <div style={{ width, height }} />;
+  }
+
+  const max = Math.max(...data, 1);
+  const min = Math.min(...data, 0);
+  const range = max - min || 1;
+  const stepX = width / (data.length - 1);
+
+  const points = data.map((v, i) => {
+    const x = i * stepX;
+    const y = height - ((v - min) / range) * height;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+
+  const linePath = `M ${points.join(" L ")}`;
+  const areaPath = `${linePath} L ${width},${height} L 0,${height} Z`;
+  const gradId = `spark-${color.replace(/[^a-z0-9]/gi, "")}`;
+
+  return (
+    <svg width={width} height={height} className="shrink-0 overflow-visible">
+      <defs>
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.25" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={areaPath} fill={`url(#${gradId})`} />
+      <path
+        d={linePath}
+        fill="none"
+        stroke={color}
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function AdminAnalyticsPage() {
   const [days, setDays] = useState<7 | 30 | 90>(30);
   const [data, setData] = useState<AnalyticsState | null>(null);
@@ -208,6 +253,11 @@ export default function AdminAnalyticsPage() {
 
   const maxProductViews = Math.max(...(data?.topProducts.map((p) => p.count) || [1]), 1);
 
+  // Sparkline data per KPI
+  const sparkPageviews = traffic.map((t) => t.pageviews);
+  const sparkVisitors = traffic.map((t) => t.visitors);
+  const sparkQuotes = traffic.map((t) => t.quotes);
+
   const sourceRingData = [
     { label: "Accès Direct", value: data?.sources.Direct || 0, maxValue: totalSourceEvents, color: "#3a45c4" },
     { label: "Recherche (SEO)", value: data?.sources.Recherche || 0, maxValue: totalSourceEvents, color: "#10b981" },
@@ -279,94 +329,67 @@ export default function AdminAnalyticsPage() {
         </div>
       </div>
 
-      {/* ── Range KPI Cards (4 cartes) ── */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 nav:grid-cols-4">
+      {/* ── Range KPI Cards (3 cartes avec micro-graphiques) ── */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {/* Card 1 : Pageviews */}
         <div className="flex flex-col justify-between rounded-[16px] border border-line bg-white p-5 shadow-soft transition-all hover:shadow-hover">
-          <div className="flex items-center justify-between">
-            <span className="text-[12.5px] font-bold uppercase tracking-[0.06em] text-ink-500">
-              Pages vues
-            </span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-brand-50 text-brand-600">
-              <EyeIcon size={18} />
+          <span className="text-[12.5px] font-bold uppercase tracking-[0.06em] text-ink-500">
+            Pages vues
+          </span>
+          <div className="mt-2 flex items-end justify-between gap-3">
+            <div>
+              <span className="font-serif text-[28px] font-bold text-brand-900">
+                {kpis?.totalPageviews.value.toLocaleString("fr-FR")}
+              </span>
+              <div className="mt-1 flex items-center gap-1.5 text-[12px]">
+                <GrowthBadge growth={kpis?.totalPageviews.growth || 0} />
+                <span className="text-ink-500">vs préc.</span>
+              </div>
             </div>
-          </div>
-          <div className="mt-3">
-            <span className="font-serif text-[28px] font-bold text-brand-900">
-              {kpis?.totalPageviews.value.toLocaleString("fr-FR")}
-            </span>
-            <div className="mt-1 flex items-center gap-1.5 text-[12px]">
-              <GrowthBadge growth={kpis?.totalPageviews.growth || 0} />
-              <span className="text-ink-500">vs période précédente</span>
-            </div>
+            <Sparkline data={sparkPageviews} color="#3a45c4" />
           </div>
         </div>
 
         {/* Card 2 : Visiteurs uniques */}
         <div className="flex flex-col justify-between rounded-[16px] border border-line bg-white p-5 shadow-soft transition-all hover:shadow-hover">
-          <div className="flex items-center justify-between">
-            <span className="text-[12.5px] font-bold uppercase tracking-[0.06em] text-ink-500">
-              Visiteurs uniques
-            </span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-indigo-50 text-indigo-600">
-              <GlobeIcon size={18} />
-            </div>
-          </div>
-          <div className="mt-3">
-            <span className="font-serif text-[28px] font-bold text-brand-900">
-              {kpis?.uniqueVisitors.value.toLocaleString("fr-FR")}
-            </span>
-            <div className="mt-1 flex items-center gap-1.5 text-[12px]">
-              <GrowthBadge growth={kpis?.uniqueVisitors.growth || 0} />
-              <span className="text-ink-500">vs période précédente</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Card 3 : Vues Produits */}
-        <div className="flex flex-col justify-between rounded-[16px] border border-line bg-white p-5 shadow-soft transition-all hover:shadow-hover">
-          <div className="flex items-center justify-between">
-            <span className="text-[12.5px] font-bold uppercase tracking-[0.06em] text-ink-500">
-              Vues produits
-            </span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-amber-50 text-amber-600">
-              <PackageIcon size={18} />
-            </div>
-          </div>
-          <div className="mt-3">
-            <span className="font-serif text-[28px] font-bold text-brand-900">
-              {kpis?.productViews.value.toLocaleString("fr-FR")}
-            </span>
-            <div className="mt-1 flex items-center gap-1.5 text-[12px]">
-              <GrowthBadge growth={kpis?.productViews.growth || 0} />
-              <span className="text-ink-500">vs période précédente</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Card 4 : Demandes de devis */}
-        <div className="flex flex-col justify-between rounded-[16px] border border-line bg-white p-5 shadow-soft transition-all hover:shadow-hover">
-          <div className="flex items-center justify-between">
-            <span className="text-[12.5px] font-bold uppercase tracking-[0.06em] text-ink-500">
-              Demandes de devis
-            </span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-emerald-50 text-emerald-600">
-              <TrendingUpIcon size={18} />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="flex items-baseline gap-2">
+          <span className="text-[12.5px] font-bold uppercase tracking-[0.06em] text-ink-500">
+            Visiteurs uniques
+          </span>
+          <div className="mt-2 flex items-end justify-between gap-3">
+            <div>
               <span className="font-serif text-[28px] font-bold text-brand-900">
-                {kpis?.quoteRequests.value}
+                {kpis?.uniqueVisitors.value.toLocaleString("fr-FR")}
               </span>
-              <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-600">
-                {kpis?.quoteRequests.conversionRate}% conv.
-              </span>
+              <div className="mt-1 flex items-center gap-1.5 text-[12px]">
+                <GrowthBadge growth={kpis?.uniqueVisitors.growth || 0} />
+                <span className="text-ink-500">vs préc.</span>
+              </div>
             </div>
-            <div className="mt-1 flex items-center gap-1.5 text-[12px]">
-              <GrowthBadge growth={kpis?.quoteRequests.growth || 0} />
-              <span className="text-ink-500">vs période précédente</span>
+            <Sparkline data={sparkVisitors} color="#6366f1" />
+          </div>
+        </div>
+
+        {/* Card 3 : Demandes de devis */}
+        <div className="flex flex-col justify-between rounded-[16px] border border-line bg-white p-5 shadow-soft transition-all hover:shadow-hover">
+          <span className="text-[12.5px] font-bold uppercase tracking-[0.06em] text-ink-500">
+            Demandes de devis
+          </span>
+          <div className="mt-2 flex items-end justify-between gap-3">
+            <div>
+              <div className="flex items-baseline gap-2">
+                <span className="font-serif text-[28px] font-bold text-brand-900">
+                  {kpis?.quoteRequests.value}
+                </span>
+                <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-600">
+                  {kpis?.quoteRequests.conversionRate}% conv.
+                </span>
+              </div>
+              <div className="mt-1 flex items-center gap-1.5 text-[12px]">
+                <GrowthBadge growth={kpis?.quoteRequests.growth || 0} />
+                <span className="text-ink-500">vs préc.</span>
+              </div>
             </div>
+            <Sparkline data={sparkQuotes} color="#10b981" />
           </div>
         </div>
       </div>
