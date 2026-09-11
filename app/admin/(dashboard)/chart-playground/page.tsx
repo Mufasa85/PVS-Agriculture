@@ -2,10 +2,18 @@
 
 import { useState } from "react";
 import { curveCatmullRom } from "@visx/curve";
+import { feature } from "topojson-client";
+import worldData from "world-atlas/countries-110m.json";
+import type { FeatureCollection, Geometry } from "geojson";
 import {
   Background,
   ChartBrushLayout,
   ChartTooltip,
+  ChoroplethChart,
+  ChoroplethFeatureComponent,
+  type ChoroplethFeature,
+  ChoroplethGraticule,
+  ChoroplethTooltip,
   Legend,
   LegendItem,
   LegendLabel,
@@ -32,6 +40,31 @@ const ringData = [
   { label: "Mobile", value: 3100, maxValue: 5000, color: "#10b981" },
   { label: "Tablet", value: 1800, maxValue: 5000, color: "#f59e0b" },
 ];
+
+const geojson = feature(
+  worldData as any,
+  (worldData as any).objects.countries
+) as unknown as FeatureCollection<
+  Geometry,
+  { name?: string; visitors?: number }
+>;
+
+geojson.features.forEach((f) => {
+  f.properties.visitors = Math.floor(Math.random() * 10000);
+});
+
+function getVisitorColor(feature: ChoroplethFeature, _index: number) {
+  const visitors = (feature.properties.visitors as number) ?? 0;
+  const ratio = visitors / 10000;
+  const r = Math.round(220 - ratio * 170);
+  const g = Math.round(230 - ratio * 180);
+  const b = Math.round(250 - ratio * 60);
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+function getVisitorValue(feature: ChoroplethFeature, _index: number) {
+  return (feature.properties.visitors as number) ?? 0;
+}
 
 export default function ChartPlaygroundPage() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -100,6 +133,22 @@ export default function ChartPlaygroundPage() {
             <LegendProgress />
           </LegendItem>
         </Legend>
+      </div>
+
+      <h1 className="text-2xl font-bold">Choropleth Chart - Interactive</h1>
+      <div className="w-full">
+        <ChoroplethChart
+          aspectRatio="2 / 1"
+          data={geojson}
+          margin={{ top: 8, right: 8, bottom: 40, left: 8 }}
+        >
+          <ChoroplethGraticule />
+          <ChoroplethFeatureComponent getFeatureColor={getVisitorColor} />
+          <ChoroplethTooltip
+            getFeatureValue={getVisitorValue}
+            valueLabel="Visitors"
+          />
+        </ChoroplethChart>
       </div>
     </div>
   );

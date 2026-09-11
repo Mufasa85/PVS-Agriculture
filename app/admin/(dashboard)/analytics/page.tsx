@@ -86,15 +86,44 @@ const baseGeojson = feature(
   { name?: string; visitors?: number }
 >;
 
-function getVisitorColor(feature: ChoroplethFeature, _index: number) {
-  const visitors = (feature.properties.visitors as number) ?? 0;
-  if (visitors === 0) return "#e8e8e8";
-  const maxVisitors = 1000;
-  const ratio = Math.min(visitors / maxVisitors, 1);
-  const r = Math.round(220 - ratio * 170);
-  const g = Math.round(230 - ratio * 180);
-  const b = Math.round(250 - ratio * 60);
+function visitorColorFor(visitors: number, maxVisitors: number): string {
+  if (visitors === 0) return "#d8dce4";
+
+  const max = Math.max(maxVisitors, 1);
+  const ratio = Math.min(visitors / max, 1);
+
+  const stops = [
+    { t: 0.0, r: 34, g: 197, b: 94 },
+    { t: 0.25, r: 132, g: 204, b: 22 },
+    { t: 0.5, r: 234, g: 179, b: 8 },
+    { t: 0.75, r: 249, g: 115, b: 22 },
+    { t: 1.0, r: 220, g: 38, b: 38 },
+  ];
+
+  let lo = stops[0];
+  let hi = stops[stops.length - 1];
+  for (let i = 0; i < stops.length - 1; i++) {
+    if (ratio >= stops[i].t && ratio <= stops[i + 1].t) {
+      lo = stops[i];
+      hi = stops[i + 1];
+      break;
+    }
+  }
+
+  const span = hi.t - lo.t || 1;
+  const localRatio = (ratio - lo.t) / span;
+  const r = Math.round(lo.r + (hi.r - lo.r) * localRatio);
+  const g = Math.round(lo.g + (hi.g - lo.g) * localRatio);
+  const b = Math.round(lo.b + (hi.b - lo.b) * localRatio);
+
   return `rgb(${r}, ${g}, ${b})`;
+}
+
+function getVisitorColorFactory(maxVisitors: number) {
+  return function getVisitorColor(feature: ChoroplethFeature, _index: number) {
+    const visitors = (feature.properties.visitors as number) ?? 0;
+    return visitorColorFor(visitors, maxVisitors);
+  };
 }
 
 function getFeatureName(feature: ChoroplethFeature, _index: number) {
@@ -178,6 +207,13 @@ export default function AdminAnalyticsPage() {
       })),
     };
   }, [data?.visitorsByCountry]);
+
+  const maxVisitors = useMemo(() => {
+    const vals = Object.values(data?.visitorsByCountry || {});
+    return vals.length > 0 ? Math.max(...vals) : 0;
+  }, [data?.visitorsByCountry]);
+
+  const getVisitorColor = useMemo(() => getVisitorColorFactory(maxVisitors), [maxVisitors]);
 
   async function fetchAnalytics(selectedDays: number) {
     setLoading(true);
@@ -641,8 +677,14 @@ export default function AdminAnalyticsPage() {
                       key={numeric}
                       className="flex items-center justify-between rounded-lg px-2.5 py-1.5 transition-colors hover:bg-brand-50/60"
                     >
-                      <span className="truncate text-[13px] font-medium text-brand-900">
-                        {name}
+                      <span className="flex items-center gap-2 truncate">
+                        <span
+                          className="h-2.5 w-2.5 shrink-0 rounded-full"
+                          style={{ backgroundColor: visitorColorFor(count, maxVisitors) }}
+                        />
+                        <span className="truncate text-[13px] font-medium text-brand-900">
+                          {name}
+                        </span>
                       </span>
                       <span className="flex shrink-0 items-center gap-2">
                         <span className="text-[12.5px] font-bold text-brand-700">
