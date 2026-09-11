@@ -3,17 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import IconSelect from "@/components/admin/IconSelect";
 import { XIcon } from "@/components/ui/icons";
-
-const ICON_OPTIONS = [
-  { value: "egg", label: "Œuf" },
-  { value: "cattle", label: "Bétail" },
-  { value: "pig", label: "Porc" },
-  { value: "fish", label: "Poisson" },
-  { value: "sprout", label: "Pousse" },
-  { value: "feedbag", label: "Sac d'aliment" },
-  { value: "check", label: "Coché" },
-];
 
 export type CategoryModalData = {
   id?: number;
@@ -181,17 +172,10 @@ export default function CategoryModal({
               <label className="mb-1.5 block text-[13px] font-bold text-brand-900">
                 Icône
               </label>
-              <select
+              <IconSelect
                 value={values.icon}
-                onChange={(e) => update("icon", e.target.value)}
-                className={inputClass}
-              >
-                {ICON_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
+                onChange={(icon) => update("icon", icon)}
+              />
             </div>
 
             <div>

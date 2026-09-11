@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import CategorySelect from "@/components/admin/CategorySelect";
 import ImageUploader from "@/components/admin/ImageUploader";
 import type { CategoryInfo } from "@/lib/products";
 
@@ -142,17 +143,11 @@ export default function ProductForm({
 
         <div>
           <label className="mb-1.5 block text-[13px] font-bold text-brand-900">Catégorie</label>
-          <select
+          <CategorySelect
             value={values.category}
-            onChange={(e) => update("category", e.target.value)}
-            className="w-full rounded-[10px] border border-line bg-white px-4 py-3 text-[14.5px] text-brand-900 outline-none transition-colors placeholder:text-ink-500/50 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15"
-          >
-            {categories.map((cat) => (
-              <option key={cat.slug} value={cat.slug}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
+            categories={categories}
+            onChange={(slug) => update("category", slug)}
+          />
         </div>
       </div>
 
