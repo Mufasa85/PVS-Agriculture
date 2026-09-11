@@ -316,7 +316,7 @@ export async function seedSampleAnalyticsData() {
       "https://l.instagram.com/",
       "https://bing.com/",
     ];
-    const IPS = Array.from({ length: 45 }, (_, i) => `197.234.${Math.floor(i / 5) + 1}.${(i % 10) * 23 + 12}`);
+    const IPS = Array.from({ length: 45 }, (_, i) => `${Math.floor(i / 5) + 1}.${(i % 10) * 23 + 12}.${Math.floor(i / 5) + 1}.${(i % 10) * 23 + 12}`);
 
     const events = [];
     const now = new Date();

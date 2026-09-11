@@ -62,7 +62,7 @@ export type ContactInfo = {
   consentText: string;
 };
 
-export type ActivityPageContent = {
+export type AgriculturePageContent = {
   metaTitle: string;
   metaDescription: string;
   hero: {
@@ -73,15 +73,26 @@ export type ActivityPageContent = {
     paragraph: string;
     imageSrc: string;
     imageAlt: string;
-    badge: string;
+  };
+  overview: {
+    eyebrow: string;
+    title: string;
+    paragraphs: string[];
+    tags: string[];
+    imageSrc: string;
+    imageAlt: string;
+    products: { name: string; description: string; imageSrc: string; imageAlt: string }[];
   };
   features: {
     eyebrow: string;
     title: string;
-    paragraph: string;
-    imageSrc: string;
-    imageAlt: string;
-    points: FeaturePoint[];
+    subtitle: string;
+    items: { icon: string; title: string; description: string }[];
+  };
+  pricing: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
   };
   stats: Stat[];
   cta: {

@@ -14,7 +14,7 @@
 import type {
   AboutPageContent,
   Activity,
-  ActivityPageContent,
+  AgriculturePageContent,
   ContactInfo,
   Cta,
   ElevagePageContent,
@@ -398,7 +398,7 @@ export const footer = {
   copyright: "PVS ONGD ASBL. Tous droits réservés.",
 };
 
-export const agriculturePage: ActivityPageContent = {
+export const agriculturePage: AgriculturePageContent = {
   metaTitle: "Agriculture — PVS ONGD ASBL",
   metaDescription:
     "Découvrez l'engagement agricole de PVS ONGD ASBL : production de cultures vivrières, pratiques durables et suivi rigoureux, de la préparation du sol à la récolte.",
@@ -415,50 +415,101 @@ export const agriculturePage: ActivityPageContent = {
       "De la préparation du sol à la récolte, PVS ONGD ASBL met en œuvre des pratiques agricoles rigoureuses pour produire des cultures saines, tout en respectant les cycles naturels de la terre à Kinshasa.",
     // [PLACEHOLDER] Unsplash
     imageSrc:
-      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80",
     imageAlt: "Champ agricole verdoyant au lever du soleil",
-    badge: "🌾 Agriculture d'abord",
+  },
+
+  overview: {
+    eyebrow: "Notre exploitation",
+    title: "Une production vivrière structurée, à taille humaine",
+    paragraphs: [
+      "Nos parcelles sont organisées en plates-bandes suivies individuellement, du semis à la récolte. Chaque culture est choisie pour s'adapter au climat et aux sols de Kinshasa, avec un objectif simple : une production saine, régulière et traçable.",
+      "Nous travaillons à la demande pour certaines cultures maraîchères, ce qui nous permet de garantir fraîcheur et disponibilité auprès de nos partenaires, sans gaspillage ni surproduction.",
+    ],
+    tags: ["Production locale", "Cultures diversifiées", "Suivi rigoureux"],
+    // [PLACEHOLDER] Unsplash
+    imageSrc:
+      "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Rangées de cultures dans une exploitation agricole",
+    products: [
+      {
+        name: "Épinard",
+        description:
+          "Cultivé en plate-bande et produit à la demande, notre épinard est récolté frais pour préserver toute sa qualité nutritionnelle.",
+        // [PLACEHOLDER] Unsplash
+        imageSrc:
+          "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=700&q=80",
+        imageAlt: "Plate-bande d'épinard",
+      },
+      {
+        name: "Oseille",
+        description:
+          "Une culture traditionnelle suivie de près, appréciée pour sa saveur et sa place centrale dans l'alimentation locale.",
+        // [PLACEHOLDER] Unsplash
+        imageSrc:
+          "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=700&q=80",
+        imageAlt: "Plate-bande d'oseille",
+      },
+      {
+        name: "Nduda",
+        description:
+          "Cultivée selon les mêmes standards de rigueur, la nduda complète notre offre de légumes-feuilles produits à la demande.",
+        // [PLACEHOLDER] Unsplash
+        imageSrc:
+          "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=700&q=80",
+        imageAlt: "Plate-bande de nduda",
+      },
+    ],
   },
 
   features: {
     eyebrow: "Nos pratiques agricoles",
     title: "Une production organisée, du semis à la récolte",
-    paragraph:
+    subtitle:
       "De la préparation du sol à la récolte, nous mettons en œuvre des pratiques agricoles rigoureuses pour produire des cultures saines, tout en respectant les cycles naturels de la terre.",
-    // [PLACEHOLDER] Unsplash
-    imageSrc:
-      "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=800&q=80",
-    imageAlt: "Rangées de cultures dans une exploitation agricole",
-    points: [
+    items: [
       {
+        icon: "barn",
         title: "Production agricole",
         description: "Une production organisée, suivie du semis à la récolte.",
       },
       {
+        icon: "leaf",
         title: "Cultures diversifiées",
         description: "Un éventail de cultures adaptées au climat local.",
       },
       {
+        icon: "lock",
         title: "Exploitation structurée",
         description: "Une exploitation organisée pour un rendement stable.",
       },
       {
+        icon: "check",
         title: "Qualité des produits",
         description: "Un contrôle attentif à chaque étape de production.",
       },
       {
+        icon: "cycle",
         title: "Production durable",
         description: "Des méthodes respectueuses des sols et des ressources.",
       },
       {
+        icon: "lines",
         title: "Suivi rigoureux",
         description: "Une organisation qui accompagne chaque cycle agricole.",
       },
     ],
   },
 
+  pricing: {
+    eyebrow: "Nos cultures disponibles",
+    title: "Des plates-bandes produites à la demande",
+    subtitle:
+      "Chaque culture est semée selon vos besoins, pour garantir fraîcheur et disponibilité.",
+  },
+
   stats: [
-    { value: "6", label: "Points forts agricoles" },
+    { value: "3", label: "Cultures suivies" },
     { value: "100%", label: "Ancrage local" },
     { value: "ONGD", label: "Engagement durable" },
   ],
