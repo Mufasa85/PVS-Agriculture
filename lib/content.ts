@@ -138,12 +138,15 @@ export const hero = {
       alt: "Vache dans un pâturage au coucher du soleil",
     },
     {
-      src: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80",
-      alt: "Étang de pisciculture",
+      src: "https://images.unsplash.com/photo-1529313780224-1a12b68bed16?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=markus-winkler-HeqXGxnsnX4-unsplash.jpg",
+      alt: "Plate bande",
     },
     {
       src: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=900&q=80",
       alt: "Porcherie moderne et propre",
+    }, {
+      src: "https://images.unsplash.com/photo-1515735543535-12664d2453f8?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=milos-prelevic-uWLvruHp8kY-unsplash.jpg",
+      alt: "Pisciculture moderne et propre",
     },
   ],
   badge: "🌾 Agriculture d'abord",
@@ -158,7 +161,7 @@ export const agricultureFeature = {
     "De la préparation du sol à la récolte, nous mettons en œuvre des pratiques agricoles rigoureuses pour produire des cultures saines, tout en respectant les cycles naturels de la terre.",
   // [PLACEHOLDER] Unsplash
   imageSrc:
-    "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=markus-spiske-sFydXGrt5OA-unsplash.jpg",
   imageAlt: "Rangées de cultures dans une exploitation agricole",
   points: [
     {
@@ -325,7 +328,7 @@ export const contactForm = {
     message: { label: "Message", placeholder: "Décrivez votre besoin..." },
   },
   submitLabel: "Envoyer le message",
-  successLabel: "Message envoyé ✓",
+  successLabel: "Votre message a été envoyé ✓",
 };
 
 export const contact: ContactInfo = {
@@ -429,7 +432,7 @@ export const agriculturePage: AgriculturePageContent = {
     tags: ["Production locale", "Cultures diversifiées", "Suivi rigoureux"],
     // [PLACEHOLDER] Unsplash
     imageSrc:
-      "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=markus-spiske-sFydXGrt5OA-unsplash.jpg",
     imageAlt: "Rangées de cultures dans une exploitation agricole",
     products: [
       {
@@ -727,13 +730,13 @@ export const elevagePage: ElevagePageContent = {
     slides: [
       {
         // [PLACEHOLDER] Unsplash
-        src: "https://images.unsplash.com/photo-1600428853876-6b57d20b9da6?auto=format&fit=crop&w=1200&q=80",
-        alt: "Vaches dans un pâturage",
-        caption: "Bovins au pâturage",
+        src: "https://images.unsplash.com/photo-1587213128862-80345e23a71a?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=dan-renco-Y06imaOLycY-unsplash.jpg",
+        alt: "Porc dans leurs enclosures",
+        caption: "Porcs dans leurs enclosures",
       },
       {
         // [PLACEHOLDER] Unsplash
-        src: "https://images.unsplash.com/photo-1516467508483-a7212febe7da?auto=format&fit=crop&w=1200&q=80",
+        src: " https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=ben-moreland-auijD19Byq8-unsplash.jpg?auto=format&fit=crop&w=1200&q=80",
         alt: "Poules en élevage libre",
         caption: "Volailles en élevage libre",
       },
@@ -745,9 +748,9 @@ export const elevagePage: ElevagePageContent = {
       },
       {
         // [PLACEHOLDER] Unsplash
-        src: "https://images.unsplash.com/photo-1592875811445-9ad3c67b0c9e?auto=format&fit=crop&w=1200&q=80",
-        alt: "Moutons dans un enclos",
-        caption: "Ovins au repos",
+        src: "https://images.unsplash.com/photo-1648141499246-97a0eb56c2fd?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=creab-thepolymath-rY56zxvWnKs-unsplash.jpg",
+        alt: "Oeufs frais",
+        caption: "Oeufs Frais",
       },
       {
         // [PLACEHOLDER] Unsplash
