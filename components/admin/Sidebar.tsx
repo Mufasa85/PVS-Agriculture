@@ -11,7 +11,6 @@ import {
   LayoutGrid,
   LogOut,
   Mail,
-  Menu,
   Package,
   Shield,
   Tag,
@@ -110,6 +109,14 @@ export default function Sidebar({
     setOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    function handleOpen() {
+      setOpen(true);
+    }
+    window.addEventListener("admin-sidebar-open", handleOpen);
+    return () => window.removeEventListener("admin-sidebar-open", handleOpen);
+  }, []);
+
   const navItems = isSuperAdmin ? [...PRIMARY_NAV, TEAM_NAV] : PRIMARY_NAV;
 
   function isActive(item: NavItem) {
@@ -190,26 +197,6 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Barre mobile */}
-      <div className="sticky top-0 z-30 flex items-center gap-3 border-b border-white/40 bg-white/70 px-5 py-3.5 shadow-soft backdrop-blur-xl nav:hidden">
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="flex h-9 w-9 items-center justify-center rounded-[10px] border border-line text-brand-900 transition-all hover:border-brand-300 hover:bg-brand-50 active:scale-95"
-          aria-label="Ouvrir le menu"
-        >
-          <Menu size={19} />
-        </button>
-        <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-[8px] bg-brand-600 font-serif text-[11px] font-bold text-white shadow-brand">
-            PVS
-          </div>
-          <span className="font-serif text-[15px] font-bold text-brand-900">
-            Espace admin
-          </span>
-        </div>
-      </div>
-
       {/* Sidebar desktop */}
       <aside className="fixed inset-y-3 left-3 z-30 hidden w-[248px] overflow-hidden rounded-[16px] border border-white/50 bg-white/70 shadow-float backdrop-blur-xl nav:block">
         {sidebarContent}
