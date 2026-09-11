@@ -1,5 +1,6 @@
 "use client";
 
+import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
@@ -95,17 +96,27 @@ export default function AdminTopBar({
         </button>
 
         {/* Avatar */}
-        <div className="flex items-center gap-2.5 rounded-full border border-line bg-white py-1 pl-1 pr-3.5 shadow-soft">
+        <div className="flex items-center gap-2.5 rounded-full border border-line bg-white py-1 pl-1 shadow-soft nav:pr-3.5">
           <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-[11.5px] font-bold text-white shadow-sm">
             {initials || "PV"}
           </div>
-          <div>
+          <div className="hidden nav:block">
             <p className="text-[12.5px] font-bold text-brand-900 leading-tight">
               {userName}
             </p>
             <p className="text-[10.5px] text-ink-500 leading-tight">{userRole}</p>
           </div>
         </div>
+
+        {/* Bouton menu (mobile uniquement) */}
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new CustomEvent("admin-sidebar-open"))}
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-line bg-white text-brand-900 transition-all hover:border-brand-300 hover:bg-brand-50 active:scale-95 nav:hidden"
+          aria-label="Ouvrir le menu"
+        >
+          <Menu size={19} />
+        </button>
       </div>
     </header>
   );
