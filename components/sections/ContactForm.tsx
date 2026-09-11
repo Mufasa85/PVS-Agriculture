@@ -1,7 +1,9 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 
+import PageLoader from "@/components/ui/PageLoader";
 import { contact, contactForm } from "@/lib/content";
 import { trackQuoteRequest } from "@/lib/track";
 
@@ -61,107 +63,120 @@ export default function ContactForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="rounded-pvs-lg bg-white px-[22px] py-7 shadow-float mid:p-[42px]"
-    >
-      <h3 className="mb-1.5 text-[22px] text-brand-900">{contactForm.title}</h3>
-      <p className="mb-[26px] text-sm text-ink-500">{contactForm.subtitle}</p>
+    <div className="relative">
+      {/* Loader animé plein écran pendant l'envoi du message */}
+      <AnimatePresence>
+        {status === "submitting" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-[3000] flex items-center justify-center bg-white/95 backdrop-blur-sm"
+          >
+            <PageLoader caption="Envoi de votre message…" />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="grid grid-cols-1 gap-[18px] mid:grid-cols-2">
-        <div className="mb-[18px]">
-          <label htmlFor="nom" className={labelClass}>
-            {contactForm.fields.nom.label}
-          </label>
-          <input
-            type="text"
-            id="nom"
-            name="nom"
-            placeholder={contactForm.fields.nom.placeholder}
-            required
-            className={fieldClass}
-          />
-        </div>
-        <div className="mb-[18px]">
-          <label htmlFor="telephone" className={labelClass}>
-            {contactForm.fields.telephone.label}
-          </label>
-          <input
-            type="tel"
-            id="telephone"
-            name="telephone"
-            placeholder={contactForm.fields.telephone.placeholder}
-            required
-            className={fieldClass}
-          />
-        </div>
-      </div>
-
-      <div className="mb-[18px]">
-        <label htmlFor="email" className={labelClass}>
-          {contactForm.fields.email.label}
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder={contactForm.fields.email.placeholder}
-          required
-          className={fieldClass}
-        />
-      </div>
-
-      <div className="mb-[18px]">
-        <label htmlFor="sujet" className={labelClass}>
-          {contactForm.fields.sujet.label}
-        </label>
-        <select id="sujet" name="sujet" className={fieldClass}>
-          {contact.formSubjects.map((subject) => (
-            <option key={subject}>{subject}</option>
-          ))}
-        </select>
-      </div>
-
-      <div className="mb-[18px]">
-        <label htmlFor="message" className={labelClass}>
-          {contactForm.fields.message.label}
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          placeholder={contactForm.fields.message.placeholder}
-          required
-          className={`${fieldClass} min-h-[110px] resize-y`}
-        />
-      </div>
-
-      <button
-        type="submit"
-        disabled={status === "submitting"}
-        className={`btn mt-1.5 w-full ${
-          status === "success"
-            ? "bg-[#2f9e5e] text-white"
-            : status === "error"
-              ? "bg-red-600 text-white"
-              : "btn-primary"
-        } ${status === "submitting" ? "opacity-70" : ""}`}
+      <form
+        onSubmit={handleSubmit}
+        className="rounded-pvs-lg bg-white px-[22px] py-7 shadow-float mid:p-[42px]"
       >
-        {status === "submitting"
-          ? "Envoi en cours..."
-          : status === "success"
-            ? contactForm.successLabel
-            : status === "error"
-              ? "Échec de l'envoi"
-              : contactForm.submitLabel}
-      </button>
+        <h3 className="mb-1.5 text-[22px] text-brand-900">{contactForm.title}</h3>
+        <p className="mb-[26px] text-sm text-ink-500">{contactForm.subtitle}</p>
 
-      {status === "error" && errorMsg && (
-        <p className="mt-3 text-center text-sm text-red-600">{errorMsg}</p>
-      )}
+        <div className="grid grid-cols-1 gap-[18px] mid:grid-cols-2">
+          <div className="mb-[18px]">
+            <label htmlFor="nom" className={labelClass}>
+              {contactForm.fields.nom.label}
+            </label>
+            <input
+              type="text"
+              id="nom"
+              name="nom"
+              placeholder={contactForm.fields.nom.placeholder}
+              required
+              className={fieldClass}
+            />
+          </div>
+          <div className="mb-[18px]">
+            <label htmlFor="telephone" className={labelClass}>
+              {contactForm.fields.telephone.label}
+            </label>
+            <input
+              type="tel"
+              id="telephone"
+              name="telephone"
+              placeholder={contactForm.fields.telephone.placeholder}
+              required
+              className={fieldClass}
+            />
+          </div>
+        </div>
 
-      <p className="mt-3.5 text-center text-xs text-ink-500">
-        {contact.consentText}
-      </p>
-    </form>
+        <div className="mb-[18px]">
+          <label htmlFor="email" className={labelClass}>
+            {contactForm.fields.email.label}
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder={contactForm.fields.email.placeholder}
+            required
+            className={fieldClass}
+          />
+        </div>
+
+        <div className="mb-[18px]">
+          <label htmlFor="sujet" className={labelClass}>
+            {contactForm.fields.sujet.label}
+          </label>
+          <select id="sujet" name="sujet" className={fieldClass}>
+            {contact.formSubjects.map((subject) => (
+              <option key={subject}>{subject}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mb-[18px]">
+          <label htmlFor="message" className={labelClass}>
+            {contactForm.fields.message.label}
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            placeholder={contactForm.fields.message.placeholder}
+            required
+            className={`${fieldClass} min-h-[110px] resize-y`}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={status === "submitting"}
+          className={`btn mt-1.5 w-full ${
+            status === "success"
+              ? "bg-[#2f9e5e] text-white"
+              : status === "error"
+                ? "bg-red-600 text-white"
+                : "btn-primary"
+          } ${status === "submitting" ? "opacity-70" : ""}`}
+        >
+          {status === "submitting"
+            ? "Envoi en cours..."
+            : status === "success"
+              ? contactForm.successLabel
+              : status === "error"
+                ? errorMsg || "Échec de l'envoi"
+                : contactForm.submitLabel}
+        </button>
+
+        <p className="mt-3.5 text-center text-xs text-ink-500">
+          {contact.consentText}
+        </p>
+      </form>
+    </div>
   );
 }
