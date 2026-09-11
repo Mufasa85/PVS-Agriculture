@@ -357,9 +357,18 @@ const SCENES: Record<StageKey, () => JSX.Element> = {
 
 export default function PageLoader({
   fullScreen = false,
+  compact = false,
+  showCaption = true,
+  caption,
   className,
 }: {
   fullScreen?: boolean;
+  /** Version réduite, pensée pour être incrustée dans une carte ou un formulaire. */
+  compact?: boolean;
+  /** Masque la légende narrative et les puces d'étapes (utile si l'appelant affiche son propre texte). */
+  showCaption?: boolean;
+  /** Remplace la légende narrative par un texte fixe (ex: "Envoi de votre message…"). */
+  caption?: string;
   className?: string;
 }) {
   const [stageIndex, setStageIndex] = useState(0);
@@ -374,10 +383,13 @@ export default function PageLoader({
 
   const stageKey = STAGE_ORDER[stageIndex];
   const Scene = SCENES[stageKey];
+  const sizeClass = compact
+    ? "h-[76px] w-[76px]"
+    : "h-[132px] w-[132px] nav:h-[160px] nav:w-[160px]";
 
   const content = (
     <div className={`flex flex-col items-center gap-6 ${className ?? ""}`}>
-      <div className="relative h-[132px] w-[132px] nav:h-[160px] nav:w-[160px]">
+      <div className={`relative ${sizeClass}`}>
         <AnimatePresence mode="wait">
           <motion.svg
             key={stageKey}
@@ -394,31 +406,33 @@ export default function PageLoader({
         </AnimatePresence>
       </div>
 
-      <div className="flex flex-col items-center gap-3 text-center">
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={stageKey}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.3 }}
-            className="font-serif text-[15px] font-semibold text-brand-900 nav:text-[16px]"
-          >
-            {STAGE_CAPTIONS[stageKey]}
-          </motion.p>
-        </AnimatePresence>
+      {showCaption && (
+        <div className="flex flex-col items-center gap-3 text-center">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={caption ?? stageKey}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.3 }}
+              className="font-serif text-[15px] font-semibold text-brand-900 nav:text-[16px]"
+            >
+              {caption ?? STAGE_CAPTIONS[stageKey]}
+            </motion.p>
+          </AnimatePresence>
 
-        <div className="flex items-center gap-1.5" role="status" aria-label="Chargement en cours">
-          {STAGE_ORDER.map((key) => (
-            <span
-              key={key}
-              className={`h-1.5 w-1.5 rounded-full transition-colors duration-300 ${
-                key === stageKey ? "bg-gold-500" : "bg-brand-100"
-              }`}
-            />
-          ))}
+          <div className="flex items-center gap-1.5" role="status" aria-label="Chargement en cours">
+            {STAGE_ORDER.map((key) => (
+              <span
+                key={key}
+                className={`h-1.5 w-1.5 rounded-full transition-colors duration-300 ${
+                  key === stageKey ? "bg-gold-500" : "bg-brand-100"
+                }`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 
