@@ -3,6 +3,15 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { SearchIcon } from "@/components/ui/icons";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 type AuditLog = {
   id: number;
@@ -329,27 +338,74 @@ export default function AdminAuditLogsPage() {
         </div>
 
         {/* ── Pagination ── */}
-        {data && data.totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-line px-5 py-3.5">
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page <= 1}
-              className="rounded-[8px] border border-line bg-white px-3.5 py-1.5 text-[12.5px] font-semibold text-brand-900 transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              ← Précédent
-            </button>
+        {data && data.total > 0 && (
+          <div className="flex items-center justify-between gap-2 border-t border-line px-5 py-3.5">
             <span className="text-[12.5px] font-semibold text-ink-500">
-              {data.page} / {data.totalPages}
+              Page {data.page} / {data.totalPages}
             </span>
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.min(data.totalPages, p + 1))}
-              disabled={page >= data.totalPages}
-              className="rounded-[8px] border border-line bg-white px-3.5 py-1.5 text-[12.5px] font-semibold text-brand-900 transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              Suivant →
-            </button>
+            <Pagination className="mx-0 w-auto justify-end">
+              <PaginationContent>
+                {page > 1 && (
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setPage((p) => Math.max(1, p - 1));
+                      }}
+                    />
+                  </PaginationItem>
+                )}
+                {(() => {
+                  const pages: (number | "ellipsis")[] = [];
+                  const totalPages = data.totalPages;
+                  const current = data.page;
+                  const add = (p: number | "ellipsis") => pages.push(p);
+
+                  if (totalPages <= 7) {
+                    for (let i = 1; i <= totalPages; i++) add(i);
+                  } else {
+                    add(1);
+                    if (current > 3) add("ellipsis");
+                    for (let i = Math.max(2, current - 1); i <= Math.min(totalPages - 1, current + 1); i++) add(i);
+                    if (current < totalPages - 2) add("ellipsis");
+                    add(totalPages);
+                  }
+
+                  return pages.map((p, idx) =>
+                    p === "ellipsis" ? (
+                      <PaginationItem key={`ellipsis-${idx}`}>
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    ) : (
+                      <PaginationItem key={p}>
+                        <PaginationLink
+                          href="#"
+                          isActive={p === current}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setPage(p);
+                          }}
+                        >
+                          {p}
+                        </PaginationLink>
+                      </PaginationItem>
+                    )
+                  );
+                })()}
+                {page < data.totalPages && (
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setPage((p) => Math.min(data.totalPages, p + 1));
+                      }}
+                    />
+                  </PaginationItem>
+                )}
+              </PaginationContent>
+            </Pagination>
           </div>
         )}
       </div>
