@@ -4,22 +4,15 @@ import ActivitiesCarousel from "@/components/sections/ActivitiesCarousel";
 import ActivityCard from "@/components/sections/ActivityCard";
 import Reveal from "@/components/ui/Reveal";
 import SectionHead from "@/components/ui/SectionHead";
-import {
-  CattleIcon,
-  FeedBagIcon,
-  FishIcon,
-  PigIcon,
-  SproutIcon,
-} from "@/components/ui/icons";
 import { activities, activitesSection, ctaBanner } from "@/lib/content";
 
-const iconBySlug = {
-  agriculture: SproutIcon,
-  elevage: CattleIcon,
-  pisciculture: FishIcon,
-  porcherie: PigIcon,
-  produits: FeedBagIcon,
-} as const;
+const iconBySlug: Record<string, string> = {
+  agriculture: "sprout",
+  elevage: "cattle",
+  pisciculture: "fish",
+  porcherie: "pig",
+  produits: "feedbag",
+};
 
 /**
  * La maquette pose les ancres de navigation sur le corps de certaines cartes
@@ -55,10 +48,7 @@ export default function Activites() {
               <ActivityCard
                 activity={activity}
                 anchorId={anchorBySlug[activity.slug]}
-                icon={
-                  iconBySlug[activity.slug as keyof typeof iconBySlug] ??
-                  SproutIcon
-                }
+                icon={iconBySlug[activity.slug] ?? "sprout"}
               />
             </Reveal>
           ))}

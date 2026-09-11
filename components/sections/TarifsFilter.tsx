@@ -6,26 +6,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { Product } from "@prisma/client";
 
 import {
-  CattleIcon,
-  CheckIcon,
-  EggIcon,
-  FeedBagIcon,
-  FishIcon,
-  PigIcon,
-  SproutIcon,
-} from "@/components/ui/icons";
+  CategoryIcon,
+} from "@/components/admin/CategoryIcon";
 import { formatProductPrice } from "@/lib/products";
 import { trackEvent, trackProductView } from "@/lib/track";
-
-const categoryIcons: Record<string, (props: { size?: number }) => React.ReactElement> = {
-  cattle: CattleIcon,
-  fish: FishIcon,
-  feedbag: FeedBagIcon,
-  check: CheckIcon,
-  egg: EggIcon,
-  pig: PigIcon,
-  sprout: SproutIcon,
-};
 
 type Category = { id: string; icon: string; name: string };
 
@@ -59,7 +43,6 @@ export default function TarifsFilter({
         {/* ── Filtres ── */}
         <div className="mb-12 flex flex-wrap justify-center gap-3">
           {categories.map((cat) => {
-            const Icon = categoryIcons[cat.icon] ?? CheckIcon;
             const isActive = active === cat.id;
             return (
               <button
@@ -71,7 +54,7 @@ export default function TarifsFilter({
                     : "border-line bg-white text-brand-900 hover:border-brand-300 hover:bg-brand-50"
                 }`}
               >
-                <Icon size={18} />
+                <CategoryIcon icon={cat.icon} size={18} />
                 {cat.id === "tous" ? "Tous" : cat.name}
               </button>
             );

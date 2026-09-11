@@ -1,37 +1,39 @@
 "use client";
 
+import { Clock, Mail, MapPin, MessageCircle, Phone, type LucideIcon } from "lucide-react";
+
 import ContactForm from "@/components/sections/ContactForm";
 import Reveal from "@/components/ui/Reveal";
-import {
-  ClockIcon,
-  MailIcon,
-  PhoneIcon,
-  PinIcon,
-  WhatsAppOutlineIcon,
-} from "@/components/ui/icons";
 import { contact } from "@/lib/content";
 import { trackContactClick } from "@/lib/track";
 
-const infoItems = [
+const infoItems: {
+  icon: LucideIcon;
+  title: string;
+  value: string;
+  href?: string;
+  external?: boolean;
+  channel?: "phone" | "whatsapp" | "email";
+}[] = [
   {
-    icon: PhoneIcon,
+    icon: Phone,
     title: "Téléphone",
     value: contact.phone,
     href: contact.phoneHref,
-    channel: "phone" as const,
+    channel: "phone",
   },
   {
-    icon: WhatsAppOutlineIcon,
+    icon: MessageCircle,
     title: "WhatsApp",
     value: contact.phone,
     href: contact.whatsappHref,
     external: true,
-    channel: "whatsapp" as const,
+    channel: "whatsapp",
   },
   ...(contact.email
     ? [
         {
-          icon: MailIcon,
+          icon: Mail,
           title: "Email",
           value: contact.email,
           href: `mailto:${contact.email}`,
@@ -39,8 +41,8 @@ const infoItems = [
         },
       ]
     : []),
-  { icon: PinIcon, title: "Adresse", value: contact.address },
-  { icon: ClockIcon, title: "Horaires", value: contact.hours },
+  { icon: MapPin, title: "Adresse", value: contact.address },
+  { icon: Clock, title: "Horaires", value: contact.hours },
 ];
 
 export default function Contact() {

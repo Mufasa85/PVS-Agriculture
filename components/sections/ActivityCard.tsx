@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { CategoryIcon } from "@/components/admin/CategoryIcon";
 import { ArrowRightIcon } from "@/components/ui/icons";
 import type { Activity } from "@/lib/types";
 
@@ -11,11 +12,11 @@ import type { Activity } from "@/lib/types";
 export default function ActivityCard({
   activity,
   anchorId,
-  icon: Icon,
+  icon,
 }: {
   activity: Activity;
   anchorId?: string;
-  icon: (props: { size?: number; className?: string }) => React.JSX.Element;
+  icon: string;
 }) {
   return (
     <article className="group flex shrink-0 snap-center basis-[88%] flex-col overflow-hidden rounded-pvs-lg border border-line bg-white transition-all duration-[400ms] ease-pvs hover:-translate-y-2 hover:border-transparent hover:shadow-float mid:basis-[82%] cards:basis-auto">
@@ -28,7 +29,7 @@ export default function ActivityCard({
           className="object-cover transition-transform duration-[600ms] ease-pvs group-hover:scale-[1.08]"
         />
         <span className="absolute -bottom-6 left-[22px] z-[2] flex h-[52px] w-[52px] items-center justify-center rounded-[14px] bg-brand-600 text-white shadow-[0_8px_20px_rgba(58,69,196,0.4)]">
-          <Icon size={22} />
+          <CategoryIcon icon={icon} size={22} />
         </span>
       </div>
 

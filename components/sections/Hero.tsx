@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Sprout } from "lucide-react";
 
 import Reveal from "@/components/ui/Reveal";
 import FloatingBadge from "@/components/sections/HeroFloatingBadge";
@@ -87,14 +88,7 @@ export default function Hero() {
 
           <div className="absolute bottom-[34px] left-1.5 z-[2] flex max-w-[230px] items-center gap-3 rounded-2xl bg-white px-[22px] py-[18px] shadow-card sm:-left-[30px]">
             <span className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full bg-brand-100">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M12 2C12 2 6 8 6 13a6 6 0 0012 0c0-5-6-11-6-11z"
-                  stroke="#3a45c4"
-                  strokeWidth="1.8"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <Sprout size={20} className="text-brand-600" />
             </span>
             <span className="block">
               <span className="block font-serif text-sm font-bold text-brand-900">

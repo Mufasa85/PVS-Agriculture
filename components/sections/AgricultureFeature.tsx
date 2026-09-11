@@ -1,24 +1,25 @@
 import Image from "next/image";
+import {
+  AlignCenter,
+  Check,
+  Leaf,
+  Lock,
+  RefreshCw,
+  Warehouse,
+  type LucideIcon,
+} from "lucide-react";
 
 import Reveal from "@/components/ui/Reveal";
-import {
-  BarnIcon,
-  CheckIcon,
-  CycleIcon,
-  LeafIcon,
-  LinesIcon,
-  LockIcon,
-} from "@/components/ui/icons";
 import { agricultureFeature } from "@/lib/content";
 
 /** Icônes dans l'ordre des `points` de la maquette. */
-const pointIcons = [
-  BarnIcon,
-  LeafIcon,
-  LockIcon,
-  CheckIcon,
-  CycleIcon,
-  LinesIcon,
+const pointIcons: LucideIcon[] = [
+  Warehouse,
+  Leaf,
+  Lock,
+  Check,
+  RefreshCw,
+  AlignCenter,
 ];
 
 export default function AgricultureFeature() {
@@ -52,14 +53,14 @@ export default function AgricultureFeature() {
 
             <ul className="grid gap-[30px] nav:grid-cols-2 nav:gap-x-7 nav:gap-y-[22px]">
               {agricultureFeature.points.map((point, index) => {
-                const Icon = pointIcons[index] ?? BarnIcon;
+                const Icon = pointIcons[index] ?? Warehouse;
                 return (
                   <li
                     key={point.title}
                     className="flex items-center gap-[14px] nav:items-start"
                   >
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[11px] border border-white/[0.14] bg-white/[0.08] text-gold-500 nav:h-10 nav:w-10">
-                      <Icon />
+                      <Icon size={20} />
                     </span>
                     <span className="block">
                       <span className="mb-1.5 block font-sans text-base font-bold text-white nav:mb-1 nav:text-[15.5px]">
