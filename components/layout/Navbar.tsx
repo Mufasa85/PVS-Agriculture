@@ -1,27 +1,13 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import BrandBadge from "@/components/layout/BrandBadge";
+import { CategoryIcon } from "@/components/admin/CategoryIcon";
 import { brand, navCta, navLinks, primaryNavLinks, servicesLinks } from "@/lib/content";
-import {
-  CattleIcon,
-  ChevronDownIcon,
-  FeedBagIcon,
-  FishIcon,
-  PigIcon,
-  SproutIcon,
-} from "@/components/ui/icons";
-
-const serviceIcons: Record<string, typeof SproutIcon> = {
-  sprout: SproutIcon,
-  cattle: CattleIcon,
-  fish: FishIcon,
-  pig: PigIcon,
-  feedbag: FeedBagIcon,
-};
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -94,7 +80,7 @@ export default function Navbar() {
                 className="group relative flex items-center gap-1.5 py-1.5 text-[14.5px] font-semibold text-ink-700 transition-colors hover:text-brand-700"
               >
                 Services
-                <ChevronDownIcon
+                <ChevronDown
                   size={15}
                   className={`transition-transform duration-300 ${servicesOpen ? "rotate-180" : ""}`}
                 />
@@ -112,7 +98,6 @@ export default function Navbar() {
                   >
                     <div className="grid grid-cols-2 gap-2">
                       {servicesLinks.map((service) => {
-                        const Icon = serviceIcons[service.icon] ?? SproutIcon;
                         return (
                           <Link
                             key={service.href}
@@ -121,7 +106,7 @@ export default function Navbar() {
                             className="flex items-start gap-3 rounded-[12px] p-3 transition-colors duration-200 hover:bg-brand-50"
                           >
                             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-brand-100 text-brand-700">
-                              <Icon size={19} />
+                              <CategoryIcon icon={service.icon} size={19} />
                             </span>
                             <span className="block">
                               <span className="block text-[14px] font-bold text-brand-900">
@@ -198,9 +183,7 @@ export default function Navbar() {
               aria-label="Fermer le menu"
               className="absolute right-6 top-6 flex h-11 w-11 items-center justify-center rounded-full border border-line text-brand-900 transition-colors hover:bg-brand-50"
             >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M5 5l10 10M15 5L5 15" />
-              </svg>
+              <X size={20} className="text-brand-900" />
             </button>
             {navLinks.map((link) => (
               <Link
