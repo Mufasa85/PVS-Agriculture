@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
+import InitialLoader from "@/components/layout/InitialLoader";
 import Navbar from "@/components/layout/Navbar";
 import WhatsAppButton from "@/components/layout/WhatsAppButton";
 
@@ -14,6 +15,7 @@ export default function SiteChrome() {
 
   return (
     <>
+      <InitialLoader />
       <Navbar />
       <WhatsAppButton />
     </>
