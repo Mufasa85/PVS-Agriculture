@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       ipAddress,
       metadata: mergedMetadata,
     });
-
+ 
     return NextResponse.json({ success: true, eventId: event?.id });
   } catch (error) {
     console.error("Tracking endpoint error:", error);
