@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 import { prisma } from "@/lib/prisma";
+import { contactSchema } from "@/lib/validation";
 
 export const runtime = "nodejs";
 
@@ -70,14 +71,17 @@ export async function POST(request: Request) {
     );
   }
 
-  const { nom, telephone, email, sujet, message } = body;
-
-  if (!nom || !telephone || !email || !message) {
+  const parsed = contactSchema.safeParse(body);
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: "Tous les champs obligatoires doivent être remplis." },
+      {
+        error: "Tous les champs obligatoires doivent être remplis et valides.",
+      },
       { status: 422 },
     );
   }
+
+  const { nom, telephone, email, sujet, message } = parsed.data;
 
   const smtpHost = process.env.SMTP_HOST;
   const smtpPort = process.env.SMTP_PORT;

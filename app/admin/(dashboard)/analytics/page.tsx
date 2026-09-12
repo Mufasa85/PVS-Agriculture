@@ -44,7 +44,8 @@ countries.registerLocale(frLocale);
 // Build numeric → French name lookup
 const numericToName: Record<string, string> = {};
 for (const [numeric, alpha2] of Object.entries(countries.getNumericCodes())) {
-  numericToName[numeric] = countries.getName(alpha2 as string, "fr") || (alpha2 as string);
+  numericToName[numeric] =
+    countries.getName(alpha2 as string, "fr") || (alpha2 as string);
 }
 
 type AnalyticsState = {
@@ -63,7 +64,12 @@ type AnalyticsState = {
     quotes: number;
   }>;
   devices: { Desktop: number; Mobile: number; Tablet: number };
-  sources: { Direct: number; Recherche: number; "Réseaux Sociaux": number; Références: number };
+  sources: {
+    Direct: number;
+    Recherche: number;
+    "Réseaux Sociaux": number;
+    Références: number;
+  };
   topProducts: Array<{ name: string; count: number; category: string }>;
   topSearches: Array<{ query: string; count: number }>;
   recentEvents: Array<{
@@ -80,7 +86,7 @@ type AnalyticsState = {
 
 const baseGeojson = feature(
   worldData as any,
-  (worldData as any).objects.countries
+  (worldData as any).objects.countries,
 ) as unknown as FeatureCollection<
   Geometry,
   { name?: string; visitors?: number }
@@ -213,7 +219,10 @@ export default function AdminAnalyticsPage() {
     return vals.length > 0 ? Math.max(...vals) : 0;
   }, [data?.visitorsByCountry]);
 
-  const getVisitorColor = useMemo(() => getVisitorColorFactory(maxVisitors), [maxVisitors]);
+  const getVisitorColor = useMemo(
+    () => getVisitorColorFactory(maxVisitors),
+    [maxVisitors],
+  );
 
   async function fetchAnalytics(selectedDays: number) {
     setLoading(true);
@@ -231,7 +240,10 @@ export default function AdminAnalyticsPage() {
   }
 
   async function handleReset(action: "clear" | "seed") {
-    if (action === "clear" && !confirm("Voulez-vous vraiment effacer tous les événements enregistrés ?")) {
+    if (
+      action === "clear" &&
+      !confirm("Voulez-vous vraiment effacer tous les événements enregistrés ?")
+    ) {
       return;
     }
     setResetting(true);
@@ -252,7 +264,9 @@ export default function AdminAnalyticsPage() {
   }
 
   useEffect(() => {
-    fetchAnalytics(days);
+    // Différé en microtâche : setLoading/setData dans fetchAnalytics
+    // (react-hooks/set-state-in-effect interdit le setState synchrone).
+    queueMicrotask(() => fetchAnalytics(days));
   }, [days]);
 
   if (loading && !data) {
@@ -260,7 +274,9 @@ export default function AdminAnalyticsPage() {
       <div className="flex h-96 items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="h-9 w-9 animate-spin rounded-full border-3 border-brand-200 border-t-brand-600" />
-          <p className="text-[13px] font-semibold text-ink-500">Chargement des métriques analytics…</p>
+          <p className="text-[13px] font-semibold text-ink-500">
+            Chargement des métriques analytics…
+          </p>
         </div>
       </div>
     );
@@ -271,8 +287,15 @@ export default function AdminAnalyticsPage() {
   const maxPageviews = Math.max(...traffic.map((t) => t.pageviews), 1);
 
   // Totaux pour les appareils & sources
-  const totalDeviceEvents = (data?.devices.Desktop || 0) + (data?.devices.Mobile || 0) + (data?.devices.Tablet || 0) || 1;
-  const totalSourceEvents = (data?.sources.Direct || 0) + (data?.sources.Recherche || 0) + (data?.sources["Réseaux Sociaux"] || 0) + (data?.sources.Références || 0) || 1;
+  const totalDeviceEvents =
+    (data?.devices.Desktop || 0) +
+      (data?.devices.Mobile || 0) +
+      (data?.devices.Tablet || 0) || 1;
+  const totalSourceEvents =
+    (data?.sources.Direct || 0) +
+      (data?.sources.Recherche || 0) +
+      (data?.sources["Réseaux Sociaux"] || 0) +
+      (data?.sources.Références || 0) || 1;
 
   const deviceChartData = (data?.trafficTrend || []).map((t, i) => {
     const total = t.pageviews || 0;
@@ -287,7 +310,10 @@ export default function AdminAnalyticsPage() {
     };
   });
 
-  const maxProductViews = Math.max(...(data?.topProducts.map((p) => p.count) || [1]), 1);
+  const maxProductViews = Math.max(
+    ...(data?.topProducts.map((p) => p.count) || [1]),
+    1,
+  );
 
   // Sparkline data per KPI
   const sparkPageviews = traffic.map((t) => t.pageviews);
@@ -295,10 +321,30 @@ export default function AdminAnalyticsPage() {
   const sparkQuotes = traffic.map((t) => t.quotes);
 
   const sourceRingData = [
-    { label: "Accès Direct", value: data?.sources.Direct || 0, maxValue: totalSourceEvents, color: "#3a45c4" },
-    { label: "Recherche (SEO)", value: data?.sources.Recherche || 0, maxValue: totalSourceEvents, color: "#10b981" },
-    { label: "Réseaux Sociaux", value: data?.sources["Réseaux Sociaux"] || 0, maxValue: totalSourceEvents, color: "#f59e0b" },
-    { label: "Sites Référents", value: data?.sources.Références || 0, maxValue: totalSourceEvents, color: "#6366f1" },
+    {
+      label: "Accès Direct",
+      value: data?.sources.Direct || 0,
+      maxValue: totalSourceEvents,
+      color: "#3a45c4",
+    },
+    {
+      label: "Recherche (SEO)",
+      value: data?.sources.Recherche || 0,
+      maxValue: totalSourceEvents,
+      color: "#10b981",
+    },
+    {
+      label: "Réseaux Sociaux",
+      value: data?.sources["Réseaux Sociaux"] || 0,
+      maxValue: totalSourceEvents,
+      color: "#f59e0b",
+    },
+    {
+      label: "Sites Référents",
+      value: data?.sources.Références || 0,
+      maxValue: totalSourceEvents,
+      color: "#6366f1",
+    },
   ];
 
   return (
@@ -319,7 +365,8 @@ export default function AdminAnalyticsPage() {
             Analytics & Audience
           </h1>
           <p className="mt-1 text-[13.5px] text-ink-500">
-            Statistiques de fréquentation, produits les plus vus et comportement des visiteurs.
+            Statistiques de fréquentation, produits les plus vus et comportement
+            des visiteurs.
           </p>
         </div>
 
@@ -344,9 +391,9 @@ export default function AdminAnalyticsPage() {
 
           <div className="flex items-center gap-1.5 rounded-[12px] border border-line bg-white p-1 shadow-soft">
             {[
-              { label: "7j", value: 7 },
-              { label: "30j", value: 30 },
-              { label: "90j", value: 90 },
+              { label: "7 derniers jours", value: 7 },
+              { label: "30 derniers jours", value: 30 },
+              { label: "90 derniers jours", value: 90 },
             ].map((item) => (
               <button
                 key={item.value}
@@ -438,15 +485,18 @@ export default function AdminAnalyticsPage() {
               Évolution du trafic quotidien
             </h2>
             <p className="text-[12.5px] text-ink-500">
-              Volume de pages vues et de visiteurs uniques par jour sur {days} jours.
+              Volume de pages vues et de visiteurs uniques par jour sur {days}{" "}
+              jours.
             </p>
           </div>
           <div className="flex items-center gap-5 text-[12px] font-semibold text-ink-600">
             <span className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full bg-brand-600 shadow-sm" /> Pages vues
+              <span className="h-3 w-3 rounded-full bg-brand-600 shadow-sm" />{" "}
+              Pages vues
             </span>
             <span className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full bg-emerald-500 shadow-sm" /> Visiteurs uniques
+              <span className="h-3 w-3 rounded-full bg-emerald-500 shadow-sm" />{" "}
+              Visiteurs uniques
             </span>
           </div>
         </div>
@@ -474,7 +524,9 @@ export default function AdminAnalyticsPage() {
 
           <div className="flex flex-col gap-3.5 flex-1 justify-center">
             {data?.topProducts.length === 0 ? (
-              <p className="text-center text-[13px] text-ink-500 py-6">Aucune donnée produit disponible.</p>
+              <p className="text-center text-[13px] text-ink-500 py-6">
+                Aucune donnée produit disponible.
+              </p>
             ) : (
               data?.topProducts.map((p, idx) => {
                 const percent = Math.round((p.count / maxProductViews) * 100);
@@ -518,7 +570,9 @@ export default function AdminAnalyticsPage() {
 
           <div className="flex flex-col gap-3 flex-1 justify-center">
             {data?.topSearches.length === 0 ? (
-              <p className="text-center text-[13px] text-ink-500 py-6">Aucun terme de recherche enregistré.</p>
+              <p className="text-center text-[13px] text-ink-500 py-6">
+                Aucun terme de recherche enregistré.
+              </p>
             ) : (
               data?.topSearches.map((s) => (
                 <div
@@ -550,13 +604,25 @@ export default function AdminAnalyticsPage() {
           </h2>
           <div className="flex items-center gap-5 mb-4 text-[13px] font-semibold text-ink-600">
             <span className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full" style={{ backgroundColor: "#3a45c4" }} /> Desktop
+              <span
+                className="h-3 w-3 rounded-full"
+                style={{ backgroundColor: "#3a45c4" }}
+              />{" "}
+              Desktop
             </span>
             <span className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full" style={{ backgroundColor: "#10b981" }} /> Mobile
+              <span
+                className="h-3 w-3 rounded-full"
+                style={{ backgroundColor: "#10b981" }}
+              />{" "}
+              Mobile
             </span>
             <span className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full" style={{ backgroundColor: "#f59e0b" }} /> Tablette
+              <span
+                className="h-3 w-3 rounded-full"
+                style={{ backgroundColor: "#f59e0b" }}
+              />{" "}
+              Tablette
             </span>
           </div>
           {deviceChartData.length > 0 ? (
@@ -569,9 +635,27 @@ export default function AdminAnalyticsPage() {
                     tweenYDomainOnXDomainChange
                   >
                     <Background pattern="dots" opacity={0.85} />
-                    <Line dataKey="desktop" stroke="#3a45c4" curve={curveCatmullRom} fadeEdges strokeWidth={2} />
-                    <Line dataKey="mobile" stroke="#10b981" curve={curveCatmullRom} fadeEdges strokeWidth={2} />
-                    <Line dataKey="tablet" stroke="#f59e0b" curve={curveCatmullRom} fadeEdges strokeWidth={2} />
+                    <Line
+                      dataKey="desktop"
+                      stroke="#3a45c4"
+                      curve={curveCatmullRom}
+                      fadeEdges
+                      strokeWidth={2}
+                    />
+                    <Line
+                      dataKey="mobile"
+                      stroke="#10b981"
+                      curve={curveCatmullRom}
+                      fadeEdges
+                      strokeWidth={2}
+                    />
+                    <Line
+                      dataKey="tablet"
+                      stroke="#f59e0b"
+                      curve={curveCatmullRom}
+                      fadeEdges
+                      strokeWidth={2}
+                    />
                     <XAxis />
                     <ChartTooltip />
                   </LineChart>
@@ -580,7 +664,9 @@ export default function AdminAnalyticsPage() {
             </div>
           ) : (
             <div className="flex h-40 items-center justify-center rounded-[12px] border border-dashed border-line bg-brand-50/50">
-              <p className="text-[13px] text-ink-500 font-medium">Aucune donnée disponible.</p>
+              <p className="text-[13px] text-ink-500 font-medium">
+                Aucune donnée disponible.
+              </p>
             </div>
           )}
         </div>
@@ -588,7 +674,7 @@ export default function AdminAnalyticsPage() {
         {/* Sources de Trafic */}
         <div className="rounded-[16px] border border-line bg-white p-6 shadow-soft">
           <h2 className="font-serif text-[17px] font-bold text-brand-900 mb-4">
-            Sources d'Acquisition
+            Sources d&apos;Acquisition
           </h2>
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
             <div className="flex w-1/2 justify-center">
@@ -669,7 +755,11 @@ export default function AdminAnalyticsPage() {
               {Object.entries(data?.visitorsByCountry || {})
                 .sort(([, a], [, b]) => b - a)
                 .map(([numeric, count]) => {
-                  const total = Object.values(data?.visitorsByCountry || {}).reduce((s, v) => s + v, 0) || 1;
+                  const total =
+                    Object.values(data?.visitorsByCountry || {}).reduce(
+                      (s, v) => s + v,
+                      0,
+                    ) || 1;
                   const pct = Math.round((count / total) * 100);
                   const name = numericToName[numeric] || numeric;
                   return (
@@ -680,7 +770,12 @@ export default function AdminAnalyticsPage() {
                       <span className="flex items-center gap-2 truncate">
                         <span
                           className="h-2.5 w-2.5 shrink-0 rounded-full"
-                          style={{ backgroundColor: visitorColorFor(count, maxVisitors) }}
+                          style={{
+                            backgroundColor: visitorColorFor(
+                              count,
+                              maxVisitors,
+                            ),
+                          }}
                         />
                         <span className="truncate text-[13px] font-medium text-brand-900">
                           {name}
@@ -713,7 +808,7 @@ export default function AdminAnalyticsPage() {
           <div className="flex items-center gap-2">
             <ClockIcon size={18} className="text-brand-500" />
             <h2 className="font-serif text-[17px] font-bold text-brand-900">
-              Flux d'activité en temps réel
+              Flux d&apos;activité en temps réel
             </h2>
           </div>
           <span className="text-[12px] font-semibold text-ink-500">
@@ -723,18 +818,29 @@ export default function AdminAnalyticsPage() {
 
         <div className="divide-y divide-line/60">
           {data?.recentEvents.map((ev) => (
-            <div key={ev.id} className="flex items-center justify-between px-6 py-3.5 transition-colors hover:bg-brand-50/30">
+            <div
+              key={ev.id}
+              className="flex items-center justify-between px-6 py-3.5 transition-colors hover:bg-brand-50/30"
+            >
               <div className="flex items-center gap-3">
-                <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold ${
-                  ev.type === "QUOTE_REQUEST"
-                    ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                <span
+                  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold ${
+                    ev.type === "QUOTE_REQUEST"
+                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                      : ev.type === "PRODUCT_VIEW"
+                        ? "bg-amber-50 text-amber-700 border border-amber-200"
+                        : ev.type === "SEARCH"
+                          ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
+                          : "bg-brand-50 text-brand-700 border border-brand-200"
+                  }`}
+                >
+                  {ev.type === "QUOTE_REQUEST"
+                    ? "Devis"
                     : ev.type === "PRODUCT_VIEW"
-                    ? "bg-amber-50 text-amber-700 border border-amber-200"
-                    : ev.type === "SEARCH"
-                    ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
-                    : "bg-brand-50 text-brand-700 border border-brand-200"
-                }`}>
-                  {ev.type === "QUOTE_REQUEST" ? "Devis" : ev.type === "PRODUCT_VIEW" ? "Vue Produit" : ev.type === "SEARCH" ? "Recherche" : "Vue Page"}
+                      ? "Vue Produit"
+                      : ev.type === "SEARCH"
+                        ? "Recherche"
+                        : "Vue Page"}
                 </span>
                 <span className="text-[13px] font-medium text-brand-900 truncate max-w-xs sm:max-w-md">
                   {ev.detail}
@@ -765,7 +871,11 @@ function GrowthBadge({ growth }: { growth: number }) {
         isPositive ? "text-emerald-600" : "text-red-500"
       }`}
     >
-      {isPositive ? <ArrowUpRightIcon size={14} /> : <ArrowDownRightIcon size={14} />}
+      {isPositive ? (
+        <ArrowUpRightIcon size={14} />
+      ) : (
+        <ArrowDownRightIcon size={14} />
+      )}
       {isPositive ? `+${growth}%` : `${growth}%`}
     </span>
   );
@@ -783,13 +893,23 @@ function TrafficChart({
   if (!traffic || traffic.length === 0) {
     return (
       <div className="flex h-64 items-center justify-center rounded-[12px] border border-dashed border-line bg-brand-50/50">
-        <p className="text-[13px] text-ink-500 font-medium">Aucune donnée de trafic disponible pour cette période.</p>
+        <p className="text-[13px] text-ink-500 font-medium">
+          Aucune donnée de trafic disponible pour cette période.
+        </p>
       </div>
     );
   }
 
-  const maxVal = Math.max(...traffic.map((t) => Math.max(t.pageviews, t.visitors)), 1);
-  const gridSteps = [0, Math.round(maxVal * 0.33), Math.round(maxVal * 0.66), maxVal];
+  const maxVal = Math.max(
+    ...traffic.map((t) => Math.max(t.pageviews, t.visitors)),
+    1,
+  );
+  const gridSteps = [
+    0,
+    Math.round(maxVal * 0.33),
+    Math.round(maxVal * 0.66),
+    maxVal,
+  ];
 
   const width = 1000;
   const height = 220;
@@ -804,15 +924,22 @@ function TrafficChart({
     return { x, yPv, yVis, ...t };
   });
 
-  const pathPv = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.yPv}`).join(" ");
+  const pathPv = points
+    .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.yPv}`)
+    .join(" ");
   const areaPv = `${pathPv} L ${points[points.length - 1].x} ${height - padding.bottom} L ${points[0].x} ${height - padding.bottom} Z`;
 
-  const pathVis = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.yVis}`).join(" ");
+  const pathVis = points
+    .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.yVis}`)
+    .join(" ");
   const areaVis = `${pathVis} L ${points[points.length - 1].x} ${height - padding.bottom} L ${points[0].x} ${height - padding.bottom} Z`;
 
   return (
     <div className="relative w-full overflow-hidden select-none">
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto overflow-visible">
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="w-full h-auto overflow-visible"
+      >
         <defs>
           <linearGradient id="pvGradient" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#1e5138" stopOpacity="0.30" />
@@ -829,8 +956,20 @@ function TrafficChart({
           const y = padding.top + graphH - (val / maxVal) * graphH;
           return (
             <g key={val}>
-              <line x1={padding.left} y1={y} x2={width - padding.right} y2={y} stroke="#e2e8f0" strokeDasharray="4 4" />
-              <text x={padding.left - 10} y={y + 4} textAnchor="end" className="text-[10px] fill-gray-400 font-semibold">
+              <line
+                x1={padding.left}
+                y1={y}
+                x2={width - padding.right}
+                y2={y}
+                stroke="#e2e8f0"
+                strokeDasharray="4 4"
+              />
+              <text
+                x={padding.left - 10}
+                y={y + 4}
+                textAnchor="end"
+                className="text-[10px] fill-gray-400 font-semibold"
+              >
                 {val}
               </text>
             </g>
@@ -842,14 +981,34 @@ function TrafficChart({
         <path d={areaVis} fill="url(#visGradient)" />
 
         {/* Lignes principales */}
-        <path d={pathPv} fill="none" stroke="#1e5138" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-        <path d={pathVis} fill="none" stroke="#10b981" strokeWidth="2.5" strokeDasharray="4 4" strokeLinecap="round" strokeLinejoin="round" />
+        <path
+          d={pathPv}
+          fill="none"
+          stroke="#1e5138"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d={pathVis}
+          fill="none"
+          stroke="#10b981"
+          strokeWidth="2.5"
+          strokeDasharray="4 4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
 
         {/* Points interactifs */}
         {points.map((p, idx) => {
           const isHovered = hoveredIndex === idx;
           return (
-            <g key={idx} onMouseEnter={() => onHover(idx)} onMouseLeave={() => onHover(null)} className="cursor-pointer">
+            <g
+              key={idx}
+              onMouseEnter={() => onHover(idx)}
+              onMouseLeave={() => onHover(null)}
+              className="cursor-pointer"
+            >
               <rect
                 x={p.x - graphW / Math.max(traffic.length * 2, 1)}
                 y={padding.top}
@@ -859,14 +1018,42 @@ function TrafficChart({
               />
 
               {isHovered && (
-                <line x1={p.x} y1={padding.top} x2={p.x} y2={height - padding.bottom} stroke="#1e5138" strokeWidth="1.5" strokeDasharray="3 3" />
+                <line
+                  x1={p.x}
+                  y1={padding.top}
+                  x2={p.x}
+                  y2={height - padding.bottom}
+                  stroke="#1e5138"
+                  strokeWidth="1.5"
+                  strokeDasharray="3 3"
+                />
               )}
 
-              <circle cx={p.x} cy={p.yPv} r={isHovered ? 6 : 3.5} fill="#1e5138" stroke="#ffffff" strokeWidth="2" />
-              <circle cx={p.x} cy={p.yVis} r={isHovered ? 5 : 3} fill="#10b981" stroke="#ffffff" strokeWidth="1.5" />
+              <circle
+                cx={p.x}
+                cy={p.yPv}
+                r={isHovered ? 6 : 3.5}
+                fill="#1e5138"
+                stroke="#ffffff"
+                strokeWidth="2"
+              />
+              <circle
+                cx={p.x}
+                cy={p.yVis}
+                r={isHovered ? 5 : 3}
+                fill="#10b981"
+                stroke="#ffffff"
+                strokeWidth="1.5"
+              />
 
-              {(traffic.length <= 14 || idx % Math.ceil(traffic.length / 10) === 0) && (
-                <text x={p.x} y={height - 8} textAnchor="middle" className="text-[10.5px] fill-gray-500 font-semibold">
+              {(traffic.length <= 14 ||
+                idx % Math.ceil(traffic.length / 10) === 0) && (
+                <text
+                  x={p.x}
+                  y={height - 8}
+                  textAnchor="middle"
+                  className="text-[10.5px] fill-gray-500 font-semibold"
+                >
                   {p.date}
                 </text>
               )}
@@ -884,7 +1071,9 @@ function TrafficChart({
           }}
           className="pointer-events-none absolute z-30 -translate-x-1/2 rounded-xl bg-brand-900 px-3.5 py-2 text-white shadow-xl transition-all duration-150"
         >
-          <div className="text-[11px] font-bold text-gold-400">{points[hoveredIndex].date}</div>
+          <div className="text-[11px] font-bold text-gold-400">
+            {points[hoveredIndex].date}
+          </div>
           <div className="mt-0.5 flex flex-col text-[12px] gap-0.5">
             <span className="font-semibold text-emerald-300">
               ● {points[hoveredIndex].pageviews} pages vues

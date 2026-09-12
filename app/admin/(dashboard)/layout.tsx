@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cookies } from "next/headers";
+import { Toaster } from "sonner";
 
 import AdminTopBar from "@/components/admin/AdminTopBar";
 import Sidebar from "@/components/admin/Sidebar";
@@ -14,7 +15,11 @@ const ROLE_LABELS: Record<string, string> = {
   EDITOR: "Éditeur",
 };
 
-export default async function AdminLayout({ children }: { children: ReactNode }) {
+export default async function AdminLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const token = (await cookies()).get(ADMIN_SESSION_COOKIE)?.value;
   const session = await verifyAdminSessionToken(token);
   const isSuperAdmin = session?.role === "SUPER_ADMIN";
@@ -27,7 +32,8 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     : null;
 
   const userName = user?.name ?? "Administrateur";
-  const userRole = ROLE_LABELS[user?.role ?? session?.role ?? "EDITOR"] ?? "Éditeur";
+  const userRole =
+    ROLE_LABELS[user?.role ?? session?.role ?? "EDITOR"] ?? "Éditeur";
 
   return (
     <div className="min-h-screen bg-[#f0f2f8]">
@@ -50,6 +56,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
           {children}
         </main>
       </div>
+      <Toaster richColors position="top-right" />
     </div>
   );
 }

@@ -20,7 +20,11 @@ export async function POST(request: Request) {
     // Detect device basic type from userAgent
     const ua = (userAgent || "").toLowerCase();
     let device = "Desktop";
-    if (ua.includes("mobile") || ua.includes("iphone") || ua.includes("android")) {
+    if (
+      ua.includes("mobile") ||
+      ua.includes("iphone") ||
+      ua.includes("android")
+    ) {
       device = "Mobile";
     } else if (ua.includes("ipad") || ua.includes("tablet")) {
       device = "Tablet";
@@ -48,6 +52,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, eventId: event?.id });
   } catch (error) {
     console.error("Tracking endpoint error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }

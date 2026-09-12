@@ -1,36 +1,15 @@
 import { NextResponse } from "next/server";
-import type { Currency } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 import { getCategorySlugs, slugify } from "@/lib/products";
-import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/auth";
+import { getSessionFromRequest } from "@/lib/auth";
 import { getClientIp, logAudit } from "@/lib/audit";
+import { withApiError } from "@/lib/api";
+import { deleteLocalUploads } from "@/lib/uploads";
+import { firstIssueMessage, productInputSchema } from "@/lib/validation";
 
 export const runtime = "nodejs";
-
-type ProductImageInput = {
-  url: string;
-  alt: string;
-};
-
-type ProductInput = {
-  name: string;
-  slug: string | null;
-  description: string;
-  category: string;
-  priceAmount: number | null;
-  currency: Currency;
-  unit: string | null;
-  note: string | null;
-  badge: string | null;
-  imageSrc: string;
-  imageAlt: string;
-  images: ProductImageInput[];
-  comingSoon: boolean;
-  onDemand: boolean;
-  isPublished: boolean;
-  sortOrder: number;
-};
 
 async function generateUniqueSlug(
   name: string,
@@ -41,96 +20,108 @@ async function generateUniqueSlug(
   let candidate = base || "produit";
   let suffix = 2;
   while (true) {
-    const existing = await prisma.product.findUnique({ where: { slug: candidate } });
+    const existing = await prisma.product.findUnique({
+      where: { slug: candidate },
+    });
     if (!existing || existing.id === excludeId) break;
     candidate = `${base}-${suffix++}`;
   }
   return candidate;
 }
 
-function getSessionFromRequest(request: Request) {
-  const token = request.headers
-    .get("cookie")
-    ?.match(new RegExp(`${ADMIN_SESSION_COOKIE}=([^;]+)`))?.[1];
-  return verifyAdminSessionToken(token);
-}
-
-async function validateInput(body: Partial<ProductInput>): Promise<string | null> {
-  if (!body.name || !body.name.trim()) return "Le nom est requis.";
-  if (!body.description || !body.description.trim())
-    return "La description est requise.";
-  const validSlugs = await getCategorySlugs();
-  if (!body.category || !validSlugs.includes(body.category))
-    return "Catégorie invalide.";
-  if (!body.imageSrc || !body.imageSrc.trim())
-    return "L'URL de l'image est requise.";
-  if (!body.imageAlt || !body.imageAlt.trim())
-    return "Le texte alternatif de l'image est requis.";
-  if (!body.comingSoon && (body.priceAmount === null || body.priceAmount === undefined))
-    return "Le prix est requis sauf si le produit est marqué « à venir ».";
-  return null;
-}
-
 type RouteParams = { params: Promise<{ id: string }> };
 
-export async function GET(_request: Request, { params }: RouteParams) {
-  const { id } = await params;
-  const product = await prisma.product.findUnique({
-    where: { id: Number(id) },
-    include: { images: { orderBy: { sortOrder: "asc" } } },
-  });
+export const GET = withApiError(
+  async (_request: Request, { params }: RouteParams) => {
+    const { id } = await params;
+    const product = await prisma.product.findUnique({
+      where: { id: Number(id) },
+      include: { images: { orderBy: { sortOrder: "asc" } } },
+    });
 
-  if (!product || product.deletedAt) {
-    return NextResponse.json({ error: "Produit introuvable." }, { status: 404 });
-  }
+    if (!product || product.deletedAt) {
+      return NextResponse.json(
+        { error: "Produit introuvable." },
+        { status: 404 },
+      );
+    }
 
-  return NextResponse.json({ product });
-}
+    return NextResponse.json({ product });
+  },
+);
 
-export async function PUT(request: Request, { params }: RouteParams) {
-  const { id } = await params;
-  let body: Partial<ProductInput>;
+export const PUT = withApiError(
+  async (request: Request, { params }: RouteParams) => {
+    const { id } = await params;
+    let raw: unknown;
 
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
-  }
+    try {
+      raw = await request.json();
+    } catch {
+      return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
+    }
 
-  const error = await validateInput(body);
-  if (error) {
-    return NextResponse.json({ error }, { status: 422 });
-  }
+    const parsed = productInputSchema.safeParse(raw);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: firstIssueMessage(parsed.error) },
+        { status: 422 },
+      );
+    }
 
-  const productId = Number(id);
-  const slug = await generateUniqueSlug(body.name!.trim(), body.slug ?? null, productId);
-  const images = (body.images ?? []).filter((img) => img.url?.trim());
+    const body = parsed.data;
+    const validSlugs = await getCategorySlugs();
+    if (!validSlugs.includes(body.category)) {
+      return NextResponse.json(
+        { error: "Catégorie invalide." },
+        { status: 422 },
+      );
+    }
 
-  try {
+    const productId = Number(id);
+    const slug = await generateUniqueSlug(
+      body.name.trim(),
+      body.slug ?? null,
+      productId,
+    );
+    const images = body.images.filter((img) => img.url?.trim());
+
+    const oldProduct = await prisma.product.findUnique({
+      where: { id: productId },
+      include: { images: true },
+    });
+
+    if (!oldProduct || oldProduct.deletedAt) {
+      return NextResponse.json(
+        { error: "Produit introuvable." },
+        { status: 404 },
+      );
+    }
+
     const product = await prisma.$transaction(async (tx) => {
       await tx.productImage.deleteMany({ where: { productId } });
       return tx.product.update({
         where: { id: productId },
         data: {
-          name: body.name!.trim(),
+          name: body.name.trim(),
           slug,
-          description: body.description!.trim(),
-          category: body.category!,
+          description: body.description.trim(),
+          category: body.category,
           priceAmount: body.comingSoon ? null : body.priceAmount,
-          currency: body.currency ?? "FC",
+          currency: body.currency,
           unit: body.unit?.trim() || null,
           note: body.note?.trim() || null,
           badge: body.badge?.trim() || null,
-          imageSrc: body.imageSrc!.trim(),
-          imageAlt: body.imageAlt!.trim(),
-          comingSoon: body.comingSoon ?? false,
-          onDemand: body.onDemand ?? false,
-          isPublished: body.isPublished ?? true,
-          sortOrder: body.sortOrder ?? 0,
+          imageSrc: body.imageSrc.trim(),
+          imageAlt: body.imageAlt.trim(),
+          comingSoon: body.comingSoon,
+          onDemand: body.onDemand,
+          isPublished: body.isPublished,
+          sortOrder: body.sortOrder,
           images: {
             create: images.map((img, index) => ({
               url: img.url.trim(),
-              alt: img.alt?.trim() || body.imageAlt!.trim(),
+              alt: img.alt?.trim() || body.imageAlt.trim(),
               sortOrder: index,
             })),
           },
@@ -138,6 +129,16 @@ export async function PUT(request: Request, { params }: RouteParams) {
         include: { images: true },
       });
     });
+
+    // Nettoie les fichiers locaux devenus orphelins (image principale
+    // remplacée ou images retirées de la galerie).
+    const newImageUrls = new Set(images.map((img) => img.url.trim()));
+    await deleteLocalUploads([
+      oldProduct.imageSrc !== product.imageSrc ? oldProduct.imageSrc : null,
+      ...oldProduct.images
+        .map((img) => img.url)
+        .filter((url) => !newImageUrls.has(url)),
+    ]);
 
     const session = await getSessionFromRequest(request);
     await logAudit({
@@ -150,20 +151,49 @@ export async function PUT(request: Request, { params }: RouteParams) {
     });
 
     return NextResponse.json({ product });
-  } catch {
-    return NextResponse.json({ error: "Produit introuvable." }, { status: 404 });
-  }
-}
+  },
+);
 
-export async function DELETE(request: Request, { params }: RouteParams) {
-  const { id } = await params;
-  const productId = Number(id);
+export const DELETE = withApiError(
+  async (request: Request, { params }: RouteParams) => {
+    const { id } = await params;
+    const productId = Number(id);
 
-  try {
-    await prisma.product.update({
+    const product = await prisma.product.findUnique({
       where: { id: productId },
-      data: { deletedAt: new Date() },
+      include: { images: true },
     });
+
+    if (!product || product.deletedAt) {
+      return NextResponse.json(
+        { error: "Produit introuvable." },
+        { status: 404 },
+      );
+    }
+
+    try {
+      await prisma.product.update({
+        where: { id: productId },
+        data: { deletedAt: new Date() },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === "P2025"
+      ) {
+        return NextResponse.json(
+          { error: "Produit introuvable." },
+          { status: 404 },
+        );
+      }
+      throw error;
+    }
+
+    // Supprime les fichiers locaux associés au produit
+    await deleteLocalUploads([
+      product.imageSrc,
+      ...product.images.map((img) => img.url),
+    ]);
 
     const session = await getSessionFromRequest(request);
     await logAudit({
@@ -175,7 +205,5 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     });
 
     return NextResponse.json({ success: true });
-  } catch {
-    return NextResponse.json({ error: "Produit introuvable." }, { status: 404 });
-  }
-}
+  },
+);

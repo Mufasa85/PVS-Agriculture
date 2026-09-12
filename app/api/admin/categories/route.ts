@@ -2,34 +2,17 @@ import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/products";
-import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/auth";
+import { getSessionFromRequest } from "@/lib/auth";
 import { getClientIp, logAudit } from "@/lib/audit";
+import { withApiError } from "@/lib/api";
+import { categoryInputSchema, firstIssueMessage } from "@/lib/validation";
 
 export const runtime = "nodejs";
 
-type CategoryInput = {
-  name: string;
-  slug: string | null;
-  icon: string;
-  description: string | null;
-  sortOrder: number;
-  isActive: boolean;
-};
-
-function getSessionFromRequest(request: Request) {
-  const token = request.headers
-    .get("cookie")
-    ?.match(new RegExp(`${ADMIN_SESSION_COOKIE}=([^;]+)`))?.[1];
-  return verifyAdminSessionToken(token);
-}
-
-function validateInput(body: Partial<CategoryInput>): string | null {
-  if (!body.name || !body.name.trim()) return "Le nom est requis.";
-  if (!body.icon || !body.icon.trim()) return "L'icône est requise.";
-  return null;
-}
-
-async function generateUniqueSlug(name: string, desired: string | null): Promise<string> {
+async function generateUniqueSlug(
+  name: string,
+  desired: string | null,
+): Promise<string> {
   const base = slugify(desired?.trim() || name);
   let candidate = base || "categorie";
   let suffix = 2;
@@ -39,7 +22,7 @@ async function generateUniqueSlug(name: string, desired: string | null): Promise
   return candidate;
 }
 
-export async function GET() {
+export const GET = withApiError(async () => {
   const categories = await prisma.category.findMany({
     orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
   });
@@ -60,31 +43,35 @@ export async function GET() {
   }));
 
   return NextResponse.json({ categories: categoriesWithCounts });
-}
+});
 
-export async function POST(request: Request) {
-  let body: Partial<CategoryInput>;
+export const POST = withApiError(async (request: Request) => {
+  let raw: unknown;
   try {
-    body = await request.json();
+    raw = await request.json();
   } catch {
     return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
   }
 
-  const error = validateInput(body);
-  if (error) {
-    return NextResponse.json({ error }, { status: 422 });
+  const parsed = categoryInputSchema.safeParse(raw);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: firstIssueMessage(parsed.error) },
+      { status: 422 },
+    );
   }
 
-  const slug = await generateUniqueSlug(body.name!.trim(), body.slug ?? null);
+  const body = parsed.data;
+  const slug = await generateUniqueSlug(body.name.trim(), body.slug ?? null);
 
   const category = await prisma.category.create({
     data: {
-      name: body.name!.trim(),
+      name: body.name.trim(),
       slug,
-      icon: body.icon!.trim(),
+      icon: body.icon.trim(),
       description: body.description?.trim() || null,
-      sortOrder: body.sortOrder ?? 0,
-      isActive: body.isActive ?? true,
+      sortOrder: body.sortOrder,
+      isActive: body.isActive,
     },
   });
 
@@ -99,4 +86,4 @@ export async function POST(request: Request) {
   });
 
   return NextResponse.json({ category }, { status: 201 });
-}
+});

@@ -84,37 +84,64 @@ export async function getAnalyticsData(days: AnalyticsTimeframe = 30) {
   // Key metrics
   const totalPageviews = events.length;
   const prevTotalPageviews = prevEvents.length;
-  const pageviewGrowth = prevTotalPageviews > 0
-    ? Math.round(((totalPageviews - prevTotalPageviews) / prevTotalPageviews) * 100 * 10) / 10
-    : 100;
+  const pageviewGrowth =
+    prevTotalPageviews > 0
+      ? Math.round(
+          ((totalPageviews - prevTotalPageviews) / prevTotalPageviews) *
+            100 *
+            10,
+        ) / 10
+      : 100;
 
   // Unique visitors (by IP)
-  const uniqueVisitors = new Set(events.map((e) => e.ipAddress || "anonymous")).size;
-  const prevUniqueVisitors = new Set(prevEvents.map((e) => e.ipAddress || "anonymous")).size;
-  const visitorGrowth = prevUniqueVisitors > 0
-    ? Math.round(((uniqueVisitors - prevUniqueVisitors) / prevUniqueVisitors) * 100 * 10) / 10
-    : 100;
+  const uniqueVisitors = new Set(events.map((e) => e.ipAddress || "anonymous"))
+    .size;
+  const prevUniqueVisitors = new Set(
+    prevEvents.map((e) => e.ipAddress || "anonymous"),
+  ).size;
+  const visitorGrowth =
+    prevUniqueVisitors > 0
+      ? Math.round(
+          ((uniqueVisitors - prevUniqueVisitors) / prevUniqueVisitors) *
+            100 *
+            10,
+        ) / 10
+      : 100;
 
   // Product consultations
   const productViews = events.filter((e) => e.type === "PRODUCT_VIEW").length;
-  const prevProductViews = prevEvents.filter((e) => e.type === "PRODUCT_VIEW").length;
-  const productViewGrowth = prevProductViews > 0
-    ? Math.round(((productViews - prevProductViews) / prevProductViews) * 100 * 10) / 10
-    : 100;
+  const prevProductViews = prevEvents.filter(
+    (e) => e.type === "PRODUCT_VIEW",
+  ).length;
+  const productViewGrowth =
+    prevProductViews > 0
+      ? Math.round(
+          ((productViews - prevProductViews) / prevProductViews) * 100 * 10,
+        ) / 10
+      : 100;
 
   // Demandes de devis / conversion
   const quoteRequests = events.filter((e) => e.type === "QUOTE_REQUEST").length;
-  const prevQuoteRequests = prevEvents.filter((e) => e.type === "QUOTE_REQUEST").length;
-  const quoteGrowth = prevQuoteRequests > 0
-    ? Math.round(((quoteRequests - prevQuoteRequests) / prevQuoteRequests) * 100 * 10) / 10
-    : 100;
+  const prevQuoteRequests = prevEvents.filter(
+    (e) => e.type === "QUOTE_REQUEST",
+  ).length;
+  const quoteGrowth =
+    prevQuoteRequests > 0
+      ? Math.round(
+          ((quoteRequests - prevQuoteRequests) / prevQuoteRequests) * 100 * 10,
+        ) / 10
+      : 100;
 
-  const conversionRate = totalPageviews > 0
-    ? Math.round((quoteRequests / totalPageviews) * 100 * 10) / 10
-    : 0;
+  const conversionRate =
+    totalPageviews > 0
+      ? Math.round((quoteRequests / totalPageviews) * 100 * 10) / 10
+      : 0;
 
   // Group events by Date for trend chart
-  const datesMap: Record<string, { pageviews: number; visitors: Set<string>; quotes: number }> = {};
+  const datesMap: Record<
+    string,
+    { pageviews: number; visitors: Set<string>; quotes: number }
+  > = {};
 
   for (let i = days - 1; i >= 0; i--) {
     const d = new Date();
@@ -134,7 +161,10 @@ export async function getAnalyticsData(days: AnalyticsTimeframe = 30) {
 
   const trafficTrend = Object.entries(datesMap).map(([date, data]) => {
     const d = new Date(date);
-    const formattedDate = d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+    const formattedDate = d.toLocaleDateString("fr-FR", {
+      day: "numeric",
+      month: "short",
+    });
     return {
       date: formattedDate,
       rawDate: date,
@@ -145,11 +175,23 @@ export async function getAnalyticsData(days: AnalyticsTimeframe = 30) {
   });
 
   // Device Breakdown from metadata
-  const deviceCounts: Record<string, number> = { Desktop: 0, Mobile: 0, Tablet: 0 };
+  const deviceCounts: Record<string, number> = {
+    Desktop: 0,
+    Mobile: 0,
+    Tablet: 0,
+  };
   // Traffic Sources
-  const sourceCounts: Record<string, number> = { Direct: 0, Recherche: 0, "Réseaux Sociaux": 0, Références: 0 };
+  const sourceCounts: Record<string, number> = {
+    Direct: 0,
+    Recherche: 0,
+    "Réseaux Sociaux": 0,
+    Références: 0,
+  };
   // Top Products Viewed
-  const productViewCounts: Record<string, { name: string; count: number; category: string }> = {};
+  const productViewCounts: Record<
+    string,
+    { name: string; count: number; category: string }
+  > = {};
   // Top Search Terms
   const searchCounts: Record<string, number> = {};
   // Visitors by Country (ISO-2 code)
@@ -200,7 +242,12 @@ export async function getAnalyticsData(days: AnalyticsTimeframe = 30) {
       ref.includes("youtube")
     ) {
       sourceCounts["Réseaux Sociaux"] += 1;
-    } else if (!ref || ref.includes("localhost") || ref.includes("pvs-agriculture") || ref.includes("127.0.0.1")) {
+    } else if (
+      !ref ||
+      ref.includes("localhost") ||
+      ref.includes("pvs-agriculture") ||
+      ref.includes("127.0.0.1")
+    ) {
       sourceCounts.Direct += 1;
     } else {
       sourceCounts.Références += 1;
@@ -210,7 +257,11 @@ export async function getAnalyticsData(days: AnalyticsTimeframe = 30) {
     if (e.type === "PRODUCT_VIEW" && meta.productName) {
       const name = meta.productName;
       if (!productViewCounts[name]) {
-        productViewCounts[name] = { name, count: 0, category: meta.categoryName || "Général" };
+        productViewCounts[name] = {
+          name,
+          count: 0,
+          category: meta.categoryName || "Général",
+        };
       }
       productViewCounts[name].count += 1;
     }
@@ -250,7 +301,11 @@ export async function getAnalyticsData(days: AnalyticsTimeframe = 30) {
       type: e.type,
       path: e.path,
       device: meta.device || "Desktop",
-      detail: meta.productName ? `Produit : ${meta.productName}` : meta.query ? `Recherche : "${meta.query}"` : e.path,
+      detail: meta.productName
+        ? `Produit : ${meta.productName}`
+        : meta.query
+          ? `Recherche : "${meta.query}"`
+          : e.path,
       timeAgo: formatTimeAgo(e.createdAt),
       createdAt: e.createdAt.toISOString(),
     };
@@ -262,7 +317,11 @@ export async function getAnalyticsData(days: AnalyticsTimeframe = 30) {
       totalPageviews: { value: totalPageviews, growth: pageviewGrowth },
       uniqueVisitors: { value: uniqueVisitors, growth: visitorGrowth },
       productViews: { value: productViews, growth: productViewGrowth },
-      quoteRequests: { value: quoteRequests, growth: quoteGrowth, conversionRate },
+      quoteRequests: {
+        value: quoteRequests,
+        growth: quoteGrowth,
+        conversionRate,
+      },
     },
     trafficTrend,
     devices: deviceCounts,
@@ -288,7 +347,15 @@ export async function seedSampleAnalyticsData() {
   try {
     await clearAnalyticsData();
 
-    const PATHS = ["/", "/produits", "/tarifs", "/contact", "/a-propos", "/agriculture", "/elevage"];
+    const PATHS = [
+      "/",
+      "/produits",
+      "/tarifs",
+      "/contact",
+      "/a-propos",
+      "/agriculture",
+      "/elevage",
+    ];
     const SEARCH_QUERIES = [
       "maïs bio",
       "poulet de chair",
@@ -301,12 +368,24 @@ export async function seedSampleAnalyticsData() {
     const PRODUCTS = [
       { name: "Maïs Jaune Égrené", category: "Agriculture & Céréales" },
       { name: "Poulets de Chair Vivants", category: "Élevage & Volailles" },
-      { name: "Œufs Frais de Ferme (Plateau x30)", category: "Élevage & Volailles" },
+      {
+        name: "Œufs Frais de Ferme (Plateau x30)",
+        category: "Élevage & Volailles",
+      },
       { name: "Haricots Rouges Bio", category: "Agriculture & Céréales" },
       { name: "Poussins d'Un Jour Vaccinés", category: "Élevage & Volailles" },
       { name: "Graines de Tournesol", category: "Agriculture & Céréales" },
     ];
-    const DEVICES = ["Desktop", "Desktop", "Desktop", "Mobile", "Mobile", "Mobile", "Mobile", "Tablet"];
+    const DEVICES = [
+      "Desktop",
+      "Desktop",
+      "Desktop",
+      "Mobile",
+      "Mobile",
+      "Mobile",
+      "Mobile",
+      "Tablet",
+    ];
     const SOURCES = [
       "",
       "https://www.google.com/",
@@ -316,7 +395,11 @@ export async function seedSampleAnalyticsData() {
       "https://l.instagram.com/",
       "https://bing.com/",
     ];
-    const IPS = Array.from({ length: 45 }, (_, i) => `${Math.floor(i / 5) + 1}.${(i % 10) * 23 + 12}.${Math.floor(i / 5) + 1}.${(i % 10) * 23 + 12}`);
+    const IPS = Array.from(
+      { length: 45 },
+      (_, i) =>
+        `${Math.floor(i / 5) + 1}.${(i % 10) * 23 + 12}.${Math.floor(i / 5) + 1}.${(i % 10) * 23 + 12}`,
+    );
 
     const events = [];
     const now = new Date();
@@ -324,7 +407,10 @@ export async function seedSampleAnalyticsData() {
     for (let i = 59; i >= 0; i--) {
       const dayDate = new Date();
       dayDate.setDate(now.getDate() - i);
-      const baseTraffic = i < 30 ? Math.floor(Math.random() * 35) + 40 : Math.floor(Math.random() * 25) + 25;
+      const baseTraffic =
+        i < 30
+          ? Math.floor(Math.random() * 35) + 40
+          : Math.floor(Math.random() * 25) + 25;
 
       for (let j = 0; j < baseTraffic; j++) {
         const hour = Math.floor(Math.random() * 15) + 7;
@@ -344,20 +430,32 @@ export async function seedSampleAnalyticsData() {
         if (randType > 0.85) {
           type = "QUOTE_REQUEST";
           const prod = PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)];
-          metadata = { ...metadata, productName: prod.name, categoryName: prod.category };
+          metadata = {
+            ...metadata,
+            productName: prod.name,
+            categoryName: prod.category,
+          };
         } else if (randType > 0.55) {
           type = "PRODUCT_VIEW";
           const prod = PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)];
-          metadata = { ...metadata, productName: prod.name, categoryName: prod.category };
-        } else if (randType > 0.40) {
+          metadata = {
+            ...metadata,
+            productName: prod.name,
+            categoryName: prod.category,
+          };
+        } else if (randType > 0.4) {
           type = "SEARCH";
-          const query = SEARCH_QUERIES[Math.floor(Math.random() * SEARCH_QUERIES.length)];
+          const query =
+            SEARCH_QUERIES[Math.floor(Math.random() * SEARCH_QUERIES.length)];
           metadata = { ...metadata, query };
         }
 
         events.push({
           type,
-          path: type === "PRODUCT_VIEW" ? `/produits/${slugify(metadata.productName || "")}` : path,
+          path:
+            type === "PRODUCT_VIEW"
+              ? `/produits/${slugify(metadata.productName || "")}`
+              : path,
           referrer: referrer || null,
           userAgent: `Mozilla/5.0 (${device}; CPU OS like Mac OS X)`,
           ipAddress,

@@ -107,7 +107,11 @@ export default function UsersTable({ users }: { users: UserData[] }) {
       {/* ── Stats ── */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: "Total membres", value: users.length, color: "text-brand-600" },
+          {
+            label: "Total membres",
+            value: users.length,
+            color: "text-brand-600",
+          },
           { label: "Actifs", value: activeCount, color: "text-green-600" },
           { label: "Admins", value: adminCount, color: "text-gold-600" },
         ].map((s) => (

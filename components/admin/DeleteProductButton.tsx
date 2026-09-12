@@ -2,10 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { TrashIcon } from "@/components/ui/icons";
 
-export default function DeleteProductButton({ id, name }: { id: number; name: string }) {
+export default function DeleteProductButton({
+  id,
+  name,
+}: {
+  id: number;
+  name: string;
+}) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -18,9 +25,11 @@ export default function DeleteProductButton({ id, name }: { id: number; name: st
     const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
 
     if (res.ok) {
+      toast.success(`« ${name} » supprimé.`);
       router.refresh();
     } else {
-      alert("Erreur lors de la suppression.");
+      const data = await res.json().catch(() => null);
+      toast.error(data?.error ?? "Erreur lors de la suppression.");
       setLoading(false);
     }
   }

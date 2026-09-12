@@ -85,7 +85,10 @@ function formatMetadata(meta: Record<string, unknown> | null): string {
   const entries = Object.entries(meta);
   if (entries.length === 0) return "—";
   return entries
-    .map(([k, v]) => `${k}: ${typeof v === "object" ? JSON.stringify(v) : String(v)}`)
+    .map(
+      ([k, v]) =>
+        `${k}: ${typeof v === "object" ? JSON.stringify(v) : String(v)}`,
+    )
     .join("\n");
 }
 
@@ -98,29 +101,34 @@ export default function AdminAuditLogsPage() {
   const [search, setSearch] = useState("");
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
-  const fetchLogs = useCallback(async (p: number, a: string, e: string, s: string) => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams();
-      params.set("page", String(p));
-      params.set("perPage", "25");
-      if (a) params.set("action", a);
-      if (e) params.set("entityType", e);
-      if (s.trim()) params.set("search", s);
-      const res = await fetch(`/api/admin/audit-logs?${params}`);
-      if (res.ok) {
-        const json = await res.json();
-        setData(json);
+  const fetchLogs = useCallback(
+    async (p: number, a: string, e: string, s: string) => {
+      setLoading(true);
+      try {
+        const params = new URLSearchParams();
+        params.set("page", String(p));
+        params.set("perPage", "25");
+        if (a) params.set("action", a);
+        if (e) params.set("entityType", e);
+        if (s.trim()) params.set("search", s);
+        const res = await fetch(`/api/admin/audit-logs?${params}`);
+        if (res.ok) {
+          const json = await res.json();
+          setData(json);
+        }
+      } catch {
+        console.error("Failed to load audit logs");
+      } finally {
+        setLoading(false);
       }
-    } catch {
-      console.error("Failed to load audit logs");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    [],
+  );
 
   useEffect(() => {
-    fetchLogs(page, action, entityType, search);
+    // Différé en microtâche : fetchLogs appelle setLoading/setData
+    // (react-hooks/set-state-in-effect interdit le setState synchrone).
+    queueMicrotask(() => fetchLogs(page, action, entityType, search));
   }, [page, action, entityType, search, fetchLogs]);
 
   function resetFilters() {
@@ -143,7 +151,8 @@ export default function AdminAuditLogsPage() {
           Journal d&apos;audit
         </h1>
         <p className="mt-1 text-[13.5px] text-ink-500">
-          Historique complet des actions effectuées dans l&apos;espace d&apos;administration.
+          Historique complet des actions effectuées dans l&apos;espace
+          d&apos;administration.
         </p>
       </div>
 
@@ -157,19 +166,36 @@ export default function AdminAuditLogsPage() {
           <input
             type="text"
             value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
             placeholder="Rechercher (action, entité, IP)…"
             className="w-full rounded-[12px] border border-line bg-white py-2.5 pl-11 pr-10 text-[14px] text-brand-900 outline-none transition-colors placeholder:text-ink-500/50 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15"
           />
           {search && (
             <button
               type="button"
-              onClick={() => { setSearch(""); setPage(1); }}
+              onClick={() => {
+                setSearch("");
+                setPage(1);
+              }}
               className="absolute right-3 top-1/2 -translate-y-1/2 flex h-6 w-6 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-brand-50 hover:text-brand-700"
               aria-label="Effacer"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden
+              >
+                <path
+                  d="M6 6l12 12M18 6L6 18"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
               </svg>
             </button>
           )}
@@ -177,7 +203,10 @@ export default function AdminAuditLogsPage() {
 
         <select
           value={action}
-          onChange={(e) => { setAction(e.target.value); setPage(1); }}
+          onChange={(e) => {
+            setAction(e.target.value);
+            setPage(1);
+          }}
           className="rounded-[12px] border border-line bg-white px-4 py-2.5 text-[13.5px] font-semibold text-brand-900 outline-none transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15"
         >
           <option value="">Toutes les actions</option>
@@ -190,7 +219,10 @@ export default function AdminAuditLogsPage() {
 
         <select
           value={entityType}
-          onChange={(e) => { setEntityType(e.target.value); setPage(1); }}
+          onChange={(e) => {
+            setEntityType(e.target.value);
+            setPage(1);
+          }}
           className="rounded-[12px] border border-line bg-white px-4 py-2.5 text-[13.5px] font-semibold text-brand-900 outline-none transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15"
         >
           <option value="">Tous les types</option>
@@ -216,7 +248,9 @@ export default function AdminAuditLogsPage() {
       <div className="overflow-hidden rounded-[16px] border border-line bg-white shadow-soft">
         <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
           <span className="text-[13px] font-semibold text-ink-700">
-            {data ? `${data.total} entrée${data.total > 1 ? "s" : ""}` : "Chargement…"}
+            {data
+              ? `${data.total} entrée${data.total > 1 ? "s" : ""}`
+              : "Chargement…"}
           </span>
           {data && data.total > 0 && (
             <span className="text-[12px] text-ink-500">
@@ -233,13 +267,29 @@ export default function AdminAuditLogsPage() {
           ) : !data || data.logs.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-brand-50">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
-                  <path d="M9 12l2 2 4-4M12 2a10 10 0 100 20 10 10 0 000-20z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden
+                >
+                  <path
+                    d="M9 12l2 2 4-4M12 2a10 10 0 100 20 10 10 0 000-20z"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </div>
-              <p className="text-[14px] font-semibold text-ink-700">Aucune entrée</p>
+              <p className="text-[14px] font-semibold text-ink-700">
+                Aucune entrée
+              </p>
               <p className="mt-1 text-[13px] text-ink-500">
-                {hasFilters ? "Aucun résultat pour ces filtres." : "Le journal est vide."}
+                {hasFilters
+                  ? "Aucun résultat pour ces filtres."
+                  : "Le journal est vide."}
               </p>
             </div>
           ) : (
@@ -267,7 +317,9 @@ export default function AdminAuditLogsPage() {
                 {data.logs.map((log) => (
                   <tr
                     key={log.id}
-                    onClick={() => setExpandedId(expandedId === log.id ? null : log.id)}
+                    onClick={() =>
+                      setExpandedId(expandedId === log.id ? null : log.id)
+                    }
                     className={`cursor-pointer border-b border-line/60 transition-colors last:border-0 hover:bg-brand-50/30 ${
                       expandedId === log.id ? "bg-brand-50/40" : ""
                     }`}
@@ -279,7 +331,11 @@ export default function AdminAuditLogsPage() {
                       {log.user ? (
                         <div className="flex items-center gap-2">
                           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-[10px] font-bold text-white">
-                            {log.user.name.split(" ").map((p) => p[0]?.toUpperCase()).slice(0, 2).join("")}
+                            {log.user.name
+                              .split(" ")
+                              .map((p) => p[0]?.toUpperCase())
+                              .slice(0, 2)
+                              .join("")}
                           </div>
                           <div className="min-w-0">
                             <p className="truncate text-[12.5px] font-semibold text-brand-900">
@@ -291,11 +347,15 @@ export default function AdminAuditLogsPage() {
                           </div>
                         </div>
                       ) : (
-                        <span className="text-[12.5px] text-ink-500/60 italic">Système</span>
+                        <span className="text-[12.5px] text-ink-500/60 italic">
+                          Système
+                        </span>
                       )}
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-bold ${getActionColor(log.action)}`}>
+                      <span
+                        className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-bold ${getActionColor(log.action)}`}
+                      >
                         {ACTION_LABELS[log.action] ?? log.action}
                       </span>
                     </td>
@@ -367,7 +427,12 @@ export default function AdminAuditLogsPage() {
                   } else {
                     add(1);
                     if (current > 3) add("ellipsis");
-                    for (let i = Math.max(2, current - 1); i <= Math.min(totalPages - 1, current + 1); i++) add(i);
+                    for (
+                      let i = Math.max(2, current - 1);
+                      i <= Math.min(totalPages - 1, current + 1);
+                      i++
+                    )
+                      add(i);
                     if (current < totalPages - 2) add("ellipsis");
                     add(totalPages);
                   }
@@ -390,7 +455,7 @@ export default function AdminAuditLogsPage() {
                           {p}
                         </PaginationLink>
                       </PaginationItem>
-                    )
+                    ),
                   );
                 })()}
                 {page < data.totalPages && (

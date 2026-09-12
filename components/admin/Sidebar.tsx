@@ -34,7 +34,6 @@ const PRIMARY_NAV: NavItem[] = [
   { href: "/admin/audit-logs", label: "Journal d'audit", icon: Shield },
 ];
 
-
 const TEAM_NAV: NavItem = {
   href: "/admin/users",
   label: "Utilisateurs",
@@ -59,10 +58,12 @@ function initials(name: string): string {
 function NavLink({
   item,
   active,
+  badge,
   onNavigate,
 }: {
   item: NavItem;
   active: boolean;
+  badge?: number;
   onNavigate: () => void;
 }) {
   const Icon = item.icon;
@@ -91,6 +92,11 @@ function NavLink({
         }
       />
       {item.label}
+      {badge ? (
+        <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1.5 text-[10.5px] font-bold text-white">
+          {badge > 99 ? "99+" : badge}
+        </span>
+      ) : null}
     </Link>
   );
 }
@@ -104,9 +110,33 @@ export default function Sidebar({
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    setOpen(false);
+    // Différé en microtâche (react-hooks/set-state-in-effect).
+    queueMicrotask(() => setOpen(false));
+  }, [pathname]);
+
+  // Badge « messages non lus » — rafraîchi à la navigation + toutes les 60 s
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const res = await fetch("/api/admin/messages?perPage=1");
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setUnreadCount(data.unreadCount ?? 0);
+        }
+      } catch {
+        // silencieux : le badge est indicatif
+      }
+    }
+    load();
+    const timer = setInterval(load, 60_000);
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
   }, [pathname]);
 
   useEffect(() => {
@@ -160,6 +190,7 @@ export default function Sidebar({
             key={item.href}
             item={item}
             active={isActive(item)}
+            badge={item.href === "/admin/messages" ? unreadCount : undefined}
             onNavigate={() => setOpen(false)}
           />
         ))}

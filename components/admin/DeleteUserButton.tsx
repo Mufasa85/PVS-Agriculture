@@ -2,15 +2,26 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { TrashIcon } from "@/components/ui/icons";
 
-export default function DeleteUserButton({ id, name }: { id: number; name: string }) {
+export default function DeleteUserButton({
+  id,
+  name,
+}: {
+  id: number;
+  name: string;
+}) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   async function handleDelete() {
-    if (!confirm(`Supprimer l'utilisateur « ${name} » ? Cette action est irréversible.`)) {
+    if (
+      !confirm(
+        `Supprimer l'utilisateur « ${name} » ? Cette action est irréversible.`,
+      )
+    ) {
       return;
     }
 
@@ -18,10 +29,11 @@ export default function DeleteUserButton({ id, name }: { id: number; name: strin
     const res = await fetch(`/api/admin/users/${id}`, { method: "DELETE" });
 
     if (res.ok) {
+      toast.success(`Utilisateur « ${name} » supprimé.`);
       router.refresh();
     } else {
       const data = await res.json().catch(() => null);
-      alert(data?.error ?? "Erreur lors de la suppression.");
+      toast.error(data?.error ?? "Erreur lors de la suppression.");
       setLoading(false);
     }
   }

@@ -1,4 +1,4 @@
-import type { Currency } from "@prisma/client";
+import type { Currency, Product } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 
@@ -58,9 +58,23 @@ export function formatProductPrice(product: {
   return formatCurrency(Number(product.priceAmount), product.currency);
 }
 
+export type SerializableProduct = Omit<Product, "priceAmount"> & {
+  priceAmount: number | null;
+};
+
+export function serializeProduct(product: Product): SerializableProduct {
+  return {
+    ...product,
+    priceAmount:
+      product.priceAmount === null ? null : product.priceAmount.toNumber(),
+  };
+}
+
 export function slugify(input: string): string {
   return input
     .toLowerCase()
+    .replace(/œ/g, "oe")
+    .replace(/æ/g, "ae")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-")

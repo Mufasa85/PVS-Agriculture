@@ -1,10 +1,16 @@
 import ProductsTable from "@/components/admin/ProductsTable";
 import { prisma } from "@/lib/prisma";
-import { getAllCategories } from "@/lib/products";
+import { getAllCategories, serializeProduct } from "@/lib/products";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminProductsPage() {
+export default async function AdminProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ new?: string }>;
+}) {
+  const { new: openNew } = await searchParams;
+
   const [products, categories] = await Promise.all([
     prisma.product.findMany({
       where: { deletedAt: null },
@@ -13,9 +19,10 @@ export default async function AdminProductsPage() {
     getAllCategories(),
   ]);
 
+  const serialized = products.map(serializeProduct);
   const grouped = categories.map((cat) => ({
     category: cat,
-    items: products.filter((p) => p.category === cat.slug),
+    items: serialized.filter((p) => p.category === cat.slug),
   }));
 
   return (
@@ -23,6 +30,7 @@ export default async function AdminProductsPage() {
       grouped={grouped}
       totalCount={products.length}
       categories={categories}
+      openCreateOnMount={openNew === "1"}
     />
   );
 }

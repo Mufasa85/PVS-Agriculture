@@ -194,7 +194,11 @@ export default function AdminLoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                  aria-label={
+                    showPassword
+                      ? "Masquer le mot de passe"
+                      : "Afficher le mot de passe"
+                  }
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-ink-500/60 transition-colors hover:text-brand-600"
                 >
                   <EyeIcon size={17} />

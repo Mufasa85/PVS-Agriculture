@@ -16,7 +16,9 @@ export type AdminSession = {
 function getSecretKey() {
   const secret = process.env.AUTH_SECRET;
   if (!secret) {
-    throw new Error("AUTH_SECRET n'est pas défini dans les variables d'environnement.");
+    throw new Error(
+      "AUTH_SECRET n'est pas défini dans les variables d'environnement.",
+    );
   }
   return new TextEncoder().encode(secret);
 }
@@ -50,11 +52,44 @@ export async function createAdminSessionToken(user: {
   email: string;
   role: UserRole;
 }): Promise<string> {
-  return new SignJWT({ sub: String(user.id), email: user.email, role: user.role })
+  return new SignJWT({
+    sub: String(user.id),
+    email: user.email,
+    role: user.role,
+  })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(`${SESSION_DURATION_SECONDS}s`)
     .sign(getSecretKey());
+}
+
+export async function getSessionFromRequest(
+  request: Request,
+): Promise<AdminSession | null> {
+  const token = request.headers
+    .get("cookie")
+    ?.match(new RegExp(`${ADMIN_SESSION_COOKIE}=([^;]+)`))?.[1];
+  return verifyAdminSessionToken(token);
+}
+
+/**
+ * Variante qui re-vérifie l'utilisateur en base : un compte désactivé ou
+ * rétrogradé perd immédiatement l'accès, même si son JWT est encore valide.
+ * À utiliser sur les routes sensibles (gestion des utilisateurs, etc.).
+ */
+export async function getFreshAdminSession(
+  request: Request,
+): Promise<AdminSession | null> {
+  const session = await getSessionFromRequest(request);
+  if (!session) return null;
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId },
+    select: { isActive: true, role: true },
+  });
+
+  if (!user || !user.isActive) return null;
+  return { ...session, role: user.role };
 }
 
 export async function verifyAdminSessionToken(

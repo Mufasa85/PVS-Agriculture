@@ -104,14 +104,18 @@ export default function AdminTopBar({
             <p className="text-[12.5px] font-bold text-brand-900 leading-tight">
               {userName}
             </p>
-            <p className="text-[10.5px] text-ink-500 leading-tight">{userRole}</p>
+            <p className="text-[10.5px] text-ink-500 leading-tight">
+              {userRole}
+            </p>
           </div>
         </div>
 
         {/* Bouton menu (mobile uniquement) */}
         <button
           type="button"
-          onClick={() => window.dispatchEvent(new CustomEvent("admin-sidebar-open"))}
+          onClick={() =>
+            window.dispatchEvent(new CustomEvent("admin-sidebar-open"))
+          }
           className="flex h-9 w-9 items-center justify-center rounded-full border border-line bg-white text-brand-900 transition-all hover:border-brand-300 hover:bg-brand-50 active:scale-95 nav:hidden"
           aria-label="Ouvrir le menu"
         >

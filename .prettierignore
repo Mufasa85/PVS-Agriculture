@@ -1,0 +1,11 @@
+.next/
+node_modules/
+out/
+build/
+public/uploads/
+files/
+files.zip
+package-lock.json
+prisma/migrations/
+components/charts_backup/
+*.min.js

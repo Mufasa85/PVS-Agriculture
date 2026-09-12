@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const ALL_ROLES = ["SUPER_ADMIN", "ADMIN", "EDITOR"] as const;
 
@@ -36,13 +37,18 @@ export default function UserForm({
   onClose?: () => void;
 }) {
   const router = useRouter();
-  const [values, setValues] = useState<UserFormValues>(initialValues ?? emptyValues);
+  const [values, setValues] = useState<UserFormValues>(
+    initialValues ?? emptyValues,
+  );
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const isEditing = Boolean(values.id);
 
-  function update<K extends keyof UserFormValues>(key: K, value: UserFormValues[K]) {
+  function update<K extends keyof UserFormValues>(
+    key: K,
+    value: UserFormValues[K],
+  ) {
     setValues((prev) => ({ ...prev, [key]: value }));
   }
 
@@ -61,7 +67,9 @@ export default function UserForm({
       payload.password = values.password;
     }
 
-    const url = isEditing ? `/api/admin/users/${values.id}` : "/api/admin/users";
+    const url = isEditing
+      ? `/api/admin/users/${values.id}`
+      : "/api/admin/users";
     const method = isEditing ? "PUT" : "POST";
 
     try {
@@ -78,6 +86,9 @@ export default function UserForm({
         return;
       }
 
+      toast.success(
+        isEditing ? "Utilisateur mis à jour." : "Utilisateur créé.",
+      );
       if (onClose) {
         onClose();
       } else {
@@ -94,7 +105,9 @@ export default function UserForm({
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div className="grid gap-5 mid:grid-cols-2">
         <div>
-          <label className="mb-1.5 block text-[13px] font-bold text-brand-900">Nom</label>
+          <label className="mb-1.5 block text-[13px] font-bold text-brand-900">
+            Nom
+          </label>
           <input
             required
             value={values.name}
@@ -104,7 +117,9 @@ export default function UserForm({
         </div>
 
         <div>
-          <label className="mb-1.5 block text-[13px] font-bold text-brand-900">Email</label>
+          <label className="mb-1.5 block text-[13px] font-bold text-brand-900">
+            Email
+          </label>
           <input
             type="email"
             required
@@ -123,19 +138,27 @@ export default function UserForm({
           <input
             type="password"
             required={!isEditing}
-            minLength={8}
+            minLength={12}
             value={values.password}
             onChange={(e) => update("password", e.target.value)}
             className="w-full rounded-[10px] border border-line bg-white px-4 py-3 text-[14.5px] text-brand-900 outline-none transition-colors placeholder:text-ink-500/50 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15"
-            placeholder={isEditing ? "Laisser vide pour ne pas changer" : ""}
+            placeholder={
+              isEditing
+                ? "Laisser vide pour ne pas changer"
+                : "12 caractères minimum"
+            }
           />
         </div>
 
         <div>
-          <label className="mb-1.5 block text-[13px] font-bold text-brand-900">Rôle</label>
+          <label className="mb-1.5 block text-[13px] font-bold text-brand-900">
+            Rôle
+          </label>
           <select
             value={values.role}
-            onChange={(e) => update("role", e.target.value as UserFormValues["role"])}
+            onChange={(e) =>
+              update("role", e.target.value as UserFormValues["role"])
+            }
             className="w-full rounded-[10px] border border-line bg-white px-4 py-3 text-[14.5px] text-brand-900 outline-none transition-colors placeholder:text-ink-500/50 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15"
           >
             {ALL_ROLES.map((role) => (
@@ -158,7 +181,9 @@ export default function UserForm({
       </label>
 
       {error && (
-        <div className="rounded-[10px] border border-red-200 bg-red-50 px-4 py-3 text-[13px] font-semibold text-red-600">{error}</div>
+        <div className="rounded-[10px] border border-red-200 bg-red-50 px-4 py-3 text-[13px] font-semibold text-red-600">
+          {error}
+        </div>
       )}
 
       <div className="flex gap-3">
@@ -167,7 +192,11 @@ export default function UserForm({
           disabled={loading}
           className="inline-flex items-center justify-center rounded-[10px] bg-brand-600 px-5 py-2.5 text-[13.5px] font-bold text-white shadow-brand-btn transition-all hover:bg-brand-700 hover:shadow-brand-btn-hover disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {loading ? "Enregistrement..." : isEditing ? "Mettre à jour" : "Créer l'utilisateur"}
+          {loading
+            ? "Enregistrement..."
+            : isEditing
+              ? "Mettre à jour"
+              : "Créer l'utilisateur"}
         </button>
         <button
           type="button"

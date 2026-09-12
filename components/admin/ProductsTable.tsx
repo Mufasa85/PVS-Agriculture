@@ -1,15 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import type { Currency } from "@prisma/client";
-import type { Prisma } from "@prisma/client";
 
-import { Package, Pencil, Plus, Search, X } from "lucide-react";
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import type { DragEndEvent } from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
+import {
+  GripVertical,
+  Package,
+  Pencil,
+  Plus,
+  Search,
+  Trash2,
+  X,
+} from "lucide-react";
 
 import { CategoryIcon } from "@/components/admin/CategoryIcon";
 import DeleteProductButton from "@/components/admin/DeleteProductButton";
 import ProductModal from "@/components/admin/ProductModal";
+import TrashPanel from "@/components/admin/TrashPanel";
 import { formatProductPrice } from "@/lib/products";
 import type { CategoryInfo } from "@/lib/products";
 
@@ -18,31 +44,167 @@ type ProductRow = {
   name: string;
   slug: string;
   category: string;
-  priceAmount: Prisma.Decimal | null;
+  priceAmount: number | null;
   currency: Currency;
   unit: string | null;
   comingSoon: boolean;
   isPublished: boolean;
 };
 
+type ProductRowWithCategory = ProductRow & { categoryInfo: CategoryInfo };
+
 type GroupedProducts = {
   category: CategoryInfo;
   items: ProductRow[];
 };
 
+function SortableProductRow({
+  product,
+  sortable,
+  onEdit,
+}: {
+  product: ProductRowWithCategory;
+  sortable: boolean;
+  onEdit: (id: number) => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: product.id, disabled: !sortable });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+      }}
+      className={`flex items-center gap-4 border-b border-line/60 px-5 py-3.5 transition-colors last:border-0 hover:bg-brand-50/30 ${
+        isDragging ? "relative z-10 bg-white shadow-float" : ""
+      }`}
+    >
+      {/* Nom */}
+      <div className="flex flex-[3] items-center gap-3 min-w-0">
+        {sortable && (
+          <button
+            type="button"
+            {...attributes}
+            {...listeners}
+            title="Glisser pour réordonner"
+            aria-label={`Déplacer ${product.name}`}
+            className="-ml-2 flex h-7 w-6 shrink-0 cursor-grab items-center justify-center rounded text-ink-500/50 transition-colors hover:text-brand-600 active:cursor-grabbing"
+          >
+            <GripVertical size={15} />
+          </button>
+        )}
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] bg-brand-50">
+          <Package size={14} className="text-brand-500" />
+        </div>
+        <span className="truncate text-[13.5px] font-semibold text-brand-900">
+          {product.name}
+        </span>
+      </div>
+
+      {/* Catégorie */}
+      <div className="hidden flex-[2] nav:flex items-center gap-1.5 text-[12.5px]">
+        <span className="inline-flex items-center gap-1.5 rounded-md bg-brand-50/70 px-2.5 py-1 text-[11.5px] font-medium text-brand-700 border border-brand-100">
+          <CategoryIcon icon={product.categoryInfo.icon} size={13} />
+          <span>{product.categoryInfo.name}</span>
+        </span>
+      </div>
+
+      {/* Prix */}
+      <div className="flex-1 text-right nav:text-left">
+        <span className="text-[13px] font-semibold text-ink-700">
+          {formatProductPrice(product)}
+          {product.unit ? ` ${product.unit}` : ""}
+        </span>
+      </div>
+
+      {/* Statut */}
+      <div className="hidden flex-1 nav:flex nav:flex-wrap nav:gap-1.5">
+        {product.comingSoon ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-bold text-amber-600">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />À venir
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-0.5 text-[11px] font-bold text-green-600">
+            <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
+            Actif
+          </span>
+        )}
+        {!product.isPublished && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-ink-100 px-2.5 py-0.5 text-[11px] font-bold text-ink-500">
+            Brouillon
+          </span>
+        )}
+      </div>
+
+      {/* Actions */}
+      <div className="flex w-20 shrink-0 items-center justify-end gap-1">
+        <button
+          type="button"
+          onClick={() => onEdit(product.id)}
+          title="Éditer"
+          className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-line text-ink-500 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
+        >
+          <Pencil size={13} />
+        </button>
+        <DeleteProductButton id={product.id} name={product.name} />
+      </div>
+    </div>
+  );
+}
+
 export default function ProductsTable({
   grouped,
   totalCount,
   categories,
+  openCreateOnMount = false,
 }: {
   grouped: GroupedProducts[];
   totalCount: number;
   categories: CategoryInfo[];
+  openCreateOnMount?: boolean;
 }) {
-  const [modalOpen, setModalOpen] = useState(false);
+  const router = useRouter();
+  const [modalOpen, setModalOpen] = useState(openCreateOnMount);
   const [editId, setEditId] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<string | "all">("all");
+  const [activeTab, setActiveTab] = useState<string | "all" | "trash">("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
+  const [localOrder, setLocalOrder] = useState<Record<string, number[]>>({});
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+  );
+
+  // Raccourcis : « / » focus la recherche, « n » ouvre la création
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      const target = e.target as HTMLElement;
+      const isTyping =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable;
+      if (isTyping || modalOpen) return;
+
+      if (e.key === "/") {
+        e.preventDefault();
+        searchRef.current?.focus();
+      } else if (e.key === "n" || e.key === "N") {
+        e.preventDefault();
+        setEditId(null);
+        setModalOpen(true);
+      }
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [modalOpen]);
 
   function openCreate() {
     setEditId(null);
@@ -59,7 +221,9 @@ export default function ProductsTable({
     setEditId(null);
   }
 
-  const publishedCount = grouped.flatMap((g) => g.items).filter((p) => p.isPublished).length;
+  const publishedCount = grouped
+    .flatMap((g) => g.items)
+    .filter((p) => p.isPublished).length;
   const draftCount = totalCount - publishedCount;
 
   const q = searchQuery.trim().toLowerCase();
@@ -80,7 +244,44 @@ export default function ProductsTable({
     return matchesTab && matchesSearch;
   });
 
+  // Réordonnancement : uniquement sur un onglet catégorie précis, sans recherche
+  const canReorder = activeTab !== "all" && activeTab !== "trash" && !q;
+  const orderOverride = canReorder ? localOrder[activeTab] : undefined;
+  if (orderOverride) {
+    const orderIndex = new Map(orderOverride.map((id, i) => [id, i]));
+    displayProducts.sort(
+      (a, b) => (orderIndex.get(a.id) ?? 9999) - (orderIndex.get(b.id) ?? 9999),
+    );
+  }
+
   const searchResultCount = displayProducts.length;
+
+  async function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const ids = displayProducts.map((p) => p.id);
+    const newOrder = arrayMove(
+      ids,
+      ids.indexOf(Number(active.id)),
+      ids.indexOf(Number(over.id)),
+    );
+    setLocalOrder((prev) => ({ ...prev, [activeTab]: newOrder }));
+
+    try {
+      const res = await fetch("/api/admin/products/reorder", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: newOrder }),
+      });
+      if (!res.ok) throw new Error();
+      toast.success("Ordre des produits enregistré.");
+    } catch {
+      toast.error("Impossible d'enregistrer le nouvel ordre.");
+      setLocalOrder((prev) => ({ ...prev, [activeTab]: [] }));
+      router.refresh();
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -110,9 +311,24 @@ export default function ProductsTable({
       {/* ── Mini stats ── */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: "Total", value: totalCount, color: "text-brand-600", bg: "bg-brand-50" },
-          { label: "Publiés", value: publishedCount, color: "text-green-600", bg: "bg-green-50" },
-          { label: "Brouillons", value: draftCount, color: "text-amber-600", bg: "bg-amber-50" },
+          {
+            label: "Total",
+            value: totalCount,
+            color: "text-brand-600",
+            bg: "bg-brand-50",
+          },
+          {
+            label: "Publiés",
+            value: publishedCount,
+            color: "text-green-600",
+            bg: "bg-green-50",
+          },
+          {
+            label: "Brouillons",
+            value: draftCount,
+            color: "text-amber-600",
+            bg: "bg-amber-50",
+          },
         ].map((s) => (
           <div
             key={s.label}
@@ -134,10 +350,11 @@ export default function ProductsTable({
             className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-500/60"
           />
           <input
+            ref={searchRef}
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Rechercher un produit par nom ou slug…"
+            placeholder="Rechercher un produit par nom ou slug…  ( / )"
             className="w-full rounded-[12px] border border-line bg-white py-2.5 pl-11 pr-10 text-[14px] text-brand-900 outline-none transition-colors placeholder:text-ink-500/50 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15"
           />
           {searchQuery && (
@@ -153,7 +370,8 @@ export default function ProductsTable({
         </div>
         {q && (
           <p className="text-[12.5px] text-ink-500">
-            {searchResultCount} résultat{searchResultCount > 1 ? "s" : ""} pour « {searchQuery} »
+            {searchResultCount} résultat{searchResultCount > 1 ? "s" : ""} pour
+            « {searchQuery} »
           </p>
         )}
       </div>
@@ -194,10 +412,24 @@ export default function ProductsTable({
             </span>
           </button>
         ))}
+        <button
+          type="button"
+          onClick={() => setActiveTab("trash")}
+          className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[12.5px] font-semibold transition-all ${
+            activeTab === "trash"
+              ? "bg-red-500 text-white shadow-brand-btn"
+              : "border border-line bg-white text-ink-500 hover:border-red-300 hover:text-red-500"
+          }`}
+        >
+          <Trash2 size={13} />
+          Corbeille
+        </button>
       </div>
 
-      {/* ── Table unique des produits (plate, sans séparation par catégorie) ── */}
-      {displayProducts.length === 0 ? (
+      {/* ── Corbeille ou table des produits ── */}
+      {activeTab === "trash" ? (
+        <TrashPanel />
+      ) : displayProducts.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-[16px] border border-dashed border-line bg-white py-16 text-center">
           <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-brand-50">
             <Package size={24} className="text-brand-400" />
@@ -224,75 +456,27 @@ export default function ProductsTable({
             </div>
           </div>
 
-          <div>
-            {displayProducts.map((product, idx) => (
-              <div
-                key={product.id}
-                className={`flex items-center gap-4 px-5 py-3.5 transition-colors hover:bg-brand-50/30 ${
-                  idx < displayProducts.length - 1 ? "border-b border-line/60" : ""
-                }`}
-              >
-                {/* Nom */}
-                <div className="flex flex-[3] items-center gap-3 min-w-0">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] bg-brand-50">
-                    <Package size={14} className="text-brand-500" />
-                  </div>
-                  <span className="truncate text-[13.5px] font-semibold text-brand-900">
-                    {product.name}
-                  </span>
-                </div>
-
-                {/* Catégorie */}
-                <div className="hidden flex-[2] nav:flex items-center gap-1.5 text-[12.5px]">
-                  <span className="inline-flex items-center gap-1.5 rounded-md bg-brand-50/70 px-2.5 py-1 text-[11.5px] font-medium text-brand-700 border border-brand-100">
-                    <CategoryIcon icon={product.categoryInfo.icon} size={13} />
-                    <span>{product.categoryInfo.name}</span>
-                  </span>
-                </div>
-
-                {/* Prix */}
-                <div className="flex-1 text-right nav:text-left">
-                  <span className="text-[13px] font-semibold text-ink-700">
-                    {formatProductPrice(product)}
-                    {product.unit ? ` ${product.unit}` : ""}
-                  </span>
-                </div>
-
-                {/* Statut */}
-                <div className="hidden flex-1 nav:flex nav:flex-wrap nav:gap-1.5">
-                  {product.comingSoon ? (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-bold text-amber-600">
-                      <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-                      À venir
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-0.5 text-[11px] font-bold text-green-600">
-                      <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
-                      Actif
-                    </span>
-                  )}
-                  {!product.isPublished && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-ink-100 px-2.5 py-0.5 text-[11px] font-bold text-ink-500">
-                      Brouillon
-                    </span>
-                  )}
-                </div>
-
-                {/* Actions */}
-                <div className="flex w-20 shrink-0 items-center justify-end gap-1">
-                  <button
-                    type="button"
-                    onClick={() => openEdit(product.id)}
-                    title="Éditer"
-                    className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-line text-ink-500 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
-                  >
-                    <Pencil size={13} />
-                  </button>
-                  <DeleteProductButton id={product.id} name={product.name} />
-                </div>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={displayProducts.map((p) => p.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div>
+                {displayProducts.map((product) => (
+                  <SortableProductRow
+                    key={product.id}
+                    product={product}
+                    sortable={canReorder}
+                    onEdit={openEdit}
+                  />
+                ))}
               </div>
-            ))}
-          </div>
+            </SortableContext>
+          </DndContext>
         </div>
       )}
 
@@ -305,4 +489,3 @@ export default function ProductsTable({
     </div>
   );
 }
-

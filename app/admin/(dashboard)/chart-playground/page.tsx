@@ -43,7 +43,7 @@ const ringData = [
 
 const geojson = feature(
   worldData as any,
-  (worldData as any).objects.countries
+  (worldData as any).objects.countries,
 ) as unknown as FeatureCollection<
   Geometry,
   { name?: string; visitors?: number }

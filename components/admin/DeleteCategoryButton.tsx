@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { TrashIcon } from "@/components/ui/icons";
 
@@ -16,18 +17,25 @@ export default function DeleteCategoryButton({
   const [loading, setLoading] = useState(false);
 
   async function handleDelete() {
-    if (!confirm(`Supprimer la catégorie « ${name} » ? Cette action est irréversible.`)) {
+    if (
+      !confirm(
+        `Supprimer la catégorie « ${name} » ? Cette action est irréversible.`,
+      )
+    ) {
       return;
     }
 
     setLoading(true);
-    const res = await fetch(`/api/admin/categories/${id}`, { method: "DELETE" });
+    const res = await fetch(`/api/admin/categories/${id}`, {
+      method: "DELETE",
+    });
 
     if (res.ok) {
+      toast.success(`Catégorie « ${name} » supprimée.`);
       router.refresh();
     } else {
       const data = await res.json().catch(() => null);
-      alert(data?.error ?? "Erreur lors de la suppression.");
+      toast.error(data?.error ?? "Erreur lors de la suppression.");
       setLoading(false);
     }
   }

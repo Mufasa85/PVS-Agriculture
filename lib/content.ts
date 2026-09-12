@@ -144,7 +144,8 @@ export const hero = {
     {
       src: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=900&q=80",
       alt: "Porcherie moderne et propre",
-    }, {
+    },
+    {
       src: "https://images.unsplash.com/photo-1515735543535-12664d2453f8?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=milos-prelevic-uWLvruHp8kY-unsplash.jpg",
       alt: "Pisciculture moderne et propre",
     },
@@ -381,7 +382,8 @@ export const footer = {
     { label: "+243 999 916 552", href: "tel:+243999916552" },
     { label: "3 Av. Dokolo, Kimwenza, Mont Ngafula", href: "#" },
   ] satisfies NavLink[],
-  legalInfo: "ASBL — Arrêté ministériel N°088/CAB/MIN/J&DH/2013 du 04 avril 2013 · Depuis 2013",
+  legalInfo:
+    "ASBL — Arrêté ministériel N°088/CAB/MIN/J&DH/2013 du 04 avril 2013 · Depuis 2013",
   // [PLACEHOLDER] URLs des réseaux sociaux à fournir par le client.
   socials: [
     { network: "facebook", label: "Facebook", href: "#" },
@@ -410,10 +412,7 @@ export const agriculturePage: AgriculturePageContent = {
     eyebrow: "Notre cœur de métier",
     title: "L'agriculture, au centre de notre engagement",
     titleEmphasis: "engagement",
-    titleLines: [
-      "L'agriculture, au centre",
-      "de notre engagement.",
-    ],
+    titleLines: ["L'agriculture, au centre", "de notre engagement."],
     paragraph:
       "De la préparation du sol à la récolte, PVS ONGD ASBL met en œuvre des pratiques agricoles rigoureuses pour produire des cultures saines, tout en respectant les cycles naturels de la terre à Kinshasa.",
     // [PLACEHOLDER] Unsplash
@@ -710,10 +709,7 @@ export const elevagePage: ElevagePageContent = {
     eyebrow: "Notre savoir-faire",
     title: "Un élevage suivi avec soin et rigueur",
     titleEmphasis: "soin",
-    titleLines: [
-      "Un élevage suivi",
-      "avec soin et rigueur.",
-    ],
+    titleLines: ["Un élevage suivi", "avec soin et rigueur."],
     paragraph:
       "L'élevage est l'un des piliers de PVS ONGD ASBL. Nous assurons un suivi attentif du cheptel, avec des pratiques d'hygiène strictes et une alimentation contrôlée, pour garantir des produits sains et une croissance harmonieuse des animaux.",
     // [PLACEHOLDER] Unsplash
@@ -867,10 +863,7 @@ export const tarifsPage: TarifsPageContent = {
     eyebrow: "Nos tarifs",
     title: "Un aperçu clair de nos prix",
     titleEmphasis: "prix",
-    titleLines: [
-      "Un aperçu clair",
-      "de nos prix.",
-    ],
+    titleLines: ["Un aperçu clair", "de nos prix."],
     paragraph:
       "Consultez les tarifs de nos produits par catégorie. Sélectionnez une catégorie pour filtrer les prix et trouver rapidement ce qui vous intéresse. Les prix sont indicatifs et peuvent varier selon la disponibilité et la saison.",
   },
@@ -1061,11 +1054,7 @@ export const pisciculturePage: PisciculturePageContent = {
     eyebrow: "Notre savoir-faire",
     title: "Une pisciculture maîtrisée en étangs contrôlés",
     titleEmphasis: "maîtrisée",
-    titleLines: [
-      "Une pisciculture",
-      "maîtrisée en étangs",
-      "contrôlés.",
-    ],
+    titleLines: ["Une pisciculture", "maîtrisée en étangs", "contrôlés."],
     paragraph:
       "La pisciculture est l'un de nos métiers de cœur. Nous élevons des poissons en étangs contrôlés, avec une gestion rigoureuse de la qualité de l'eau, de l'alimentation et du suivi sanitaire, pour une production saine et durable.",
     // [PLACEHOLDER] Unsplash
@@ -1081,7 +1070,13 @@ export const pisciculturePage: PisciculturePageContent = {
       "Notre exploitation piscicole repose sur des étangs aménagés et contrôlés, où chaque paramètre — qualité de l'eau, oxygénation, densité, alimentation — est suivi de près pour garantir la santé et la croissance des poissons.",
       "Nous élevons principalement du tilapia et du poisson-chat, deux espèces bien adaptées au climat local et appréciées pour leur chair. Notre objectif est de fournir un poisson frais, sain et issu d'une production responsable.",
     ],
-    tags: ["Tilapia", "Poisson-chat", "Étangs contrôlés", "Eau de qualité", "Production locale"],
+    tags: [
+      "Tilapia",
+      "Poisson-chat",
+      "Étangs contrôlés",
+      "Eau de qualité",
+      "Production locale",
+    ],
     // [PLACEHOLDER] Unsplash
     imageSrc:
       "https://images.unsplash.com/photo-1559473242-3740c6c65e1e?auto=format&fit=crop&w=800&q=80",
@@ -1202,7 +1197,8 @@ export const pisciculturePage: PisciculturePageContent = {
       },
       {
         name: "Aliment poisson",
-        description: "Granulés pour poissons d'élevage, formulation équilibrée.",
+        description:
+          "Granulés pour poissons d'élevage, formulation équilibrée.",
         price: "40 000 FC",
         unit: "/ sac 25 kg",
         // [PLACEHOLDER] Unsplash
@@ -1237,11 +1233,7 @@ export const produitsAnimauxPage: ProduitsAnimauxPageContent = {
     eyebrow: "Nos produits",
     title: "Une alimentation saine et adaptée pour vos animaux",
     titleEmphasis: "saine",
-    titleLines: [
-      "Une alimentation",
-      "saine et adaptée",
-      "pour vos animaux.",
-    ],
+    titleLines: ["Une alimentation", "saine et adaptée", "pour vos animaux."],
     paragraph:
       "PVS ONGD ASBL propose une gamme de produits pour animaux pensée pour répondre aux besoins nutritionnels de vos bovins, caprins, volailles et poissons. Qualité, traçabilité et prix justes : tout pour nourrir au mieux votre élevage.",
     imageSrc:
@@ -1256,7 +1248,14 @@ export const produitsAnimauxPage: ProduitsAnimauxPageContent = {
       "Nous sélectionnons et formulons des aliments complets et des compléments nutritionnels pour accompagner la croissance, la santé et la production de vos animaux.",
       "Nos produits sont conçus avec des ingrédients de qualité, dosés selon l'espèce et le stade de développement. Bovins, caprins, volailles ou poissons : chaque animal trouve son aliment chez PVS.",
     ],
-    tags: ["Bovins", "Caprins", "Volailles", "Poissons", "Croissance", "Livraison"],
+    tags: [
+      "Bovins",
+      "Caprins",
+      "Volailles",
+      "Poissons",
+      "Croissance",
+      "Livraison",
+    ],
     imageSrc:
       "https://images.unsplash.com/photo-1589923188651-268a976c1753?auto=format&fit=crop&w=800&q=80",
     imageAlt: "Granulés d'aliment pour animaux",
@@ -1368,7 +1367,8 @@ export const produitsAnimauxPage: ProduitsAnimauxPageContent = {
       },
       {
         name: "Aliment poisson",
-        description: "Granulés pour poissons d'élevage, formulation équilibrée.",
+        description:
+          "Granulés pour poissons d'élevage, formulation équilibrée.",
         price: "40 000 FC",
         unit: "/ sac 25 kg",
         imageSrc:
@@ -1430,7 +1430,13 @@ export const porcheriePage: PorcheriePageContent = {
       "Notre porcherie repose sur des normes d'hygiène strictes et un suivi vétérinaire régulier. Chaque enclos est nettoyé et désinfecté avec soin pour prévenir les maladies et garantir des animaux en pleine santé.",
       "De la naissance à l'engraissement, nos porcs bénéficient d'une alimentation équilibrée et d'un espace adapté à chaque étape de leur croissance. Résultat : une viande savoureuse, produite dans le respect du bien-être animal.",
     ],
-    tags: ["Hygiène stricte", "Suivi vétérinaire", "Alimentation contrôlée", "Bien-être animal", "Production locale"],
+    tags: [
+      "Hygiène stricte",
+      "Suivi vétérinaire",
+      "Alimentation contrôlée",
+      "Bien-être animal",
+      "Production locale",
+    ],
     imageSrc:
       "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=800&q=80",
     imageAlt: "Porcs élevés dans un enclos propre",
@@ -1515,7 +1521,8 @@ export const porcheriePage: PorcheriePageContent = {
     items: [
       {
         name: "Porc charcutier",
-        description: "Porc élevé jusqu'au poids optimal, prêt pour la boucherie.",
+        description:
+          "Porc élevé jusqu'au poids optimal, prêt pour la boucherie.",
         price: "180 000 FC",
         unit: "/ unité",
         imageSrc:
