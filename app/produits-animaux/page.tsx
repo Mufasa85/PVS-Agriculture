@@ -13,16 +13,21 @@ import {
   FeedBagIcon,
   LockIcon,
 } from "@/components/ui/icons";
+import JsonLd from "@/components/seo/JsonLd";
 import { produitsAnimauxPage } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
 import { formatProductPrice } from "@/lib/products";
+import { pageMetadata, productListJsonLd } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// ISR : page servie depuis le cache, régénérée au plus toutes les 60 s
+// (+ invalidation immédiate via revalidatePath lors des mutations admin).
+export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: produitsAnimauxPage.metaTitle,
   description: produitsAnimauxPage.metaDescription,
-};
+  path: "/produits-animaux",
+});
 
 function TitleLine({ line }: { line: string }) {
   const emphasis = produitsAnimauxPage.hero.titleEmphasis;
@@ -35,15 +40,16 @@ function TitleLine({ line }: { line: string }) {
   return (
     <>
       {line.slice(0, index)}
-      <em className="not-italic text-gold-500">
-        {emphasis}
-      </em>
+      <em className="not-italic text-gold-500">{emphasis}</em>
       {line.slice(index + emphasis.length)}
     </>
   );
 }
 
-const featureIcons: Record<string, ComponentType<{ size?: number; className?: string }>> = {
+const featureIcons: Record<
+  string,
+  ComponentType<{ size?: number; className?: string }>
+> = {
   check: CheckIcon,
   feedbag: FeedBagIcon,
   cycle: CycleIcon,
@@ -61,6 +67,10 @@ export default async function ProduitsAnimauxPage() {
 
   return (
     <>
+      {pricingItems.length > 0 && (
+        <JsonLd data={productListJsonLd(pricingItems)} />
+      )}
+
       {/* ── Hero plein écran ── */}
       <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden">
         <Image
@@ -151,7 +161,10 @@ export default async function ProduitsAnimauxPage() {
             </ul>
           </Reveal>
 
-          <Reveal delay={0.16} className="relative mx-auto w-full max-w-[420px] nav:mx-0 nav:max-w-none">
+          <Reveal
+            delay={0.16}
+            className="relative mx-auto w-full max-w-[420px] nav:mx-0 nav:max-w-none"
+          >
             <div
               aria-hidden="true"
               className="hero-blob absolute -top-[8%] -left-[14%] z-0 h-[120%] w-[120%] bg-brand-600 opacity-95"

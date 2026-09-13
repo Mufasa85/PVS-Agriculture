@@ -6,15 +6,9 @@ const nextConfig = {
     root: __dirname,
   },
   serverExternalPackages: ["geoip-lite", "i18n-iso-countries"],
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "*.unsplash.com",
-        pathname: "/**",
-      },
-    ],
-  },
+  // Toutes les images de contenu sont locales (public/images) — pas de
+  // remotePatterns : les seules URLs next/image acceptées sont /images/*
+  // et /uploads/* (fichiers administrés via l'upload admin).
   async headers() {
     return [
       {

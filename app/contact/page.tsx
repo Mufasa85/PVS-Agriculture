@@ -5,12 +5,14 @@ import ContactForm from "@/components/sections/ContactForm";
 import Footer from "@/components/layout/Footer";
 import Reveal from "@/components/ui/Reveal";
 import { contact } from "@/lib/content";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact — PVS ONGD ASBL",
   description:
     "Contactez PVS ONGD ASBL : téléphone, email, WhatsApp ou formulaire en ligne. Notre équipe vous répond rapidement pour vos besoins en agriculture, élevage, pisciculture et produits pour animaux.",
-};
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (
@@ -39,7 +41,8 @@ export default function ContactPage() {
               Nos coordonnées
             </h2>
             <p className="mt-3 text-[15px] text-ink-500">
-              Plusieurs moyens pour nous joindre. Choisissez celui qui vous convient le mieux.
+              Plusieurs moyens pour nous joindre. Choisissez celui qui vous
+              convient le mieux.
             </p>
 
             <ul className="mt-8 flex flex-col gap-6">
@@ -106,7 +109,13 @@ export default function ContactPage() {
                       stroke="currentColor"
                       strokeWidth="1.6"
                     />
-                    <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="1.6" />
+                    <circle
+                      cx="12"
+                      cy="10"
+                      r="3"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                    />
                   </svg>
                 </span>
                 <div>
@@ -122,7 +131,13 @@ export default function ContactPage() {
               <li className="flex items-start gap-4">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[11px] bg-brand-100 text-brand-700">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="9"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                    />
                     <path
                       d="M12 7v5l3 2"
                       stroke="currentColor"
@@ -151,10 +166,7 @@ export default function ContactPage() {
               >
                 WhatsApp
               </Link>
-              <Link
-                href={contact.phoneHref}
-                className="btn btn-ghost"
-              >
+              <Link href={contact.phoneHref} className="btn btn-ghost">
                 Appeler
               </Link>
             </div>

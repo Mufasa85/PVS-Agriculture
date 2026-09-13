@@ -3,17 +3,22 @@ import Link from "next/link";
 
 import Footer from "@/components/layout/Footer";
 import TarifsFilter from "@/components/sections/TarifsFilter";
+import JsonLd from "@/components/seo/JsonLd";
 import Reveal from "@/components/ui/Reveal";
 import { tarifsPage } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
 import { getActiveCategories, serializeProduct } from "@/lib/products";
+import { pageMetadata, productListJsonLd } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// ISR : page servie depuis le cache, régénérée au plus toutes les 60 s
+// (+ invalidation immédiate via revalidatePath lors des mutations admin).
+export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: tarifsPage.metaTitle,
   description: tarifsPage.metaDescription,
-};
+  path: "/tarifs",
+});
 
 function TitleLine({ line }: { line: string }) {
   const emphasis = tarifsPage.hero.titleEmphasis;
@@ -54,6 +59,8 @@ export default async function TarifsPage() {
 
   return (
     <>
+      {products.length > 0 && <JsonLd data={productListJsonLd(products)} />}
+
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-gradient-to-b from-brand-50 to-white pb-[80px] pt-[140px] sm:pt-[168px]">
         <div className="shell text-center">

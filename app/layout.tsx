@@ -5,7 +5,9 @@ import { Suspense } from "react";
 
 import AnalyticsTracker from "@/components/analytics/AnalyticsTracker";
 import SiteChrome from "@/components/layout/SiteChrome";
+import JsonLd from "@/components/seo/JsonLd";
 import { siteMeta } from "@/lib/content";
+import { ogImage, organizationJsonLd, siteName, siteUrl } from "@/lib/seo";
 
 import "./globals.css";
 
@@ -22,15 +24,28 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: siteMeta.title,
   description: siteMeta.description,
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: siteMeta.title,
+    description: siteMeta.description,
+    url: "/",
+    siteName,
+    locale: "fr_FR",
+    type: "website",
+    images: [ogImage],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteMeta.title,
+    description: siteMeta.description,
+    images: [ogImage.url],
+  },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fr" className={`${inter.variable} ${fraunces.variable}`}>
       <body>
@@ -39,6 +54,7 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <AnalyticsTracker />
         </Suspense>
+        <JsonLd data={organizationJsonLd()} />
       </body>
     </html>
   );

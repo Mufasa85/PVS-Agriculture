@@ -84,7 +84,7 @@ export default function AdminLoginPage() {
       {/* Panel image de marque */}
       <div className="relative hidden w-[46%] flex-col justify-between overflow-hidden px-12 py-14 nav:flex">
         <Image
-          src="https://images.unsplash.com/photo-1492496913980-501348b61469?auto=format&fit=crop&w=1200&q=80"
+          src="/images/photo-1492496913980-501348b61469.jpg"
           alt="Mains tenant de la terre fertile, symbole du travail agricole de PVS ONGD ASBL"
           fill
           priority

@@ -77,6 +77,8 @@ export default function ContactForm() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
+            role="status"
+            aria-label="Envoi de votre message en cours"
             className="fixed inset-0 z-[3000] flex items-center justify-center bg-white/95 backdrop-blur-sm"
           >
             <PageLoader caption="Envoi de votre message…" />
@@ -86,8 +88,18 @@ export default function ContactForm() {
 
       <form
         onSubmit={handleSubmit}
+        aria-busy={status === "submitting"}
         className="rounded-pvs-lg bg-white px-[22px] py-7 shadow-float mid:p-[42px]"
       >
+        {/* Annonce lecteur d'écran du résultat d'envoi */}
+        <p role="status" aria-live="polite" className="sr-only">
+          {status === "success"
+            ? contactForm.successLabel
+            : status === "error"
+              ? errorMsg || "Échec de l'envoi du message."
+              : ""}
+        </p>
+
         <h3 className="mb-1.5 text-[22px] text-brand-900">
           {contactForm.title}
         </h3>

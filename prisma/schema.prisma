@@ -112,7 +112,13 @@ model Product {
   updatedAt   DateTime       @updatedAt
   deletedAt   DateTime?
 
-  @@index([category])
+  // Pages catégorie : WHERE category = ? AND deletedAt IS NULL AND
+  // isPublished = 1 ORDER BY sortOrder (couvre aussi l'ancien index
+  // simple sur category par préfixe le plus à gauche).
+  @@index([category, isPublished, deletedAt, sortOrder])
+  // Listing complet (/tarifs, admin) : filtre publication + tri par
+  // catégorie/sortOrder sans filesort sur la colonne category.
+  @@index([isPublished, deletedAt, category, sortOrder])
   @@map("products")
 }
 

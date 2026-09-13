@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import type { KeyboardEvent } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
@@ -11,6 +12,9 @@ export default function ElevageGallery() {
   const slides = gallery.slides;
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
+  // Met en pause la rotation auto au survol ou quand le carrousel a le
+  // focus clavier (recommandation WCAG pour les carrousels animés).
+  const [paused, setPaused] = useState(false);
   const reduceMotion = useReducedMotion();
 
   const goTo = useCallback(
@@ -21,24 +25,28 @@ export default function ElevageGallery() {
     [slides.length],
   );
 
-  const next = useCallback(
-    () => goTo(current + 1, 1),
-    [current, goTo],
-  );
+  const next = useCallback(() => goTo(current + 1, 1), [current, goTo]);
 
-  const prev = useCallback(
-    () => goTo(current - 1, -1),
-    [current, goTo],
-  );
+  const prev = useCallback(() => goTo(current - 1, -1), [current, goTo]);
 
   useEffect(() => {
-    if (reduceMotion) return;
+    if (reduceMotion || paused) return;
     const timer = window.setInterval(() => {
       setDirection(1);
       setCurrent((c) => (c + 1) % slides.length);
     }, 5000);
     return () => window.clearInterval(timer);
-  }, [reduceMotion, slides.length]);
+  }, [reduceMotion, paused, slides.length]);
+
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      prev();
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      next();
+    }
+  };
 
   return (
     <section className="bg-brand-900 py-[76px] nav:py-[110px]">
@@ -53,7 +61,17 @@ export default function ElevageGallery() {
           <p className="mt-4 text-[15px] text-white/70">{gallery.subtitle}</p>
         </div>
 
-        <div className="relative mx-auto max-w-[900px]">
+        <div
+          role="region"
+          aria-roledescription="carrousel"
+          aria-label={gallery.title}
+          onKeyDown={onKeyDown}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocusCapture={() => setPaused(true)}
+          onBlurCapture={() => setPaused(false)}
+          className="relative mx-auto max-w-[900px]"
+        >
           <div className="relative aspect-[16/10] overflow-hidden rounded-pvs-lg bg-brand-800 shadow-float">
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
@@ -125,6 +143,7 @@ export default function ElevageGallery() {
                 key={slide.src}
                 onClick={() => goTo(index, index > current ? 1 : -1)}
                 aria-label={`Aller à l'image ${index + 1}`}
+                aria-current={index === current || undefined}
                 className={`h-2.5 rounded-full transition-all duration-300 ${
                   index === current
                     ? "w-8 bg-gold-500"

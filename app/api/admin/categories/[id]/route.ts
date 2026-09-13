@@ -5,6 +5,7 @@ import { slugify } from "@/lib/products";
 import { getSessionFromRequest } from "@/lib/auth";
 import { getClientIp, logAudit } from "@/lib/audit";
 import { withApiError } from "@/lib/api";
+import { revalidatePublicCatalog } from "@/lib/revalidate-catalog";
 import { categoryInputSchema, firstIssueMessage } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -117,6 +118,8 @@ export const PUT = withApiError(
       ipAddress: getClientIp(request),
     });
 
+    revalidatePublicCatalog();
+
     return NextResponse.json({ category });
   },
 );
@@ -160,6 +163,8 @@ export const DELETE = withApiError(
       metadata: { name: category.name, slug: category.slug },
       ipAddress: getClientIp(request),
     });
+
+    revalidatePublicCatalog();
 
     return NextResponse.json({ success: true });
   },

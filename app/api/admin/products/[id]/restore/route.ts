@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { getSessionFromRequest } from "@/lib/auth";
 import { getClientIp, logAudit } from "@/lib/audit";
 import { withApiError } from "@/lib/api";
+import { revalidatePublicCatalog } from "@/lib/revalidate-catalog";
 
 export const runtime = "nodejs";
 
@@ -32,6 +33,8 @@ export const POST = withApiError(
         metadata: { name: product.name, slug: product.slug },
         ipAddress: getClientIp(request),
       });
+
+      revalidatePublicCatalog();
 
       return NextResponse.json({ product });
     } catch (error) {

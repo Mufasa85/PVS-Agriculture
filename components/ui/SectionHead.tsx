@@ -6,12 +6,15 @@ export default function SectionHead({
   title,
   subtitle,
   center = false,
+  dark = false,
   className,
 }: {
   eyebrow: string;
   title: ReactNode;
   subtitle?: string;
   center?: boolean;
+  /** Rendre le titre/eyebrow en clair pour les sections sur fond foncé. */
+  dark?: boolean;
   className?: string;
 }) {
   return (
@@ -20,10 +23,20 @@ export default function SectionHead({
         className ?? ""
       }`}
     >
-      <span className="eyebrow">{eyebrow}</span>
-      <h2 className="mt-[14px] text-[clamp(30px,4vw,44px)]">{title}</h2>
+      <span className={`eyebrow ${dark ? "text-gold-500" : ""}`}>
+        {eyebrow}
+      </span>
+      <h2
+        className={`mt-[14px] text-[clamp(30px,4vw,44px)] ${dark ? "text-white" : ""}`}
+      >
+        {title}
+      </h2>
       {subtitle ? (
-        <p className="mt-4 text-[17px] text-ink-500">{subtitle}</p>
+        <p
+          className={`mt-4 text-[17px] ${dark ? "text-white/70" : "text-ink-500"}`}
+        >
+          {subtitle}
+        </p>
       ) : null}
     </div>
   );

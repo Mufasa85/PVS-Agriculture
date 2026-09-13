@@ -39,15 +39,21 @@ export default function TarifsFilter({
   return (
     <section className="bg-brand-50 py-[76px] nav:py-[110px]">
       <div className="shell">
-        {/* ── Filtres ── */}
-        <div className="mb-12 flex flex-wrap justify-center gap-3">
+        {/* ── Filtres : défilement horizontal (carrousel) sur mobile ── */}
+        <div
+          role="group"
+          aria-label="Filtrer les produits par catégorie"
+          className="-mx-5 mb-12 flex gap-3 overflow-x-auto px-5 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden mid:mx-0 mid:flex-wrap mid:justify-center mid:overflow-visible mid:px-0 mid:pb-0"
+        >
           {categories.map((cat) => {
             const isActive = active === cat.id;
             return (
               <button
                 key={cat.id}
+                type="button"
                 onClick={() => handleCategoryClick(cat)}
-                className={`flex items-center gap-2.5 rounded-full border px-[20px] py-3 text-[14px] font-bold transition-all duration-300 ${
+                aria-pressed={isActive}
+                className={`flex shrink-0 items-center gap-2.5 rounded-full border px-[20px] py-3 text-[14px] font-bold transition-all duration-300 ${
                   isActive
                     ? "border-brand-600 bg-brand-600 text-white shadow-card"
                     : "border-line bg-white text-brand-900 hover:border-brand-300 hover:bg-brand-50"
@@ -61,12 +67,15 @@ export default function TarifsFilter({
         </div>
 
         {/* ── Compteur de résultats ── */}
-        <p className="mb-8 text-center text-[14px] text-ink-500">
+        <p
+          aria-live="polite"
+          className="mb-8 text-center text-[14px] text-ink-500"
+        >
           <span className="font-bold text-brand-900">{filtered.length}</span>{" "}
           produit{filtered.length > 1 ? "s" : ""} — {activeLabel}
         </p>
 
-        {/* ── Grille de produits ── */}
+        {/* ── Produits : carrousel scroll-snap sur mobile, grille dès `mid` ── */}
         <AnimatePresence mode="wait">
           <motion.div
             key={active}
@@ -74,7 +83,7 @@ export default function TarifsFilter({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.35, ease: [0.16, 0.8, 0.24, 1] }}
-            className="grid grid-cols-1 gap-6 mid:grid-cols-2 nav:grid-cols-3"
+            className="-mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden mid:mx-0 mid:grid mid:snap-none mid:grid-cols-2 mid:gap-6 mid:overflow-visible mid:px-0 mid:pb-0 nav:grid-cols-3"
           >
             {filtered.map((product) => {
               const catName =
@@ -86,7 +95,7 @@ export default function TarifsFilter({
                   onClick={() =>
                     trackProductView(product.name, catName, "/tarifs")
                   }
-                  className="group cursor-pointer overflow-hidden rounded-pvs-lg border border-line bg-white shadow-sm transition-all duration-[350ms] ease-pvs hover:-translate-y-1.5 hover:shadow-card"
+                  className="group w-[80vw] max-w-[340px] shrink-0 snap-center overflow-hidden rounded-pvs-lg border border-line bg-white shadow-sm transition-all duration-[350ms] ease-pvs hover:-translate-y-1.5 hover:shadow-card mid:w-auto mid:max-w-none"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden bg-brand-100">
                     <Image

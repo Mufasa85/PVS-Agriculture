@@ -6,6 +6,7 @@ import { getCategorySlugs, slugify } from "@/lib/products";
 import { getSessionFromRequest } from "@/lib/auth";
 import { getClientIp, logAudit } from "@/lib/audit";
 import { withApiError } from "@/lib/api";
+import { revalidatePublicCatalog } from "@/lib/revalidate-catalog";
 import { deleteLocalUploads } from "@/lib/uploads";
 import { firstIssueMessage, productInputSchema } from "@/lib/validation";
 
@@ -150,6 +151,8 @@ export const PUT = withApiError(
       ipAddress: getClientIp(request),
     });
 
+    revalidatePublicCatalog();
+
     return NextResponse.json({ product });
   },
 );
@@ -196,6 +199,7 @@ export const DELETE = withApiError(
         metadata: { name: product.name, slug: product.slug },
         ipAddress: getClientIp(request),
       });
+      revalidatePublicCatalog();
       return NextResponse.json({ success: true });
     }
 
@@ -230,6 +234,8 @@ export const DELETE = withApiError(
       entityId: productId,
       ipAddress: getClientIp(request),
     });
+
+    revalidatePublicCatalog();
 
     return NextResponse.json({ success: true });
   },

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getSessionFromRequest } from "@/lib/auth";
 import { getClientIp, logAudit } from "@/lib/audit";
 import { withApiError } from "@/lib/api";
+import { revalidatePublicCatalog } from "@/lib/revalidate-catalog";
 import { firstIssueMessage, reorderSchema } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -45,6 +46,8 @@ export const PATCH = withApiError(async (request: Request) => {
     metadata: { order: parsed.data.ids },
     ipAddress: getClientIp(request),
   });
+
+  revalidatePublicCatalog();
 
   return NextResponse.json({ success: true });
 });

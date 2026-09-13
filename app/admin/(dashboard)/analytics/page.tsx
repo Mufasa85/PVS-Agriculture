@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 
 import { Download } from "lucide-react";
 
@@ -13,43 +14,30 @@ import {
   SearchIcon,
 } from "@/components/ui/icons";
 
-import { curveCatmullRom } from "@visx/curve";
-import { feature } from "topojson-client";
-import worldData from "world-atlas/countries-110m.json";
-import type { FeatureCollection, Geometry } from "geojson";
-import countries from "i18n-iso-countries";
-import frLocale from "i18n-iso-countries/langs/fr.json";
-import {
-  Background,
-  ChartBrushLayout,
-  ChartTooltip,
-  ChoroplethChart,
-  ChoroplethFeatureComponent,
-  type ChoroplethFeature,
-  ChoroplethGraticule,
-  ChoroplethTooltip,
-  Legend,
-  LegendItem,
-  LegendLabel,
-  LegendMarker,
-  LegendProgress,
-  LegendValue,
-  Line,
-  LineChart,
-  Ring,
-  RingCenter,
-  RingChart,
-  XAxis,
-} from "@/components/charts";
-
-countries.registerLocale(frLocale);
-
-// Build numeric → French name lookup
-const numericToName: Record<string, string> = {};
-for (const [numeric, alpha2] of Object.entries(countries.getNumericCodes())) {
-  numericToName[numeric] =
-    countries.getName(alpha2 as string, "fr") || (alpha2 as string);
+function ChartSkeleton({ height = "h-[300px]" }: { height?: string }) {
+  return (
+    <div
+      className={`flex ${height} w-full items-center justify-center rounded-[12px] border border-dashed border-line bg-brand-50/50`}
+    >
+      <div className="h-8 w-8 animate-spin rounded-full border-3 border-brand-200 border-t-brand-600" />
+    </div>
+  );
 }
+
+// Lazy-load : la pile visx/d3/topojson/i18n-iso-countries n'est chargée
+// qu'à l'affichage de ces sections, pas dans le bundle initial de la page.
+const DevicesChart = dynamic(
+  () => import("@/components/admin/analytics/DevicesChart"),
+  { ssr: false, loading: () => <ChartSkeleton height="h-[350px]" /> },
+);
+const SourcesChart = dynamic(
+  () => import("@/components/admin/analytics/SourcesChart"),
+  { ssr: false, loading: () => <ChartSkeleton height="h-[220px]" /> },
+);
+const VisitorsMap = dynamic(
+  () => import("@/components/admin/analytics/VisitorsMap"),
+  { ssr: false, loading: () => <ChartSkeleton height="h-[320px]" /> },
+);
 
 type AnalyticsState = {
   timeframe: number;
@@ -86,63 +74,6 @@ type AnalyticsState = {
   }>;
   visitorsByCountry: Record<string, number>;
 };
-
-const baseGeojson = feature(
-  worldData as any,
-  (worldData as any).objects.countries,
-) as unknown as FeatureCollection<
-  Geometry,
-  { name?: string; visitors?: number }
->;
-
-function visitorColorFor(visitors: number, maxVisitors: number): string {
-  if (visitors === 0) return "#d8dce4";
-
-  const max = Math.max(maxVisitors, 1);
-  const ratio = Math.min(visitors / max, 1);
-
-  const stops = [
-    { t: 0.0, r: 34, g: 197, b: 94 },
-    { t: 0.25, r: 132, g: 204, b: 22 },
-    { t: 0.5, r: 234, g: 179, b: 8 },
-    { t: 0.75, r: 249, g: 115, b: 22 },
-    { t: 1.0, r: 220, g: 38, b: 38 },
-  ];
-
-  let lo = stops[0];
-  let hi = stops[stops.length - 1];
-  for (let i = 0; i < stops.length - 1; i++) {
-    if (ratio >= stops[i].t && ratio <= stops[i + 1].t) {
-      lo = stops[i];
-      hi = stops[i + 1];
-      break;
-    }
-  }
-
-  const span = hi.t - lo.t || 1;
-  const localRatio = (ratio - lo.t) / span;
-  const r = Math.round(lo.r + (hi.r - lo.r) * localRatio);
-  const g = Math.round(lo.g + (hi.g - lo.g) * localRatio);
-  const b = Math.round(lo.b + (hi.b - lo.b) * localRatio);
-
-  return `rgb(${r}, ${g}, ${b})`;
-}
-
-function getVisitorColorFactory(maxVisitors: number) {
-  return function getVisitorColor(feature: ChoroplethFeature, _index: number) {
-    const visitors = (feature.properties.visitors as number) ?? 0;
-    return visitorColorFor(visitors, maxVisitors);
-  };
-}
-
-function getFeatureName(feature: ChoroplethFeature, _index: number) {
-  const id = String(feature.id ?? "");
-  return numericToName[id] || feature.properties?.name || `Pays ${id}`;
-}
-
-function getVisitorValue(feature: ChoroplethFeature, _index: number) {
-  return (feature.properties.visitors as number) ?? 0;
-}
 
 function Sparkline({
   data,
@@ -204,30 +135,6 @@ export default function AdminAnalyticsPage() {
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
   const [sourceHovered, setSourceHovered] = useState<number | null>(null);
 
-  const geojson = useMemo(() => {
-    const visitorsByCountry = data?.visitorsByCountry || {};
-    return {
-      ...baseGeojson,
-      features: baseGeojson.features.map((f) => ({
-        ...f,
-        properties: {
-          ...f.properties,
-          visitors: visitorsByCountry[String(f.id)] || 0,
-        },
-      })),
-    };
-  }, [data?.visitorsByCountry]);
-
-  const maxVisitors = useMemo(() => {
-    const vals = Object.values(data?.visitorsByCountry || {});
-    return vals.length > 0 ? Math.max(...vals) : 0;
-  }, [data?.visitorsByCountry]);
-
-  const getVisitorColor = useMemo(
-    () => getVisitorColorFactory(maxVisitors),
-    [maxVisitors],
-  );
-
   async function fetchAnalytics(selectedDays: number) {
     setLoading(true);
     try {
@@ -283,7 +190,6 @@ export default function AdminAnalyticsPage() {
 
   const kpis = data?.kpis;
   const traffic = data?.trafficTrend || [];
-  const maxPageviews = Math.max(...traffic.map((t) => t.pageviews), 1);
 
   // Totaux pour les appareils & sources
   const totalDeviceEvents =
@@ -632,50 +538,7 @@ export default function AdminAnalyticsPage() {
               Tablette
             </span>
           </div>
-          {deviceChartData.length > 0 ? (
-            <div className="h-[300px] w-full overflow-hidden sm:h-[350px] md:h-[400px] lg:h-[450px]">
-              <ChartBrushLayout data={deviceChartData} enabled height={60}>
-                {(brushLayout) => (
-                  <LineChart
-                    data={deviceChartData}
-                    xDomain={brushLayout.xDomain}
-                    tweenYDomainOnXDomainChange
-                  >
-                    <Background pattern="dots" opacity={0.85} />
-                    <Line
-                      dataKey="desktop"
-                      stroke="#3a45c4"
-                      curve={curveCatmullRom}
-                      fadeEdges
-                      strokeWidth={2}
-                    />
-                    <Line
-                      dataKey="mobile"
-                      stroke="#10b981"
-                      curve={curveCatmullRom}
-                      fadeEdges
-                      strokeWidth={2}
-                    />
-                    <Line
-                      dataKey="tablet"
-                      stroke="#f59e0b"
-                      curve={curveCatmullRom}
-                      fadeEdges
-                      strokeWidth={2}
-                    />
-                    <XAxis />
-                    <ChartTooltip />
-                  </LineChart>
-                )}
-              </ChartBrushLayout>
-            </div>
-          ) : (
-            <div className="flex h-40 items-center justify-center rounded-[12px] border border-dashed border-line bg-brand-50/50">
-              <p className="text-[13px] text-ink-500 font-medium">
-                Aucune donnée disponible.
-              </p>
-            </div>
-          )}
+          <DevicesChart data={deviceChartData} />
         </div>
 
         {/* Sources de Trafic */}
@@ -683,34 +546,11 @@ export default function AdminAnalyticsPage() {
           <h2 className="font-serif text-[17px] font-bold text-brand-900 mb-4">
             Sources d&apos;Acquisition
           </h2>
-          <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
-            <div className="flex w-1/2 justify-center">
-              <RingChart
-                data={sourceRingData}
-                hoveredIndex={sourceHovered}
-                onHoverChange={setSourceHovered}
-              >
-                {sourceRingData.map((_, i) => (
-                  <Ring index={i} key={i} />
-                ))}
-                <RingCenter defaultLabel="Sources" />
-              </RingChart>
-            </div>
-
-            <Legend
-              hoveredIndex={sourceHovered}
-              items={sourceRingData}
-              onHoverChange={setSourceHovered}
-              className="flex-1"
-            >
-              <LegendItem>
-                <LegendMarker />
-                <LegendLabel />
-                <LegendValue showPercentage />
-                <LegendProgress />
-              </LegendItem>
-            </Legend>
-          </div>
+          <SourcesChart
+            data={sourceRingData}
+            hoveredIndex={sourceHovered}
+            onHoverChange={setSourceHovered}
+          />
         </div>
       </div>
 
@@ -729,84 +569,7 @@ export default function AdminAnalyticsPage() {
             <GlobeIcon size={14} />
           </div>
         </div>
-        <div className="flex flex-col gap-4 lg:flex-row">
-          {/* Map à gauche */}
-          <div className="min-w-0 flex-1">
-            <ChoroplethChart
-              aspectRatio="2 / 1"
-              data={geojson}
-              margin={{ top: 8, right: 8, bottom: 40, left: 8 }}
-            >
-              <ChoroplethGraticule />
-              <ChoroplethFeatureComponent getFeatureColor={getVisitorColor} />
-              <ChoroplethTooltip
-                getFeatureName={getFeatureName}
-                getFeatureValue={getVisitorValue}
-                valueLabel="Visiteurs"
-                backgroundColor="rgba(255, 255, 255, 0.95)"
-                panelStyle={{
-                  color: "#1e293b",
-                  ["--chart-tooltip-foreground" as string]: "#1e293b",
-                  ["--chart-tooltip-muted" as string]: "#64748b",
-                }}
-              />
-            </ChoroplethChart>
-          </div>
-
-          {/* Liste des pays à droite */}
-          <div className="w-full shrink-0 lg:w-64">
-            <div className="mb-2 text-[12px] font-bold uppercase tracking-wide text-ink-500">
-              Top pays
-            </div>
-            <div className="flex max-h-[320px] flex-col gap-1.5 overflow-y-auto pr-1">
-              {Object.entries(data?.visitorsByCountry || {})
-                .sort(([, a], [, b]) => b - a)
-                .map(([numeric, count]) => {
-                  const total =
-                    Object.values(data?.visitorsByCountry || {}).reduce(
-                      (s, v) => s + v,
-                      0,
-                    ) || 1;
-                  const pct = Math.round((count / total) * 100);
-                  const name = numericToName[numeric] || numeric;
-                  return (
-                    <div
-                      key={numeric}
-                      className="flex items-center justify-between rounded-lg px-2.5 py-1.5 transition-colors hover:bg-brand-50/60"
-                    >
-                      <span className="flex items-center gap-2 truncate">
-                        <span
-                          className="h-2.5 w-2.5 shrink-0 rounded-full"
-                          style={{
-                            backgroundColor: visitorColorFor(
-                              count,
-                              maxVisitors,
-                            ),
-                          }}
-                        />
-                        <span className="truncate text-[13px] font-medium text-brand-900">
-                          {name}
-                        </span>
-                      </span>
-                      <span className="flex shrink-0 items-center gap-2">
-                        <span className="text-[12.5px] font-bold text-brand-700">
-                          {count}
-                        </span>
-                        <span className="text-[11px] font-semibold text-ink-500">
-                          {pct}%
-                        </span>
-                      </span>
-                    </div>
-                  );
-                })}
-              {Object.keys(data?.visitorsByCountry || {}).length === 0 && (
-                <p className="py-4 text-center text-[12.5px] text-ink-500">
-                  Aucune donnée géographique disponible.
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
+        <VisitorsMap visitorsByCountry={data?.visitorsByCountry || {}} />
       </div>
 
       {/* ── Flux d'événements en direct ── */}

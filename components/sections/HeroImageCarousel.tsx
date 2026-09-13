@@ -50,7 +50,11 @@ export default function HeroImageCarousel({ images }: { images: HeroImage[] }) {
       </AnimatePresence>
 
       {images.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 z-[2] flex -translate-x-1/2 gap-1.5">
+        // Pastilles purement décoratives (carrousel auto, non interactif)
+        <div
+          aria-hidden="true"
+          className="absolute bottom-4 left-1/2 z-[2] flex -translate-x-1/2 gap-1.5"
+        >
           {images.map((image, i) => (
             <span
               key={image.src}

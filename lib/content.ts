@@ -123,30 +123,29 @@ export const hero = {
     { value: "100%", label: "Ancrage local" },
     { value: "ONGD", label: "Engagement durable" },
   ] satisfies Stat[],
-  // [PLACEHOLDER] Unsplash — à remplacer par une vraie photo PVS ONGD.
-  imageSrc:
-    "https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=900&q=80",
+  // [PLACEHOLDER] Photo d'illustration (fichier local public/images) — à remplacer par une vraie photo PVS ONGD.
+  imageSrc: "/images/photo-1500595046743-cd271d694d30.jpg",
   imageAlt: "Champ agricole verdoyant au lever du soleil",
   // Carrousel d'images du hero : alterne entre nos différentes activités.
   images: [
     {
-      src: "https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=900&q=80",
+      src: "/images/photo-1500595046743-cd271d694d30.jpg",
       alt: "Champ agricole verdoyant au lever du soleil",
     },
     {
-      src: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80",
+      src: "/images/photo-1500382017468-9049fed747ef.jpg",
       alt: "Vache dans un pâturage au coucher du soleil",
     },
     {
-      src: "https://images.unsplash.com/photo-1529313780224-1a12b68bed16?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=markus-winkler-HeqXGxnsnX4-unsplash.jpg",
+      src: "/images/photo-1529313780224-1a12b68bed16.jpg",
       alt: "Plate bande",
     },
     {
-      src: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=900&q=80",
+      src: "/images/photo-1516467508483-a7212febe31a.jpg",
       alt: "Porcherie moderne et propre",
     },
     {
-      src: "https://images.unsplash.com/photo-1515735543535-12664d2453f8?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=milos-prelevic-uWLvruHp8kY-unsplash.jpg",
+      src: "/images/photo-1515735543535-12664d2453f8.jpg",
       alt: "Pisciculture moderne et propre",
     },
   ],
@@ -160,9 +159,8 @@ export const agricultureFeature = {
   title: "L'agriculture, au centre de notre engagement",
   paragraph:
     "De la préparation du sol à la récolte, nous mettons en œuvre des pratiques agricoles rigoureuses pour produire des cultures saines, tout en respectant les cycles naturels de la terre.",
-  // [PLACEHOLDER] Unsplash
-  imageSrc:
-    "https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=markus-spiske-sFydXGrt5OA-unsplash.jpg",
+  // [PLACEHOLDER] Photo d'illustration locale
+  imageSrc: "/images/photo-1515150144380-bca9f1650ed9.jpg",
   imageAlt: "Rangées de cultures dans une exploitation agricole",
   points: [
     {
@@ -206,8 +204,7 @@ export const activities: Activity[] = [
     description:
       "Production et exploitation de cultures vivrières adaptées au terroir local.",
     href: "/agriculture",
-    imageSrc:
-      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=700&q=80",
+    imageSrc: "/images/photo-1500382017468-9049fed747ef.jpg",
     imageAlt: "Champ de maïs",
   },
   {
@@ -216,8 +213,7 @@ export const activities: Activity[] = [
     description:
       "Un élevage suivi avec soin pour une croissance saine du cheptel.",
     href: "/elevage",
-    imageSrc:
-      "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=700&q=80",
+    imageSrc: "/images/photo-1500534623283-312aade485b7.jpg",
     imageAlt: "Troupeau de bétail dans un pâturage",
   },
   {
@@ -226,8 +222,7 @@ export const activities: Activity[] = [
     description:
       "Élevage de poissons en étangs contrôlés pour une production maîtrisée.",
     href: "/pisciculture",
-    imageSrc:
-      "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=700&q=80",
+    imageSrc: "/images/photo-1544551763-46a013bb70d5.jpg",
     imageAlt: "Étang de pisciculture",
   },
   {
@@ -236,8 +231,7 @@ export const activities: Activity[] = [
     description:
       "Une porcherie gérée selon des normes d'hygiène et de bien-être animal strictes.",
     href: "/porcherie",
-    imageSrc:
-      "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=700&q=80",
+    imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
     imageAlt: "Porcherie moderne",
   },
   {
@@ -246,8 +240,7 @@ export const activities: Activity[] = [
     description:
       "Vente de produits et d'aliments de qualité pour un élevage performant.",
     href: "/produits-animaux",
-    imageSrc:
-      "https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=700&q=80",
+    imageSrc: "/images/photo-1574943320219-553eb213f72d.jpg",
     imageAlt: "Sacs d'aliments pour animaux",
   },
 ];
@@ -269,13 +262,13 @@ export const apropos = {
   tags: ["Vision durable", "Expertise terrain", "Ancrage local"],
   images: [
     {
-      // [PLACEHOLDER] Unsplash
-      src: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=700&q=80",
+      // [PLACEHOLDER] Photo d'illustration locale
+      src: "/images/photo-1625246333195-78d9c38ad449.jpg",
       alt: "Vue aérienne d'une exploitation agricole",
     },
     {
-      // [PLACEHOLDER] Unsplash
-      src: "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=500&q=80",
+      // [PLACEHOLDER] Photo d'illustration locale
+      src: "/images/photo-1593113598332-cd288d649433.jpg",
       alt: "Travailleur agricole au champ",
     },
   ],
@@ -415,9 +408,8 @@ export const agriculturePage: AgriculturePageContent = {
     titleLines: ["L'agriculture, au centre", "de notre engagement."],
     paragraph:
       "De la préparation du sol à la récolte, PVS ONGD ASBL met en œuvre des pratiques agricoles rigoureuses pour produire des cultures saines, tout en respectant les cycles naturels de la terre à Kinshasa.",
-    // [PLACEHOLDER] Unsplash
-    imageSrc:
-      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80",
+    // [PLACEHOLDER] Photo d'illustration locale
+    imageSrc: "/images/photo-1500382017468-9049fed747ef.jpg",
     imageAlt: "Champ agricole verdoyant au lever du soleil",
   },
 
@@ -429,36 +421,32 @@ export const agriculturePage: AgriculturePageContent = {
       "Nous travaillons à la demande pour certaines cultures maraîchères, ce qui nous permet de garantir fraîcheur et disponibilité auprès de nos partenaires, sans gaspillage ni surproduction.",
     ],
     tags: ["Production locale", "Cultures diversifiées", "Suivi rigoureux"],
-    // [PLACEHOLDER] Unsplash
-    imageSrc:
-      "https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=markus-spiske-sFydXGrt5OA-unsplash.jpg",
+    // [PLACEHOLDER] Photo d'illustration locale
+    imageSrc: "/images/photo-1515150144380-bca9f1650ed9.jpg",
     imageAlt: "Rangées de cultures dans une exploitation agricole",
     products: [
       {
         name: "Épinard",
         description:
           "Cultivé en plate-bande et produit à la demande, notre épinard est récolté frais pour préserver toute sa qualité nutritionnelle.",
-        // [PLACEHOLDER] Unsplash
-        imageSrc:
-          "https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=700&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        imageSrc: "/images/photo-1576045057995-568f588f82fb.jpg",
         imageAlt: "Plate-bande d'épinard",
       },
       {
         name: "Oseille",
         description:
           "Une culture traditionnelle suivie de près, appréciée pour sa saveur et sa place centrale dans l'alimentation locale.",
-        // [PLACEHOLDER] Unsplash
-        imageSrc:
-          "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=700&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        imageSrc: "/images/photo-1523348837708-15d4a09cfac2.jpg",
         imageAlt: "Plate-bande d'oseille",
       },
       {
         name: "Nduda",
         description:
           "Cultivée selon les mêmes standards de rigueur, la nduda complète notre offre de légumes-feuilles produits à la demande.",
-        // [PLACEHOLDER] Unsplash
-        imageSrc:
-          "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=700&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        imageSrc: "/images/photo-1500382017468-9049fed747ef.jpg",
         imageAlt: "Plate-bande de nduda",
       },
     ],
@@ -541,9 +529,8 @@ export const aproposPage: AboutPageContent = {
     ],
     paragraph:
       "PVS ONGD ASBL est une organisation congolaise basée à Kinshasa, active dans l'agriculture, l'élevage, la pisciculture, la porcherie et la fourniture de produits pour animaux. Notre vocation est d'accompagner une production locale saine, structurée et durable.",
-    // [PLACEHOLDER] Unsplash
-    imageSrc:
-      "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1200&q=80",
+    // [PLACEHOLDER] Photo d'illustration locale
+    imageSrc: "/images/photo-1625246333195-78d9c38ad449.jpg",
     imageAlt: "Vue aérienne d'une exploitation agricole",
   },
 
@@ -566,13 +553,13 @@ export const aproposPage: AboutPageContent = {
     tags: ["Vision durable", "Expertise terrain", "Ancrage local"],
     images: [
       {
-        // [PLACEHOLDER] Unsplash
-        src: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=700&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        src: "/images/photo-1625246333195-78d9c38ad449.jpg",
         alt: "Vue aérienne d'une exploitation agricole",
       },
       {
-        // [PLACEHOLDER] Unsplash
-        src: "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=500&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        src: "/images/photo-1593113598332-cd288d649433.jpg",
         alt: "Travailleur agricole au champ",
       },
     ],
@@ -712,9 +699,8 @@ export const elevagePage: ElevagePageContent = {
     titleLines: ["Un élevage suivi", "avec soin et rigueur."],
     paragraph:
       "L'élevage est l'un des piliers de PVS ONGD ASBL. Nous assurons un suivi attentif du cheptel, avec des pratiques d'hygiène strictes et une alimentation contrôlée, pour garantir des produits sains et une croissance harmonieuse des animaux.",
-    // [PLACEHOLDER] Unsplash
-    imageSrc:
-      "https://images.unsplash.com/photo-1600428853876-6b57d20b9da6?auto=format&fit=crop&w=1600&q=80",
+    // [PLACEHOLDER] Photo d'illustration locale
+    imageSrc: "/images/photo-1600428853876-6b57d20b9da6.jpg",
     imageAlt: "Vaches paissant dans un pâturage verdoyant",
   },
 
@@ -725,32 +711,32 @@ export const elevagePage: ElevagePageContent = {
       "Découvrez notre élevage à travers ces images : des conditions d'hébergement propres, un cheptel vigoureux et un suivi quotidien attentif.",
     slides: [
       {
-        // [PLACEHOLDER] Unsplash
-        src: "https://images.unsplash.com/photo-1587213128862-80345e23a71a?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=dan-renco-Y06imaOLycY-unsplash.jpg",
+        // [PLACEHOLDER] Photo d'illustration locale
+        src: "/images/photo-1587213128862-80345e23a71a.jpg",
         alt: "Porc dans leurs enclosures",
         caption: "Porcs dans leurs enclosures",
       },
       {
-        // [PLACEHOLDER] Unsplash
-        src: " https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=ben-moreland-auijD19Byq8-unsplash.jpg?auto=format&fit=crop&w=1200&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        src: "/images/photo-1548550023-2bdb3c5beed7.jpg",
         alt: "Poules en élevage libre",
         caption: "Volailles en élevage libre",
       },
       {
-        // [PLACEHOLDER] Unsplash
-        src: "https://images.unsplash.com/photo-1564492300010-3a6a3f4e1e1e?auto=format&fit=crop&w=1200&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        src: "/images/photo-1564492300010-3a6a3f4e1e1e.jpg",
         alt: "Chèvres dans une étable",
         caption: "Caprins en stabulation",
       },
       {
-        // [PLACEHOLDER] Unsplash
-        src: "https://images.unsplash.com/photo-1648141499246-97a0eb56c2fd?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=creab-thepolymath-rY56zxvWnKs-unsplash.jpg",
+        // [PLACEHOLDER] Photo d'illustration locale
+        src: "/images/photo-1648141499246-97a0eb56c2fd.jpg",
         alt: "Oeufs frais",
         caption: "Oeufs Frais",
       },
       {
-        // [PLACEHOLDER] Unsplash
-        src: "https://images.unsplash.com/photo-1543374996-3a5d6b3e5e4e?auto=format&fit=crop&w=1200&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        src: "/images/photo-1543374996-3a5d6b3e5e4e.jpg",
         alt: "Soignant s'occupant d'un animal",
         caption: "Suivi vétérinaire quotidien",
       },
@@ -884,8 +870,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "1 200 000 FC",
       unit: "/ tête",
       category: "bovin",
-      imageSrc:
-        "https://images.unsplash.com/photo-1600428853876-6b57d20b9da6?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1600428853876-6b57d20b9da6.jpg",
       imageAlt: "Bœuf au pâturage",
     },
     {
@@ -894,8 +879,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "1 500 000 FC",
       unit: "/ tête",
       category: "bovin",
-      imageSrc:
-        "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1500534623283-312aade485b7.jpg",
       imageAlt: "Vache laitière",
     },
     {
@@ -904,8 +888,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "450 000 FC",
       unit: "/ tête",
       category: "bovin",
-      imageSrc:
-        "https://images.unsplash.com/photo-1570042225831-d1fa9b5c9b29?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1570042225831-d1fa9b5c9b29.jpg",
       imageAlt: "Veau dans un pâturage",
     },
     {
@@ -914,8 +897,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "180 000 FC",
       unit: "/ tête",
       category: "capra",
-      imageSrc:
-        "https://images.unsplash.com/photo-1564492300010-3a6a3f4e1e1e?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1564492300010-3a6a3f4e1e1e.jpg",
       imageAlt: "Chèvre dans une étable",
     },
     {
@@ -924,8 +906,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "250 000 FC",
       unit: "/ tête",
       category: "capra",
-      imageSrc:
-        "https://images.unsplash.com/photo-1484557985045-edf25e08da73?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
       imageAlt: "Bouc dans un enclos",
     },
     {
@@ -934,8 +915,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "75 000 FC",
       unit: "/ tête",
       category: "capra",
-      imageSrc:
-        "https://images.unsplash.com/photo-1533418436585-5c2c24e0c5dc?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1533418436585-5c2c24e0c5dc.jpg",
       imageAlt: "Chevreau au pâturage",
     },
     {
@@ -944,8 +924,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "8 000 FC",
       unit: "/ kg",
       category: "pisciculture",
-      imageSrc:
-        "https://images.unsplash.com/photo-1535473895227-bdecb20fb373?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1535473895227-bdecb20fb373.jpg",
       imageAlt: "Tilapia frais",
     },
     {
@@ -954,8 +933,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "500 FC",
       unit: "/ unité",
       category: "pisciculture",
-      imageSrc:
-        "https://images.unsplash.com/photo-1559473242-3740c6c65e1e?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1559473242-3740c6c65e1e.jpg",
       imageAlt: "Alevins dans un bassin",
     },
     {
@@ -964,8 +942,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "10 000 FC",
       unit: "/ kg",
       category: "pisciculture",
-      imageSrc:
-        "https://images.unsplash.com/photo-1574781330855-d0db8cc6a79c?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1574781330855-d0db8cc6a79c.jpg",
       imageAlt: "Poisson-chat",
     },
     {
@@ -974,8 +951,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "15 000 FC",
       unit: "/ pièce",
       category: "volailles",
-      imageSrc:
-        "https://images.unsplash.com/photo-1516467508483-a7212febe7da?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1516467508483-a7212febe7da.jpg",
       imageAlt: "Poulet fermier",
     },
     {
@@ -984,8 +960,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "12 000 FC",
       unit: "/ pièce",
       category: "volailles",
-      imageSrc:
-        "https://images.unsplash.com/photo-1548559934-4e3a06e1d434?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1548559934-4e3a06e1d434.jpg",
       imageAlt: "Poules pondeuses",
     },
     {
@@ -994,8 +969,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "3 000 FC",
       unit: "/ douzaine",
       category: "volailles",
-      imageSrc:
-        "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1582722872445-44dc5f7e3c8f.jpg",
       imageAlt: "Œufs frais",
     },
     {
@@ -1004,8 +978,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "25 000 FC",
       unit: "/ sac 50 kg",
       category: "produits",
-      imageSrc:
-        "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1604908554049-29bf08f5d1a9.jpg",
       imageAlt: "Sac d'aliment pour volailles",
     },
     {
@@ -1014,8 +987,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "35 000 FC",
       unit: "/ sac 50 kg",
       category: "produits",
-      imageSrc:
-        "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1604908554049-29bf08f5d1a9.jpg",
       imageAlt: "Sac d'aliment pour bovins",
     },
     {
@@ -1024,8 +996,7 @@ export const tarifsPage: TarifsPageContent = {
       price: "40 000 FC",
       unit: "/ sac 25 kg",
       category: "produits",
-      imageSrc:
-        "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+      imageSrc: "/images/photo-1604908554049-29bf08f5d1a9.jpg",
       imageAlt: "Granulés pour poissons",
     },
   ],
@@ -1057,9 +1028,8 @@ export const pisciculturePage: PisciculturePageContent = {
     titleLines: ["Une pisciculture", "maîtrisée en étangs", "contrôlés."],
     paragraph:
       "La pisciculture est l'un de nos métiers de cœur. Nous élevons des poissons en étangs contrôlés, avec une gestion rigoureuse de la qualité de l'eau, de l'alimentation et du suivi sanitaire, pour une production saine et durable.",
-    // [PLACEHOLDER] Unsplash
-    imageSrc:
-      "https://images.unsplash.com/photo-1535473895227-bdecb20fb373?auto=format&fit=crop&w=1600&q=80",
+    // [PLACEHOLDER] Photo d'illustration locale
+    imageSrc: "/images/photo-1535473895227-bdecb20fb373.jpg",
     imageAlt: "Étang de pisciculture avec poissons",
   },
 
@@ -1077,36 +1047,32 @@ export const pisciculturePage: PisciculturePageContent = {
       "Eau de qualité",
       "Production locale",
     ],
-    // [PLACEHOLDER] Unsplash
-    imageSrc:
-      "https://images.unsplash.com/photo-1559473242-3740c6c65e1e?auto=format&fit=crop&w=800&q=80",
+    // [PLACEHOLDER] Photo d'illustration locale
+    imageSrc: "/images/photo-1559473242-3740c6c65e1e.jpg",
     imageAlt: "Bassin d'élevage de poissons",
     products: [
       {
         name: "Tilapia",
         description:
           "Le tilapia est notre espèce phare. Élevé en étang contrôlé, il se distingue par sa chair blanche, tendre et savoureuse. Résistant et à croissance rapide, le tilapia s'adapte parfaitement au climat local et constitue une source de protéines saine et abordable pour les familles congolaises.",
-        // [PLACEHOLDER] Unsplash
-        imageSrc:
-          "https://images.unsplash.com/photo-1535473895227-bdecb20fb373?auto=format&fit=crop&w=800&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        imageSrc: "/images/photo-1535473895227-bdecb20fb373.jpg",
         imageAlt: "Tilapia frais sur glace",
       },
       {
         name: "Poisson-chat",
         description:
           "Le poisson-chat est apprécié pour sa chair ferme et son goût prononcé. Robuste et résistant aux maladies, il s'épanouit dans nos étangs avec une alimentation adaptée. C'est un poisson idéal pour la préparation de plats traditionnels congolais, riche en saveurs et en nutriments.",
-        // [PLACEHOLDER] Unsplash
-        imageSrc:
-          "https://images.unsplash.com/photo-1574781330855-d0db8cc6a79c?auto=format&fit=crop&w=800&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        imageSrc: "/images/photo-1574781330855-d0db8cc6a79c.jpg",
         imageAlt: "Poisson-chat frais",
       },
       {
         name: "Alevins",
         description:
           "Nous proposons des alevins de tilapia sains et vigoureux, issus de notre propre reproduction. Parfaits pour démarrer ou renforcer votre propre étang, nos alevins sont sélectionnés pour leur taux de survie élevé et leur croissance rapide. Un accompagnement technique est disponible pour les éleveurs débutants.",
-        // [PLACEHOLDER] Unsplash
-        imageSrc:
-          "https://images.unsplash.com/photo-1559473242-3740c6c65e1e?auto=format&fit=crop&w=800&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        imageSrc: "/images/photo-1559473242-3740c6c65e1e.jpg",
         imageAlt: "Alevins dans un bassin d'élevage",
       },
     ],
@@ -1168,9 +1134,8 @@ export const pisciculturePage: PisciculturePageContent = {
         description: "Tilapia élevé en étang contrôlé, pêché du jour.",
         price: "8 000 FC",
         unit: "/ kg",
-        // [PLACEHOLDER] Unsplash
-        imageSrc:
-          "https://images.unsplash.com/photo-1535473895227-bdecb20fb373?auto=format&fit=crop&w=600&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        imageSrc: "/images/photo-1535473895227-bdecb20fb373.jpg",
         imageAlt: "Tilapia frais",
         badge: "Best-seller",
       },
@@ -1179,9 +1144,8 @@ export const pisciculturePage: PisciculturePageContent = {
         description: "Poisson-chat élevé en étang, chair ferme et savoureuse.",
         price: "10 000 FC",
         unit: "/ kg",
-        // [PLACEHOLDER] Unsplash
-        imageSrc:
-          "https://images.unsplash.com/photo-1574781330855-d0db8cc6a79c?auto=format&fit=crop&w=600&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        imageSrc: "/images/photo-1574781330855-d0db8cc6a79c.jpg",
         imageAlt: "Poisson-chat",
       },
       {
@@ -1189,9 +1153,8 @@ export const pisciculturePage: PisciculturePageContent = {
         description: "Alevins de tilapia pour démarrer votre propre étang.",
         price: "500 FC",
         unit: "/ unité",
-        // [PLACEHOLDER] Unsplash
-        imageSrc:
-          "https://images.unsplash.com/photo-1559473242-3740c6c65e1e?auto=format&fit=crop&w=600&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        imageSrc: "/images/photo-1559473242-3740c6c65e1e.jpg",
         imageAlt: "Alevins dans un bassin",
         badge: "Dès",
       },
@@ -1201,9 +1164,8 @@ export const pisciculturePage: PisciculturePageContent = {
           "Granulés pour poissons d'élevage, formulation équilibrée.",
         price: "40 000 FC",
         unit: "/ sac 25 kg",
-        // [PLACEHOLDER] Unsplash
-        imageSrc:
-          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+        // [PLACEHOLDER] Photo d'illustration locale
+        imageSrc: "/images/photo-1604908554049-29bf08f5d1a9.jpg",
         imageAlt: "Granulés pour poissons",
       },
     ],
@@ -1236,8 +1198,7 @@ export const produitsAnimauxPage: ProduitsAnimauxPageContent = {
     titleLines: ["Une alimentation", "saine et adaptée", "pour vos animaux."],
     paragraph:
       "PVS ONGD ASBL propose une gamme de produits pour animaux pensée pour répondre aux besoins nutritionnels de vos bovins, caprins, volailles et poissons. Qualité, traçabilité et prix justes : tout pour nourrir au mieux votre élevage.",
-    imageSrc:
-      "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=1600&q=80",
+    imageSrc: "/images/photo-1604908554049-29bf08f5d1a9.jpg",
     imageAlt: "Sacs d'aliment pour animaux",
   },
 
@@ -1256,40 +1217,35 @@ export const produitsAnimauxPage: ProduitsAnimauxPageContent = {
       "Croissance",
       "Livraison",
     ],
-    imageSrc:
-      "https://images.unsplash.com/photo-1589923188651-268a976c1753?auto=format&fit=crop&w=800&q=80",
+    imageSrc: "/images/photo-1589923188651-268a976c1753.jpg",
     imageAlt: "Granulés d'aliment pour animaux",
     products: [
       {
         name: "Aliment pour bovins",
         description:
           "Formulation riche en fibres et énergie pour soutenir la croissance des jeunes bovins et la production laitière des vaches. Nos aliments bovins favorisent une digestion saine et un développement musculaire optimal.",
-        imageSrc:
-          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=800&q=80",
+        imageSrc: "/images/photo-1604908554049-29bf08f5d1a9.jpg",
         imageAlt: "Aliment pour bovins",
       },
       {
         name: "Aliment pour caprins",
         description:
           "Granulés équilibrés spécialement adaptés aux chèvres et boucs. Cet aliment complète le pâturage et apporte les protéines, minéraux et vitamines nécessaires à la santé et à la reproduction du troupeau.",
-        imageSrc:
-          "https://images.unsplash.com/photo-1589923188651-268a976c1753?auto=format&fit=crop&w=800&q=80",
+        imageSrc: "/images/photo-1589923188651-268a976c1753.jpg",
         imageAlt: "Aliment pour caprins",
       },
       {
         name: "Aliment pour volailles",
         description:
           "Mélange complet pour poulets, poules pondeuses et autres volailles. Riche en protéines et en acides aminés essentiels, il assure une croissance rapide, une bonne conversion alimentaire et une production d'œufs régulière.",
-        imageSrc:
-          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=800&q=80",
+        imageSrc: "/images/photo-1604908554049-29bf08f5d1a9.jpg",
         imageAlt: "Aliment pour volailles",
       },
       {
         name: "Aliment pour poissons",
         description:
           "Granulés flottants et coulants pour tilapia et poisson-chat. Formulation équilibrée en protéines et lipides pour une croissance rapide, une meilleure santé et un rendement optimal en étang.",
-        imageSrc:
-          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=800&q=80",
+        imageSrc: "/images/photo-1604908554049-29bf08f5d1a9.jpg",
         imageAlt: "Aliment pour poissons",
       },
     ],
@@ -1351,8 +1307,7 @@ export const produitsAnimauxPage: ProduitsAnimauxPageContent = {
         description: "Aliment complet pour poulets, riche en protéines.",
         price: "25 000 FC",
         unit: "/ sac 50 kg",
-        imageSrc:
-          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+        imageSrc: "/images/photo-1604908554049-29bf08f5d1a9.jpg",
         imageAlt: "Sac d'aliment pour volailles",
         badge: "Best-seller",
       },
@@ -1361,8 +1316,7 @@ export const produitsAnimauxPage: ProduitsAnimauxPageContent = {
         description: "Complément alimentaire pour bovins, croissance et lait.",
         price: "35 000 FC",
         unit: "/ sac 50 kg",
-        imageSrc:
-          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+        imageSrc: "/images/photo-1604908554049-29bf08f5d1a9.jpg",
         imageAlt: "Sac d'aliment pour bovins",
       },
       {
@@ -1371,8 +1325,7 @@ export const produitsAnimauxPage: ProduitsAnimauxPageContent = {
           "Granulés pour poissons d'élevage, formulation équilibrée.",
         price: "40 000 FC",
         unit: "/ sac 25 kg",
-        imageSrc:
-          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+        imageSrc: "/images/photo-1604908554049-29bf08f5d1a9.jpg",
         imageAlt: "Granulés pour poissons",
       },
       {
@@ -1380,8 +1333,7 @@ export const produitsAnimauxPage: ProduitsAnimauxPageContent = {
         description: "Mélange équilibré pour chèvres et boucs.",
         price: "28 000 FC",
         unit: "/ sac 50 kg",
-        imageSrc:
-          "https://images.unsplash.com/photo-1604908554049-29bf08f5d1a9?auto=format&fit=crop&w=600&q=80",
+        imageSrc: "/images/photo-1604908554049-29bf08f5d1a9.jpg",
         imageAlt: "Sac d'aliment pour caprins",
       },
     ],
@@ -1418,8 +1370,7 @@ export const porcheriePage: PorcheriePageContent = {
     ],
     paragraph:
       "PVS ONGD ASBL exploite une porcherie moderne à Kinshasa, où hygiène, alimentation contrôlée et bien-être animal se conjuguent pour produire une viande de qualité. Ne cherchez plus : commandez dès maintenant vos porcs ou lancez votre propre élevage avec notre accompagnement.",
-    imageSrc:
-      "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=1600&q=80",
+    imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
     imageAlt: "Porcherie moderne et propre",
   },
 
@@ -1437,32 +1388,28 @@ export const porcheriePage: PorcheriePageContent = {
       "Bien-être animal",
       "Production locale",
     ],
-    imageSrc:
-      "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=800&q=80",
+    imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
     imageAlt: "Porcs élevés dans un enclos propre",
     products: [
       {
         name: "Porcs charcutiers",
         description:
           "Des porcs élevés jusqu'au poids optimal pour la boucherie, à la chair tendre et bien persillée. Idéal pour les grossistes, restaurateurs et particuliers en quête d'une viande fraîche et locale.",
-        imageSrc:
-          "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=800&q=80",
+        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
         imageAlt: "Porcs charcutiers en enclos",
       },
       {
         name: "Porcelets",
         description:
           "Nos porcelets sont sevrés dans des conditions optimales et sélectionnés pour leur vigueur. Parfaits pour démarrer ou renforcer votre propre élevage, avec un accompagnement technique sur demande.",
-        imageSrc:
-          "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=800&q=80",
+        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
         imageAlt: "Porcelets en bonne santé",
       },
       {
         name: "Reproducteurs",
         description:
           "Truies et verrats sélectionnés pour leurs qualités génétiques : croissance rapide, fertilité élevée et robustesse. Un investissement sûr pour développer durablement votre exploitation porcine.",
-        imageSrc:
-          "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=800&q=80",
+        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
         imageAlt: "Porcs reproducteurs sélectionnés",
       },
     ],
@@ -1525,8 +1472,7 @@ export const porcheriePage: PorcheriePageContent = {
           "Porc élevé jusqu'au poids optimal, prêt pour la boucherie.",
         price: "180 000 FC",
         unit: "/ unité",
-        imageSrc:
-          "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=600&q=80",
+        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
         imageAlt: "Porc charcutier",
         badge: "Best-seller",
       },
@@ -1535,8 +1481,7 @@ export const porcheriePage: PorcheriePageContent = {
         description: "Jeune porcelet sain, idéal pour démarrer votre élevage.",
         price: "45 000 FC",
         unit: "/ unité",
-        imageSrc:
-          "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=600&q=80",
+        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
         imageAlt: "Porcelet sevré",
         badge: "Dès",
       },
@@ -1545,8 +1490,7 @@ export const porcheriePage: PorcheriePageContent = {
         description: "Truie sélectionnée pour sa fertilité et sa robustesse.",
         price: "250 000 FC",
         unit: "/ unité",
-        imageSrc:
-          "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=600&q=80",
+        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
         imageAlt: "Truie reproductrice",
       },
       {
@@ -1554,8 +1498,7 @@ export const porcheriePage: PorcheriePageContent = {
         description: "Verrat robuste, choisi pour ses qualités génétiques.",
         price: "280 000 FC",
         unit: "/ unité",
-        imageSrc:
-          "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=600&q=80",
+        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
         imageAlt: "Verrat reproducteur",
       },
     ],

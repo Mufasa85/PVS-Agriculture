@@ -29,35 +29,35 @@ Légende priorité : 🔴 critique · 🟠 importante · 🟢 confort
 
 ## ⚡ Fonctionnalités
 
-- [ ] 🟠 **Export CSV** — analytics (événements/KPIs), produits, messages. Endpoint `?format=csv` ou bouton dédié.
-- [ ] 🟠 **Historique produit** — l'audit log existe : onglet « Historique » dans `ProductModal` listant les `AuditLog` `entityType=Product, entityId=id`.
-- [ ] 🟢 **Dupliquer un produit** — bouton dans les actions du tableau (`POST /api/admin/products/[id]/duplicate` : copie avec `slug-copy`, `isPublished=false`).
-- [ ] 🟢 **Lien « Voir sur le site »** — depuis une ligne produit/catégorie admin, ouvrir la page publique correspondante dans un nouvel onglet.
-- [ ] 🟢 **Purge corbeille** — la restauration existe ; ajouter une suppression définitive (avec confirmation) + purge auto après N jours optionnelle.
-- [ ] 🟢 **Recherche globale admin** — recherche produits + messages + utilisateurs dans la topbar.
+- [x] 🟠 **Export CSV** — `GET /api/admin/export?type=products|messages|analytics` (séparateur `;` + BOM UTF-8, compatible Excel FR). Boutons dans les en-têtes produits/messages/analytics.
+- [x] 🟠 **Historique produit** — onglet « Historique » dans `ProductModal` (édition) listant les `AuditLog` via `GET /api/admin/products/[id]/history`.
+- [x] 🟢 **Dupliquer un produit** — `POST /api/admin/products/[id]/duplicate` (`slug-copie`, `isPublished=false`, images copiées) + bouton tableau.
+- [x] 🟢 **Lien « Voir sur le site »** — icône ↗ sur les lignes produits et catégories, ouvre `/{category-slug}` dans un nouvel onglet.
+- [x] 🟢 **Purge corbeille** — `DELETE /api/admin/products/[id]?permanent=1` (exige le passage par la corbeille) + bouton « Supprimer définitivement » avec `ConfirmDialog` dans `TrashPanel`. Purge auto après N jours : non implémentée (optionnel).
+- [x] 🟢 **Recherche globale admin** — `GlobalSearch` dans la topbar (debounce 250 ms) → `GET /api/admin/search?q=` : produits + messages + utilisateurs (réservés SUPER_ADMIN).
 - [x] 🟢 **Profil utilisateur + changement de mot de passe** — page `/admin/profile` (lien depuis la sidebar), `PUT /api/admin/profile`, `POST /api/admin/profile/password`.
 - [x] 🟢 **Mot de passe oublié** — `/admin/forgot-password` : email → code OTP (Resend/SMTP via `lib/mail.ts`) → nouveau mot de passe. Codes à usage unique, 10 min, 5 essais max.
-- [ ] 🟢 **Réponse intégrée aux messages** — remplacer le `mailto:` par un envoi direct depuis l'admin (`lib/mail.ts` existe désormais, multi-provider).
+- [x] 🟢 **Réponse intégrée aux messages** — compositeur dans le panneau détail → `POST /api/admin/messages/[id]/reply` (envoi via `lib/mail.ts`, audit `MESSAGE_REPLY`, message marqué lu).
 - [ ] 🟢 **Notifications temps réel** — le badge non-lus pollue toutes les 60 s ; SSE/polling plus fin optionnel.
 
 ## 🚀 Performance
 
-- [ ] 🟠 **Cache du catalogue public** — `agriculture`, `elevage`, `pisciculture`, `porcherie`, `produits-animaux`, `tarifs` sont tous `force-dynamic` → requête BDD à chaque visite. Passer à `export const revalidate = 60` (+ `revalidatePath` dans les mutations admin) ou `unstable_cache`.
-- [ ] 🟠 **Images externes Unsplash** — dépendance externe + domaine wildcard `*.unsplash.com`. Migrer les images de contenu vers `public/uploads` ou un CDN propre.
-- [ ] 🟢 **Bundle admin** — `framer-motion` + `visx` + `d3` + `topojson` + `i18n-iso-countries` sont lourds : lazy-load (`next/dynamic`) des charts analytics et de la carte du monde.
-- [ ] 🟢 **Audit des index DB** — les `@@index` existent sur les bons champs ; re-valider les requêtes analytics lentes avec du volume réel.
-- [ ] 🟢 **`loading.tsx` public** — existe à la racine ; vérifier les pages catalogue (skeletons produits).
+- [x] 🟠 **Cache du catalogue public** — `export const revalidate = 60` sur les 5 pages catalogue (`agriculture`, `pisciculture`, `porcherie`, `produits-animaux`, `tarifs`) + `revalidatePath` via `lib/revalidate-catalog.ts` sur toutes les mutations produits/catégories (create, update, delete, restore, duplicate, reorder).
+- [x] 🟠 **Images externes Unsplash** — migrées vers `public/images/` par `scripts/migrate-unsplash.mjs` (31 photos + `og-cover.jpg`, réécriture `lib/content.ts`/`prisma/seed.ts`/pages admin + BDD). 11 photos supprimées d'Unsplash (404) remplacées par des substituts locaux thématiquement proches. `remotePatterns` retiré de `next.config.js`.
+- [x] 🟢 **Bundle admin** — charts visx/d3 et carte topojson/i18n-iso-countries extraits dans `components/admin/analytics/` (`DevicesChart`, `SourcesChart`, `VisitorsMap`) et chargés via `next/dynamic` avec skeletons.
+- [x] 🟢 **Audit des index DB** — index composites ajoutés sur `products` (`category,isPublished,deletedAt,sortOrder` et `isPublished,deletedAt,category,sortOrder`) → migration `catalog_composite_indexes` appliquée.
+- [x] 🟢 **`loading.tsx` public** — `components/ui/CatalogSkeleton.tsx` + `loading.tsx` dédiés sur les 8 routes publiques (hero + grille produits, `role="status"`).
 
 ## 🌍 SEO / Accessibilité (site public)
 
-- [ ] 🟠 **`app/sitemap.ts` + `app/robots.ts`** — absents : sitemap des pages publiques + disallow `/admin`, `/api`.
-- [ ] 🟠 **Open Graph / Twitter cards** — seuls `title`/`description` sont définis ; ajouter `openGraph` (image OG), `twitter`, `metadataBase`.
-- [ ] 🟢 **JSON-LD** — données structurées `Organization` (layout) et `Product` (fiches catalogue).
-- [ ] 🟢 **Audit a11y complet** — contrastes, `aria-label` sur les boutons icône restants, focus-visible cohérent, navigation clavier du carrousel/menu public.
+- [x] 🟠 **`app/sitemap.ts` + `app/robots.ts`** — sitemap des 9 routes publiques (URLs issues de `siteUrl`) ; robots disallow `/admin` + `/api` avec lien sitemap.
+- [x] 🟠 **Open Graph / Twitter cards** — `lib/seo.ts` (`pageMetadata`) : `metadataBase`, canonical, OG (title/description/url/siteName/locale fr_FR/image 1200×630) et `summary_large_image` sur toutes les pages publiques ; `robots: noindex` sur l'admin.
+- [x] 🟢 **JSON-LD** — `NGO` (adresse Kinshasa, téléphone) dans le layout racine + `ItemList` de `Product`/`Offer` (prix FC → CDF) sur les pages catalogue via `components/seo/JsonLd.tsx`.
+- [x] 🟢 **Audit a11y complet** — Navbar : Échap ferme dropdown/menu, `aria-haspopup`/`aria-controls`, focus restauré, `role="dialog" aria-modal` sur le menu mobile. ElevageGallery : pause auto au survol/focus, flèches ←/→, `aria-roledescription="carrousel"`, `aria-current` sur les pastilles. TarifsFilter : `aria-pressed` + `role="group"` + compteur `aria-live`. ContactForm : `role="status"` + `aria-busy`. Pastilles décoratives `aria-hidden`.
 
 ## 📦 Déploiement / Ops
 
-- [ ] 🟠 **`.env.example`** — fichier versionné sans secrets (DATABASE_URL, AUTH_SECRET, ADMIN__, EMAIL_PROVIDER, EMAIL_FROM, EMAIL_API_KEY, SMTP__, CONTACT_*) pour l'onboarding.
+- [x] 🟠 **`.env.example`** — créé avec `DATABASE_URL`, `AUTH_SECRET`, `ADMIN_*`, `NEXT_PUBLIC_SITE_URL`, `EMAIL_*`, `SMTP_*`, `CONTACT_*`.
 - [ ] 🟠 **CI GitHub Actions** — workflow `lint` + `typecheck` + `test` + `build` sur chaque push/PR.
 - [ ] 🟠 **`/api/health`** — endpoint healthcheck (DB ping + version) pour le monitoring.
 - [ ] 🟢 **Backup BDD** — script `mysqldump` planifié (cron/Tâches planifiées Windows sous Laragon).
@@ -73,8 +73,9 @@ Légende priorité : 🔴 critique · 🟠 importante · 🟢 confort
 
 ## Ordre suggéré (prochaines étapes)
 
-1. � `.env.example` + secrets de prod
-2. 🟠 Cache catalogue public (`revalidate`)
-3. 🟠 `sitemap.ts` + `robots.ts` + OpenGraph
+1. � `AUTH_SECRET`/`ADMIN_PASSWORD` de prod + `NEXT_PUBLIC_SITE_URL` (le `.env.example` est en place)
+2. ~~🟠 Cache catalogue public (`revalidate`)~~ → fait (ISR 60 s + `revalidatePath`)
+3. ~~🟠 `sitemap.ts` + `robots.ts` + OpenGraph~~ → fait (+ JSON-LD, a11y, images locales, lazy-load admin, index DB, loading.tsx)
 4. 🟠 `/api/health` + CI
-5. 🟠 Export CSV + historique produit
+5. ~~🟠 Export CSV + historique produit~~ → déjà fait
+6. 🟠 Tests API/E2E

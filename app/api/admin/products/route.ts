@@ -5,6 +5,7 @@ import { getCategorySlugs, slugify } from "@/lib/products";
 import { getSessionFromRequest } from "@/lib/auth";
 import { getClientIp, logAudit } from "@/lib/audit";
 import { withApiError } from "@/lib/api";
+import { revalidatePublicCatalog } from "@/lib/revalidate-catalog";
 import { firstIssueMessage, productInputSchema } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -130,6 +131,8 @@ export const POST = withApiError(async (request: Request) => {
     metadata: { name: product.name, slug: product.slug },
     ipAddress: getClientIp(request),
   });
+
+  revalidatePublicCatalog();
 
   return NextResponse.json({ product }, { status: 201 });
 });
