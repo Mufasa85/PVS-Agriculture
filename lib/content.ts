@@ -60,7 +60,7 @@ export const primaryNavLinks: NavLink[] = [
   { label: "Accueil", href: "/" },
   { label: "À propos", href: "/a-propos" },
   { label: "Nos tarifs", href: "/tarifs" },
-  { label: "Contact", href: "/contact" },
+  // "Contact" n'est pas listé : le bouton CTA « Nous contacter » y mène déjà.
 ];
 
 /** Contenu du mega-menu "Services" (desktop), regroupant nos 4 activités. */

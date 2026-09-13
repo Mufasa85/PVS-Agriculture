@@ -28,12 +28,14 @@ export default function ActivityCard({
           sizes="(max-width: 768px) 85vw, (max-width: 1080px) 45vw, 33vw"
           className="object-cover transition-transform duration-[600ms] ease-pvs group-hover:scale-[1.08]"
         />
-        <span className="absolute -bottom-6 left-[22px] z-[2] flex h-[52px] w-[52px] items-center justify-center rounded-[14px] bg-brand-600 text-white shadow-[0_8px_20px_rgba(58,69,196,0.4)]">
-          <CategoryIcon icon={icon} size={22} />
-        </span>
       </div>
 
       <div id={anchorId} className="px-[26px] pb-7 pt-10">
+        {/* Badge à cheval image/contenu — placé ici (et non dans le conteneur
+            image en overflow-hidden) pour ne pas être rogné. */}
+        <span className="relative z-[2] -mt-[66px] mb-4 flex h-[52px] w-[52px] items-center justify-center rounded-[14px] bg-brand-600 text-white shadow-[0_8px_20px_rgba(58,69,196,0.4)]">
+          <CategoryIcon icon={icon} size={22} />
+        </span>
         <h3 className="mb-2.5 text-xl">{activity.title}</h3>
         <p className="mb-5 text-[14.5px] text-ink-500">
           {activity.description}

@@ -60,9 +60,11 @@ const featureIcons: Record<
 export default async function PorcheriePage() {
   const { hero, overview, features, pricing, stats, cta } = porcheriePage;
 
+  // Limité aux 4 premiers produits publiés (la grille tient sur une ligne).
   const pricingItems = await prisma.product.findMany({
     where: { category: "porc", deletedAt: null, isPublished: true },
     orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    take: 4,
   });
 
   return (

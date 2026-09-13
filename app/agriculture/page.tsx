@@ -62,9 +62,11 @@ const featureIcons: Record<
 export default async function AgriculturePage() {
   const { hero, overview, features, pricing, stats, cta } = agriculturePage;
 
+  // Limité aux 4 premiers produits publiés (la grille tient sur une ligne).
   const pricingItems = await prisma.product.findMany({
     where: { category: "agriculture", deletedAt: null, isPublished: true },
     orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    take: 4,
   });
 
   return (
@@ -332,6 +334,12 @@ export default async function AgriculturePage() {
                   </div>
                 </Reveal>
               ))}
+            </div>
+
+            <div className="mt-12 text-center">
+              <Link href="/tarifs" className="btn btn-gold">
+                Voir tous les tarifs
+              </Link>
             </div>
           </div>
         </section>
