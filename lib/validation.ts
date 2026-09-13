@@ -82,12 +82,88 @@ export const reorderSchema = z.object({
   ids: z.array(z.number().int().positive()).min(1),
 });
 
+// ── Profil & sécurité du compte ──
+
+export const profileUpdateSchema = z.object({
+  name: z.string().min(1, "Le nom est requis."),
+});
+
+export const passwordChangeSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Le mot de passe actuel est requis."),
+    password: z.string().min(PASSWORD_MIN, PASSWORD_MESSAGE),
+    confirm: z.string(),
+  })
+  .check((ctx) => {
+    if (ctx.value.password !== ctx.value.confirm) {
+      ctx.issues.push({
+        code: "custom",
+        message: "Les deux mots de passe ne correspondent pas.",
+        path: ["confirm"],
+        input: ctx.value.confirm,
+      });
+    }
+  });
+
+const otpCodeSchema = z
+  .string()
+  .regex(/^\d{6}$/, "Le code doit contenir 6 chiffres.");
+
+export const totpVerifySchema = z.object({ code: otpCodeSchema });
+
+export const login2faSchema = z.object({
+  pendingToken: z.string().min(1),
+  code: otpCodeSchema,
+});
+
+export const forgotPasswordSchema = z.object({
+  email: z.email("Format d'email invalide."),
+});
+
+export const resetVerifySchema = z.object({
+  email: z.email("Format d'email invalide."),
+  code: otpCodeSchema,
+});
+
+export const resetPasswordSchema = z
+  .object({
+    token: z.string().min(1),
+    password: z.string().min(PASSWORD_MIN, PASSWORD_MESSAGE),
+    confirm: z.string(),
+  })
+  .check((ctx) => {
+    if (ctx.value.password !== ctx.value.confirm) {
+      ctx.issues.push({
+        code: "custom",
+        message: "Les deux mots de passe ne correspondent pas.",
+        path: ["confirm"],
+        input: ctx.value.confirm,
+      });
+    }
+  });
+
 export const contactSchema = z.object({
-  nom: z.string().min(1),
-  telephone: z.string().min(1),
-  email: z.email(),
-  sujet: z.string().optional(),
-  message: z.string().min(1),
+  nom: z.string().min(1).max(200),
+  telephone: z.string().min(1).max(50),
+  email: z.email().max(320),
+  sujet: z.string().max(300).optional(),
+  message: z.string().min(1).max(10000),
+  // Honeypot anti-bot : champ invisible rempli uniquement par les bots.
+  website: z.string().max(100).optional(),
+});
+
+export const trackEventSchema = z.object({
+  type: z.enum([
+    "PAGE_VIEW",
+    "PRODUCT_VIEW",
+    "SEARCH",
+    "CATEGORY_VIEW",
+    "QUOTE_REQUEST",
+    "CONTACT_CLICK",
+  ]),
+  path: z.string().min(1).max(500),
+  referrer: z.string().max(1000).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export function firstIssueMessage(error: z.ZodError): string {

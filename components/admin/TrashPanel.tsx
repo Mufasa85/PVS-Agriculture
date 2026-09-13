@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { RotateCcw, Trash2 } from "lucide-react";
 
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { formatProductPrice } from "@/lib/products";
 
 type TrashProduct = {
@@ -22,6 +23,8 @@ export default function TrashPanel() {
   const [products, setProducts] = useState<TrashProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [restoringId, setRestoringId] = useState<number | null>(null);
+  const [purgeTarget, setPurgeTarget] = useState<TrashProduct | null>(null);
+  const [purging, setPurging] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -59,6 +62,29 @@ export default function TrashPanel() {
       toast.error("Erreur lors de la restauration.");
     } finally {
       setRestoringId(null);
+    }
+  }
+
+  async function purge() {
+    if (!purgeTarget) return;
+    const product = purgeTarget;
+    setPurging(true);
+    try {
+      const res = await fetch(`/api/admin/products/${product.id}?permanent=1`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setProducts((prev) => prev.filter((p) => p.id !== product.id));
+        toast.success(`« ${product.name} » supprimé définitivement.`);
+        setPurgeTarget(null);
+      } else {
+        const data = await res.json().catch(() => null);
+        toast.error(data?.error ?? "Erreur lors de la suppression.");
+      }
+    } catch {
+      toast.error("Erreur lors de la suppression.");
+    } finally {
+      setPurging(false);
     }
   }
 
@@ -125,10 +151,34 @@ export default function TrashPanel() {
                 )}
                 Restaurer
               </button>
+              <button
+                type="button"
+                onClick={() => setPurgeTarget(product)}
+                disabled={purging}
+                title="Supprimer définitivement"
+                className="inline-flex items-center gap-1.5 rounded-[8px] border border-red-200 px-3 py-1.5 text-[12px] font-bold text-red-500 transition-colors hover:bg-red-50 disabled:opacity-50"
+              >
+                <Trash2 size={13} />
+                <span className="hidden sm:inline">Supprimer</span>
+              </button>
             </div>
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={purgeTarget !== null}
+        title="Suppression définitive"
+        message={
+          purgeTarget
+            ? `« ${purgeTarget.name} » sera définitivement supprimé de la base. Cette action est irréversible.`
+            : ""
+        }
+        confirmLabel="Supprimer définitivement"
+        loading={purging}
+        onConfirm={purge}
+        onCancel={() => setPurgeTarget(null)}
+      />
     </div>
   );
 }

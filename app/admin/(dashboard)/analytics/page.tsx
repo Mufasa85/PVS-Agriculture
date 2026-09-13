@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { Download } from "lucide-react";
+
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import {
   ArrowDownRightIcon,
   ArrowUpRightIcon,
@@ -197,6 +200,7 @@ export default function AdminAnalyticsPage() {
   const [data, setData] = useState<AnalyticsState | null>(null);
   const [loading, setLoading] = useState(true);
   const [resetting, setResetting] = useState(false);
+  const [confirmClear, setConfirmClear] = useState(false);
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
   const [sourceHovered, setSourceHovered] = useState<number | null>(null);
 
@@ -240,12 +244,6 @@ export default function AdminAnalyticsPage() {
   }
 
   async function handleReset(action: "clear" | "seed") {
-    if (
-      action === "clear" &&
-      !confirm("Voulez-vous vraiment effacer tous les événements enregistrés ?")
-    ) {
-      return;
-    }
     setResetting(true);
     try {
       const res = await fetch("/api/admin/analytics", {
@@ -254,6 +252,7 @@ export default function AdminAnalyticsPage() {
         body: JSON.stringify({ action }),
       });
       if (res.ok) {
+        if (action === "clear") setConfirmClear(false);
         await fetchAnalytics(days);
       }
     } catch (e) {
@@ -372,10 +371,18 @@ export default function AdminAnalyticsPage() {
 
         {/* Actions Admin & Sélecteur de période */}
         <div className="flex flex-wrap items-center gap-2.5">
+          <a
+            href="/api/admin/export?type=analytics"
+            title="Exporter les événements en CSV"
+            className="inline-flex items-center gap-1.5 rounded-[10px] border border-line bg-white px-3 py-1.5 text-[12px] font-bold text-brand-900 transition-colors hover:bg-brand-50"
+          >
+            <Download size={13} />
+            Export CSV
+          </a>
           <button
             type="button"
             disabled={resetting}
-            onClick={() => handleReset("clear")}
+            onClick={() => setConfirmClear(true)}
             className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-1.5 text-[12px] font-bold text-red-600 hover:bg-red-100 transition-colors disabled:opacity-50"
           >
             Vider les données
@@ -859,6 +866,16 @@ export default function AdminAnalyticsPage() {
           ))}
         </div>
       </div>
+
+      <ConfirmDialog
+        open={confirmClear}
+        title="Vider les données analytics"
+        message="Voulez-vous vraiment effacer tous les événements enregistrés ? Cette action est irréversible."
+        confirmLabel="Tout effacer"
+        loading={resetting}
+        onConfirm={() => handleReset("clear")}
+        onCancel={() => setConfirmClear(false)}
+      />
     </div>
   );
 }

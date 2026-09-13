@@ -1,7 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
+import { Download } from "lucide-react";
+
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import {
   MailIcon,
   SearchIcon,
@@ -56,6 +60,11 @@ export default function AdminMessagesPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const [deleteTarget, setDeleteTarget] = useState<ContactMessage | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [replyOpen, setReplyOpen] = useState(false);
+  const [replyText, setReplyText] = useState("");
+  const [sendingReply, setSendingReply] = useState(false);
 
   const fetchMessages = useCallback(async (f: Filter, s: string, p: number) => {
     setLoading(true);
@@ -144,8 +153,10 @@ export default function AdminMessagesPage() {
     }
   }
 
-  async function deleteMessage(id: number) {
-    if (!confirm("Voulez-vous vraiment supprimer ce message ?")) return;
+  async function deleteMessage() {
+    if (!deleteTarget) return;
+    const id = deleteTarget.id;
+    setDeleting(true);
     try {
       const res = await fetch(`/api/admin/messages?id=${id}`, {
         method: "DELETE",
@@ -162,16 +173,46 @@ export default function AdminMessagesPage() {
         } else {
           fetchMessages(filter, search, page);
         }
+        setDeleteTarget(null);
       }
     } catch {
       console.error("Failed to delete message");
+    } finally {
+      setDeleting(false);
     }
   }
 
   function handleMessageClick(msg: ContactMessage) {
     setSelectedId(msg.id);
+    setReplyOpen(false);
+    setReplyText("");
     if (!msg.isRead) {
       markRead(msg.id, true);
+    }
+  }
+
+  async function sendReply() {
+    if (!selected || !replyText.trim()) return;
+    setSendingReply(true);
+    try {
+      const res = await fetch(`/api/admin/messages/${selected.id}/reply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: replyText.trim() }),
+      });
+      const data = await res.json().catch(() => null);
+      if (res.ok) {
+        toast.success(`Réponse envoyée à ${selected.email}.`);
+        setReplyOpen(false);
+        setReplyText("");
+        if (!selected.isRead) markRead(selected.id, true);
+      } else {
+        toast.error(data?.error ?? "Échec de l'envoi de la réponse.");
+      }
+    } catch {
+      toast.error("Échec de l'envoi de la réponse.");
+    } finally {
+      setSendingReply(false);
     }
   }
 
@@ -190,17 +231,27 @@ export default function AdminMessagesPage() {
             Suivi des demandes envoyées via le formulaire de contact du site.
           </p>
         </div>
-        {unreadCount > 0 && (
-          <div className="inline-flex items-center gap-2 rounded-[12px] border border-amber-200 bg-amber-50 px-4 py-2.5">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-[11px] font-bold text-white">
-              {unreadCount}
-            </span>
-            <span className="text-[13px] font-semibold text-amber-700">
-              message{unreadCount > 1 ? "s" : ""} non lu
-              {unreadCount > 1 ? "s" : ""}
-            </span>
-          </div>
-        )}
+        <div className="flex items-center gap-2.5">
+          <a
+            href="/api/admin/export?type=messages"
+            title="Exporter les messages en CSV"
+            className="inline-flex items-center gap-2 rounded-[10px] border border-line bg-white px-3.5 py-2 text-[12.5px] font-bold text-brand-900 transition-colors hover:bg-brand-50"
+          >
+            <Download size={14} />
+            Export CSV
+          </a>
+          {unreadCount > 0 && (
+            <div className="inline-flex items-center gap-2 rounded-[12px] border border-amber-200 bg-amber-50 px-4 py-2.5">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-[11px] font-bold text-white">
+                {unreadCount}
+              </span>
+              <span className="text-[13px] font-semibold text-amber-700">
+                message{unreadCount > 1 ? "s" : ""} non lu
+                {unreadCount > 1 ? "s" : ""}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ── Barre de recherche + filtres ── */}
@@ -384,17 +435,14 @@ export default function AdminMessagesPage() {
                     </p>
                   </div>
                   <div className="flex shrink-0 items-center gap-2">
-                    <a
-                      href={`mailto:${selected.email}?subject=${encodeURIComponent(
-                        `Re : ${selected.sujet || "Votre demande"}`,
-                      )}&body=${encodeURIComponent(
-                        `Bonjour ${selected.nom},\n\n\n—\nVotre message :\n${selected.message}`,
-                      )}`}
+                    <button
+                      type="button"
+                      onClick={() => setReplyOpen((v) => !v)}
                       title="Répondre par email"
                       className="flex h-9 items-center rounded-[10px] border border-brand-200 px-3.5 text-[12.5px] font-bold text-brand-600 transition-colors hover:bg-brand-50 hover:text-brand-700"
                     >
                       Répondre
-                    </a>
+                    </button>
                     <button
                       type="button"
                       onClick={() =>
@@ -430,7 +478,7 @@ export default function AdminMessagesPage() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => deleteMessage(selected.id)}
+                      onClick={() => setDeleteTarget(selected)}
                       title="Supprimer"
                       className="flex h-9 w-9 items-center justify-center rounded-[10px] border border-red-200 text-red-500 transition-colors hover:bg-red-50"
                     >
@@ -490,14 +538,44 @@ export default function AdminMessagesPage() {
 
               {/* Actions de réponse */}
               <div className="border-t border-line px-6 py-4">
+                {replyOpen && (
+                  <div className="mb-4">
+                    <textarea
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                      rows={5}
+                      placeholder={`Bonjour ${selected.nom},`}
+                      className="w-full rounded-[12px] border border-line bg-white px-4 py-3 text-[13.5px] text-brand-900 outline-none transition-colors placeholder:text-ink-500/50 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15"
+                    />
+                    <div className="mt-2.5 flex items-center justify-between">
+                      <span className="text-[12px] text-ink-500">
+                        Envoyé à {selected.email}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={sendReply}
+                        disabled={sendingReply || !replyText.trim()}
+                        className="inline-flex items-center gap-2 rounded-[10px] bg-brand-600 px-4 py-2 text-[13px] font-bold text-white transition-all hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {sendingReply && (
+                          <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                        )}
+                        {sendingReply ? "Envoi..." : "Envoyer la réponse"}
+                      </button>
+                    </div>
+                  </div>
+                )}
                 <div className="flex flex-wrap gap-3">
-                  <a
-                    href={`mailto:${selected.email}?subject=Re: ${selected.sujet || "Demande d'information"}`}
-                    className="inline-flex items-center gap-2 rounded-[10px] bg-brand-600 px-5 py-2.5 text-[13.5px] font-bold text-white shadow-brand-btn transition-all hover:bg-brand-700"
-                  >
-                    <MailIcon size={16} />
-                    Répondre par email
-                  </a>
+                  {!replyOpen && (
+                    <button
+                      type="button"
+                      onClick={() => setReplyOpen(true)}
+                      className="inline-flex items-center gap-2 rounded-[10px] bg-brand-600 px-5 py-2.5 text-[13.5px] font-bold text-white shadow-brand-btn transition-all hover:bg-brand-700"
+                    >
+                      <MailIcon size={16} />
+                      Répondre par email
+                    </button>
+                  )}
                   <a
                     href={`tel:${selected.telephone}`}
                     className="inline-flex items-center gap-2 rounded-[10px] border border-line bg-white px-5 py-2.5 text-[13.5px] font-bold text-brand-900 transition-colors hover:bg-brand-50"
@@ -538,6 +616,15 @@ export default function AdminMessagesPage() {
           )}
         </div>
       </div>
+
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        title="Supprimer le message"
+        message="Voulez-vous vraiment supprimer ce message ? Cette action est irréversible."
+        loading={deleting}
+        onConfirm={deleteMessage}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

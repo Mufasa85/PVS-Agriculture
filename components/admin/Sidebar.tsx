@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import type { ComponentType } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   BarChart3,
@@ -209,17 +209,23 @@ export default function Sidebar({
 
         {/* Profil utilisateur */}
         <div className="mt-3 flex items-center gap-3 rounded-[12px] bg-brand-50 px-3.5 py-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-[12px] font-bold text-white shadow-sm">
-            {initials(user.name) || "PV"}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-[13px] font-bold text-brand-900">
-              {user.name}
-            </p>
-            <p className="truncate text-[11px] text-ink-500">
-              {ROLE_LABELS[user.role] ?? user.role}
-            </p>
-          </div>
+          <Link
+            href="/admin/profile"
+            title="Mon profil"
+            className="flex min-w-0 flex-1 items-center gap-3"
+          >
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-[12px] font-bold text-white shadow-sm">
+              {initials(user.name) || "PV"}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[13px] font-bold text-brand-900 transition-colors hover:text-brand-600">
+                {user.name}
+              </p>
+              <p className="truncate text-[11px] text-ink-500">
+                {ROLE_LABELS[user.role] ?? user.role}
+              </p>
+            </div>
+          </Link>
           <LogoutTrigger compact />
         </div>
       </div>
@@ -251,9 +257,12 @@ export default function Sidebar({
 }
 
 function LogoutTrigger({ compact }: { compact?: boolean }) {
+  const router = useRouter();
+
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
-    window.location.href = "/admin/login";
+    router.push("/admin/login");
+    router.refresh();
   }
 
   if (compact) {

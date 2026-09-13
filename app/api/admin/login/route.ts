@@ -4,6 +4,7 @@ import {
   ADMIN_SESSION_COOKIE,
   ADMIN_SESSION_MAX_AGE,
   createAdminSessionToken,
+  createPending2faToken,
   verifyAdminCredentials,
 } from "@/lib/auth";
 import { getClientIp, logAudit } from "@/lib/audit";
@@ -56,6 +57,13 @@ export const POST = withApiError(async (request: Request) => {
       { error: "Identifiants incorrects." },
       { status: 401 },
     );
+  }
+
+  // 2FA activée : le mot de passe est bon mais il faut le code TOTP.
+  // On renvoie un token temporaire (5 min) au lieu de la session.
+  if (user.twoFactorEnabled) {
+    const pendingToken = await createPending2faToken(user.id);
+    return NextResponse.json({ requires2fa: true, pendingToken });
   }
 
   const token = await createAdminSessionToken(user);

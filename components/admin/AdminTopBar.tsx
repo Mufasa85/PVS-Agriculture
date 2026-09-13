@@ -3,6 +3,8 @@
 import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 
+import GlobalSearch from "@/components/admin/GlobalSearch";
+
 const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
   "/admin": {
     title: "Vue d'ensemble",
@@ -67,6 +69,9 @@ export default function AdminTopBar({
           {getDateFr()}
         </p>
       </div>
+
+      {/* Centre : recherche globale */}
+      <GlobalSearch isSuperAdmin={userRole === "SUPER_ADMIN"} />
 
       {/* Droite : notifications + avatar */}
       <div className="flex items-center gap-3">

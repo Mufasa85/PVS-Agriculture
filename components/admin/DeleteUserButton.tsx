@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { TrashIcon } from "@/components/ui/icons";
 
 export default function DeleteUserButton({
@@ -14,22 +15,16 @@ export default function DeleteUserButton({
   name: string;
 }) {
   const router = useRouter();
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleDelete() {
-    if (
-      !confirm(
-        `Supprimer l'utilisateur « ${name} » ? Cette action est irréversible.`,
-      )
-    ) {
-      return;
-    }
-
     setLoading(true);
     const res = await fetch(`/api/admin/users/${id}`, { method: "DELETE" });
 
     if (res.ok) {
       toast.success(`Utilisateur « ${name} » supprimé.`);
+      setConfirmOpen(false);
       router.refresh();
     } else {
       const data = await res.json().catch(() => null);
@@ -39,18 +34,23 @@ export default function DeleteUserButton({
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleDelete}
-      disabled={loading}
-      title="Supprimer"
-      className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-red-200 text-red-500 transition-colors hover:border-red-300 hover:bg-red-50 disabled:opacity-50"
-    >
-      {loading ? (
-        <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-red-300 border-t-red-500" />
-      ) : (
+    <>
+      <button
+        type="button"
+        onClick={() => setConfirmOpen(true)}
+        title="Supprimer"
+        className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-red-200 text-red-500 transition-colors hover:border-red-300 hover:bg-red-50"
+      >
         <TrashIcon size={14} />
-      )}
-    </button>
+      </button>
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Supprimer l'utilisateur"
+        message={`Supprimer l'utilisateur « ${name} » ? Cette action est irréversible.`}
+        loading={loading}
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmOpen(false)}
+      />
+    </>
   );
 }

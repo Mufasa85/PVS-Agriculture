@@ -21,6 +21,25 @@ export type EventType =
 
 export type AnalyticsTimeframe = 7 | 30 | 90 | 365;
 
+/**
+ * Anonymise une IP avant stockage : dernier octet IPv4 à zéro,
+ * IPv6 tronquée aux 3 premiers blocs. Réduit la donnée personnelle
+ * conservée tout en restant utilisable pour le dédoublonnage visiteurs.
+ */
+export function anonymizeIp(ip: string): string {
+  if (ip.includes(".")) {
+    const parts = ip.split(".");
+    if (parts.length === 4) return `${parts[0]}.${parts[1]}.${parts[2]}.0`;
+    return ip;
+  }
+  if (ip.includes(":")) {
+    const parts = ip.split(":");
+    if (parts.length > 3) return `${parts.slice(0, 3).join(":")}::`;
+    return ip;
+  }
+  return ip;
+}
+
 export async function recordAnalyticsEvent(data: {
   type: EventType | string;
   path: string;

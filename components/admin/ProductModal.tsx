@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import ProductForm from "@/components/admin/ProductForm";
+import ProductHistory from "@/components/admin/ProductHistory";
 import { XIcon } from "@/components/ui/icons";
 import { useModalA11y } from "@/lib/use-modal-a11y";
 import type { CategoryInfo } from "@/lib/products";
@@ -42,6 +43,7 @@ export default function ProductModal({
 }) {
   const [initialData, setInitialData] = useState<ProductModalData | null>(null);
   const [loading, setLoading] = useState(false);
+  const [tab, setTab] = useState<"form" | "history">("form");
   const panelRef = useModalA11y(open);
 
   const isEditing = editId !== null;
@@ -49,7 +51,10 @@ export default function ProductModal({
   useEffect(() => {
     if (!open) {
       // Différé en microtâche (react-hooks/set-state-in-effect).
-      queueMicrotask(() => setInitialData(null));
+      queueMicrotask(() => {
+        setInitialData(null);
+        setTab("form");
+      });
       return;
     }
 
@@ -125,12 +130,37 @@ export default function ProductModal({
       >
         {/* Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-white px-6 py-4">
-          <h2
-            id="product-modal-title"
-            className="font-serif text-[18px] font-bold text-brand-900"
-          >
-            {isEditing ? "Modifier le produit" : "Nouveau produit"}
-          </h2>
+          <div>
+            <h2
+              id="product-modal-title"
+              className="font-serif text-[18px] font-bold text-brand-900"
+            >
+              {isEditing ? "Modifier le produit" : "Nouveau produit"}
+            </h2>
+            {isEditing && (
+              <div className="mt-2 flex gap-1 rounded-[8px] bg-brand-50/60 p-1">
+                {(
+                  [
+                    { id: "form", label: "Produit" },
+                    { id: "history", label: "Historique" },
+                  ] as const
+                ).map((t) => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => setTab(t.id)}
+                    className={`rounded-[6px] px-3 py-1 text-[12px] font-semibold transition-colors ${
+                      tab === t.id
+                        ? "bg-white text-brand-900 shadow-sm"
+                        : "text-ink-500 hover:text-brand-700"
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <button
             type="button"
             onClick={onClose}
@@ -142,7 +172,9 @@ export default function ProductModal({
 
         {/* Body */}
         <div className="p-6">
-          {loading ? (
+          {isEditing && tab === "history" && editId !== null ? (
+            <ProductHistory productId={editId} />
+          ) : loading ? (
             <div className="flex items-center justify-center py-16">
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-200 border-t-brand-600" />
             </div>

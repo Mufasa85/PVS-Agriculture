@@ -30,7 +30,13 @@ export async function hashPassword(password: string): Promise<string> {
 export async function verifyAdminCredentials(
   email: string,
   password: string,
-): Promise<{ id: number; email: string; name: string; role: UserRole } | null> {
+): Promise<{
+  id: number;
+  email: string;
+  name: string;
+  role: UserRole;
+  twoFactorEnabled: boolean;
+} | null> {
   const user = await prisma.user.findUnique({
     where: { email: email.trim().toLowerCase() },
   });
@@ -44,7 +50,13 @@ export async function verifyAdminCredentials(
     return null;
   }
 
-  return { id: user.id, email: user.email, name: user.name, role: user.role };
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    twoFactorEnabled: user.twoFactorEnabled,
+  };
 }
 
 export async function createAdminSessionToken(user: {
@@ -90,6 +102,69 @@ export async function getFreshAdminSession(
 
   if (!user || !user.isActive) return null;
   return { ...session, role: user.role };
+}
+
+/**
+ * Token intermédiaire « en attente de 2FA » — prouve que le mot de passe
+ * est bon mais n'ouvre pas de session. Valide 5 minutes.
+ */
+export async function createPending2faToken(userId: number): Promise<string> {
+  return new SignJWT({ purpose: "2fa-pending" })
+    .setSubject(String(userId))
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("5m")
+    .sign(getSecretKey());
+}
+
+export async function verifyPending2faToken(
+  token: string | undefined,
+): Promise<number | null> {
+  if (!token) return null;
+  try {
+    const { payload } = await jwtVerify(token, getSecretKey());
+    if (payload.purpose !== "2fa-pending" || typeof payload.sub !== "string") {
+      return null;
+    }
+    return Number(payload.sub);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Token « reset » émis après vérification du code OTP — autorise à définir
+ * un nouveau mot de passe. Valide 10 minutes.
+ */
+export async function createPasswordResetToken(
+  userId: number,
+  email: string,
+): Promise<string> {
+  return new SignJWT({ purpose: "password-reset", email })
+    .setSubject(String(userId))
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("10m")
+    .sign(getSecretKey());
+}
+
+export async function verifyPasswordResetToken(
+  token: string | undefined,
+): Promise<{ userId: number; email: string } | null> {
+  if (!token) return null;
+  try {
+    const { payload } = await jwtVerify(token, getSecretKey());
+    if (
+      payload.purpose !== "password-reset" ||
+      typeof payload.sub !== "string" ||
+      typeof payload.email !== "string"
+    ) {
+      return null;
+    }
+    return { userId: Number(payload.sub), email: payload.email };
+  } catch {
+    return null;
+  }
 }
 
 export async function verifyAdminSessionToken(

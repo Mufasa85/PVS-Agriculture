@@ -158,17 +158,45 @@ export const DELETE = withApiError(
   async (request: Request, { params }: RouteParams) => {
     const { id } = await params;
     const productId = Number(id);
+    const permanent =
+      new URL(request.url).searchParams.get("permanent") === "1";
 
     const product = await prisma.product.findUnique({
       where: { id: productId },
       include: { images: true },
     });
 
-    if (!product || product.deletedAt) {
+    if (!product || (!permanent && product.deletedAt)) {
       return NextResponse.json(
         { error: "Produit introuvable." },
         { status: 404 },
       );
+    }
+
+    // La suppression définitive exige le passage par la corbeille
+    // (double étape de sécurité contre les pertes accidentelles).
+    if (permanent && !product.deletedAt) {
+      return NextResponse.json(
+        { error: "Le produit doit d'abord être placé dans la corbeille." },
+        { status: 409 },
+      );
+    }
+
+    const session = await getSessionFromRequest(request);
+
+    if (permanent) {
+      // Les fichiers locaux ont déjà été supprimés lors de la mise
+      // en corbeille ; les ProductImage sont supprimés en cascade.
+      await prisma.product.delete({ where: { id: productId } });
+      await logAudit({
+        userId: session?.userId ?? null,
+        action: "PRODUCT_PURGE",
+        entityType: "Product",
+        entityId: productId,
+        metadata: { name: product.name, slug: product.slug },
+        ipAddress: getClientIp(request),
+      });
+      return NextResponse.json({ success: true });
     }
 
     try {
@@ -195,7 +223,6 @@ export const DELETE = withApiError(
       ...product.images.map((img) => img.url),
     ]);
 
-    const session = await getSessionFromRequest(request);
     await logAudit({
       userId: session?.userId ?? null,
       action: "PRODUCT_DELETE",

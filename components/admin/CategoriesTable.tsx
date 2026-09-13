@@ -20,7 +20,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import { GripVertical, Pencil, Plus, Tag } from "lucide-react";
+import { ExternalLink, GripVertical, Pencil, Plus, Tag } from "lucide-react";
 
 import { CategoryIcon } from "@/components/admin/CategoryIcon";
 import CategoryModal, {
@@ -119,6 +119,15 @@ function SortableCategoryRow({
       {/* Actions */}
       <td className="px-5 py-4">
         <div className="flex items-center justify-end gap-1.5">
+          <a
+            href={`/${cat.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Voir sur le site"
+            className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-line text-ink-500 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
+          >
+            <ExternalLink size={14} />
+          </a>
           <button
             type="button"
             onClick={() => onEdit(cat)}

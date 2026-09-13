@@ -23,6 +23,9 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 import {
+  Copy,
+  Download,
+  ExternalLink,
   GripVertical,
   Package,
   Pencil,
@@ -62,10 +65,12 @@ function SortableProductRow({
   product,
   sortable,
   onEdit,
+  onDuplicate,
 }: {
   product: ProductRowWithCategory;
   sortable: boolean;
   onEdit: (id: number) => void;
+  onDuplicate: (product: ProductRowWithCategory) => void;
 }) {
   const {
     attributes,
@@ -145,7 +150,24 @@ function SortableProductRow({
       </div>
 
       {/* Actions */}
-      <div className="flex w-20 shrink-0 items-center justify-end gap-1">
+      <div className="flex w-[140px] shrink-0 items-center justify-end gap-1">
+        <a
+          href={`/${product.category}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Voir sur le site"
+          className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-line text-ink-500 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
+        >
+          <ExternalLink size={13} />
+        </a>
+        <button
+          type="button"
+          onClick={() => onDuplicate(product)}
+          title="Dupliquer"
+          className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-line text-ink-500 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
+        >
+          <Copy size={13} />
+        </button>
         <button
           type="button"
           onClick={() => onEdit(product.id)}
@@ -219,6 +241,23 @@ export default function ProductsTable({
   function closeModal() {
     setModalOpen(false);
     setEditId(null);
+  }
+
+  async function handleDuplicate(product: ProductRowWithCategory) {
+    try {
+      const res = await fetch(`/api/admin/products/${product.id}/duplicate`, {
+        method: "POST",
+      });
+      const data = await res.json().catch(() => null);
+      if (res.ok) {
+        toast.success(`« ${product.name} » dupliqué en brouillon.`);
+        router.refresh();
+      } else {
+        toast.error(data?.error ?? "Erreur lors de la duplication.");
+      }
+    } catch {
+      toast.error("Erreur lors de la duplication.");
+    }
   }
 
   const publishedCount = grouped
@@ -298,14 +337,24 @@ export default function ProductsTable({
             {totalCount} produit{totalCount > 1 ? "s" : ""} au catalogue
           </p>
         </div>
-        <button
-          type="button"
-          onClick={openCreate}
-          className="inline-flex items-center gap-2 rounded-[10px] bg-brand-600 px-4 py-2.5 text-[13.5px] font-bold text-white shadow-brand-btn transition-all hover:bg-brand-700 hover:shadow-brand-btn-hover hover:-translate-y-0.5"
-        >
-          <Plus size={17} />
-          Nouveau produit
-        </button>
+        <div className="flex items-center gap-2.5">
+          <a
+            href="/api/admin/export?type=products"
+            title="Exporter le catalogue en CSV"
+            className="inline-flex items-center gap-2 rounded-[10px] border border-line bg-white px-4 py-2.5 text-[13.5px] font-bold text-brand-900 transition-colors hover:bg-brand-50"
+          >
+            <Download size={15} />
+            Export CSV
+          </a>
+          <button
+            type="button"
+            onClick={openCreate}
+            className="inline-flex items-center gap-2 rounded-[10px] bg-brand-600 px-4 py-2.5 text-[13.5px] font-bold text-white shadow-brand-btn transition-all hover:bg-brand-700 hover:shadow-brand-btn-hover hover:-translate-y-0.5"
+          >
+            <Plus size={17} />
+            Nouveau produit
+          </button>
+        </div>
       </div>
 
       {/* ── Mini stats ── */}
@@ -452,7 +501,9 @@ export default function ProductsTable({
               <span className="hidden flex-[2] nav:block">Catégorie</span>
               <span className="flex-1 text-right nav:text-left">Prix</span>
               <span className="hidden flex-1 nav:block">Statut</span>
-              <span className="flex-shrink-0 w-20 text-right">Actions</span>
+              <span className="flex-shrink-0 w-[140px] text-right">
+                Actions
+              </span>
             </div>
           </div>
 
@@ -472,6 +523,7 @@ export default function ProductsTable({
                     product={product}
                     sortable={canReorder}
                     onEdit={openEdit}
+                    onDuplicate={handleDuplicate}
                   />
                 ))}
               </div>
