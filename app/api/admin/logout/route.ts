@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 
 import { ADMIN_SESSION_COOKIE } from "@/lib/auth";
+import { withApiError } from "@/lib/api";
 
 export const runtime = "nodejs";
 
-export async function POST() {
+export const POST = withApiError(async () => {
   const response = NextResponse.json({ success: true });
   response.cookies.set(ADMIN_SESSION_COOKIE, "", {
     httpOnly: true,
@@ -14,4 +15,4 @@ export async function POST() {
     maxAge: 0,
   });
   return response;
-}
+});

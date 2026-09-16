@@ -83,7 +83,9 @@ function KpiCard({
   const inner = (
     <div className="group relative overflow-hidden rounded-[16px] border border-line bg-white p-5 shadow-soft transition-all duration-300 hover:shadow-card hover:-translate-y-0.5">
       {/* Icône */}
-      <div className={`mb-4 inline-flex h-10 w-10 items-center justify-center rounded-[12px] ${iconBg}`}>
+      <div
+        className={`mb-4 inline-flex h-10 w-10 items-center justify-center rounded-[12px] ${iconBg}`}
+      >
         <Icon size={19} className={iconColor} />
       </div>
 
@@ -96,14 +98,18 @@ function KpiCard({
       <div className="mt-2 flex items-center justify-between gap-2">
         <p className="text-[13px] font-medium text-ink-500">{label}</p>
         {badge && (
-          <span className={`rounded-full px-2 py-0.5 text-[10.5px] font-bold ${badgeColor}`}>
+          <span
+            className={`rounded-full px-2 py-0.5 text-[10.5px] font-bold ${badgeColor}`}
+          >
             {badge}
           </span>
         )}
       </div>
 
       {/* Décor coin */}
-      <div className={`absolute -right-3 -top-3 h-16 w-16 rounded-full opacity-[0.07] ${iconBg}`} />
+      <div
+        className={`absolute -right-3 -top-3 h-16 w-16 rounded-full opacity-[0.07] ${iconBg}`}
+      />
     </div>
   );
 
@@ -174,11 +180,11 @@ export default async function AdminDashboardPage() {
             Administration
           </p>
           <h1 className="mt-1 font-serif text-[24px] font-bold text-brand-900">
-            Vue d'ensemble
+            Vue d&apos;ensemble
           </h1>
         </div>
         <Link
-          href="/admin/products/new"
+          href="/admin/products?new=1"
           className="inline-flex items-center gap-2 rounded-[10px] bg-brand-600 px-4 py-2.5 text-[13.5px] font-bold text-white shadow-brand-btn transition-all hover:bg-brand-700 hover:shadow-brand-btn-hover hover:-translate-y-0.5"
         >
           <Plus size={16} />
@@ -232,7 +238,6 @@ export default async function AdminDashboardPage() {
 
       {/* ── Grille principale ── */}
       <div className="grid gap-6 nav:grid-cols-[1fr_340px]">
-
         {/* Répartition par catégorie */}
         <section className="rounded-[16px] border border-line bg-white p-6 shadow-soft">
           <div className="mb-5 flex items-center justify-between">
@@ -254,7 +259,9 @@ export default async function AdminDashboardPage() {
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-brand-50">
                 <Package size={22} className="text-brand-400" />
               </div>
-              <p className="text-[13.5px] text-ink-500">Aucun produit pour le moment.</p>
+              <p className="text-[13.5px] text-ink-500">
+                Aucun produit pour le moment.
+              </p>
             </div>
           ) : (
             <div className="flex flex-col gap-4">
@@ -266,7 +273,11 @@ export default async function AdminDashboardPage() {
                   <div key={category}>
                     <div className="mb-2 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <CategoryIcon icon={catInfo?.icon ?? "sprout"} size={15} className="text-brand-600" />
+                        <CategoryIcon
+                          icon={catInfo?.icon ?? "sprout"}
+                          size={15}
+                          className="text-brand-600"
+                        />
                         <span className="text-[13.5px] font-semibold text-ink-700">
                           {catInfo?.name ?? category}
                         </span>
@@ -284,7 +295,10 @@ export default async function AdminDashboardPage() {
                       <div className="h-2 flex-1 overflow-hidden rounded-full bg-brand-50">
                         <div
                           className="h-full rounded-full transition-all duration-700"
-                          style={{ width: `${pct}%`, backgroundColor: barColor }}
+                          style={{
+                            width: `${pct}%`,
+                            backgroundColor: barColor,
+                          }}
                         />
                       </div>
                     </div>
@@ -308,12 +322,15 @@ export default async function AdminDashboardPage() {
 
           {auditLogs.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 text-center">
-              <p className="text-[13.5px] text-ink-500">Aucune activité enregistrée.</p>
+              <p className="text-[13.5px] text-ink-500">
+                Aucune activité enregistrée.
+              </p>
             </div>
           ) : (
             <ul className="flex flex-col">
               {auditLogs.map((log, i) => {
-                const colorClass = ACTION_COLORS[log.action] ?? "bg-brand-50 text-brand-600";
+                const colorClass =
+                  ACTION_COLORS[log.action] ?? "bg-brand-50 text-brand-600";
                 const isLast = i === auditLogs.length - 1;
                 const userName = log.user?.name ?? "Système";
                 return (
@@ -333,7 +350,9 @@ export default async function AdminDashboardPage() {
                     {/* Contenu */}
                     <div className="min-w-0 flex-1 pt-0.5">
                       <p className="text-[12.5px] leading-snug text-ink-700">
-                        <span className="font-bold text-brand-900">{userName}</span>{" "}
+                        <span className="font-bold text-brand-900">
+                          {userName}
+                        </span>{" "}
                         {ACTION_LABELS[log.action] ?? log.action}
                       </p>
                       <p className="mt-0.5 text-[11px] text-ink-500">
@@ -361,7 +380,7 @@ export default async function AdminDashboardPage() {
       <section className="grid grid-cols-1 gap-4 nav:grid-cols-3">
         {[
           {
-            href: "/admin/products/new",
+            href: "/admin/products?new=1",
             icon: Package,
             label: "Ajouter un produit",
             desc: "Créer une nouvelle fiche produit",
@@ -390,11 +409,15 @@ export default async function AdminDashboardPage() {
             href={item.href}
             className="flex items-center gap-4 rounded-[14px] border border-line bg-white p-4 shadow-soft transition-all hover:shadow-card hover:-translate-y-0.5"
           >
-            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] ${item.color}`}>
+            <div
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] ${item.color}`}
+            >
               <item.icon size={19} className={item.iconColor} />
             </div>
             <div>
-              <p className="text-[13.5px] font-bold text-brand-900">{item.label}</p>
+              <p className="text-[13.5px] font-bold text-brand-900">
+                {item.label}
+              </p>
               <p className="text-[12px] text-ink-500">{item.desc}</p>
             </div>
           </Link>

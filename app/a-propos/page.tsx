@@ -14,11 +14,13 @@ import {
   SproutIcon,
 } from "@/components/ui/icons";
 import { aproposPage } from "@/lib/content";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: aproposPage.metaTitle,
   description: aproposPage.metaDescription,
-};
+  path: "/a-propos",
+});
 
 function TitleLine({ line }: { line: string }) {
   const emphasis = aproposPage.hero.titleEmphasis;
@@ -31,15 +33,16 @@ function TitleLine({ line }: { line: string }) {
   return (
     <>
       {line.slice(0, index)}
-      <em className="not-italic text-gold-500">
-        {emphasis}
-      </em>
+      <em className="not-italic text-gold-500">{emphasis}</em>
       {line.slice(index + emphasis.length)}
     </>
   );
 }
 
-const expertiseIcons: Record<string, ComponentType<{ size?: number; className?: string }>> = {
+const expertiseIcons: Record<
+  string,
+  ComponentType<{ size?: number; className?: string }>
+> = {
   sprout: SproutIcon,
   cattle: CattleIcon,
   fish: FishIcon,
@@ -48,7 +51,8 @@ const expertiseIcons: Record<string, ComponentType<{ size?: number; className?: 
 };
 
 export default function AProposPage() {
-  const { hero, mission, vision, expertise, approach, values, stats, cta } = aproposPage;
+  const { hero, mission, vision, expertise, approach, values, stats, cta } =
+    aproposPage;
   const [imageA, imageB] = vision.images;
 
   return (
@@ -215,7 +219,9 @@ export default function AProposPage() {
                     <Icon size={26} />
                   </span>
                   <h4 className="mb-2 text-[16.5px]">{item.title}</h4>
-                  <p className="text-[13.5px] text-ink-500">{item.description}</p>
+                  <p className="text-[13.5px] text-ink-500">
+                    {item.description}
+                  </p>
                 </Reveal>
               );
             })}
@@ -231,6 +237,7 @@ export default function AProposPage() {
               eyebrow={approach.eyebrow}
               title={approach.title}
               center
+              dark
             />
           </Reveal>
 
@@ -273,11 +280,7 @@ export default function AProposPage() {
       <section className="bg-white py-[76px] nav:py-[110px]">
         <div className="shell">
           <Reveal>
-            <SectionHead
-              eyebrow={values.eyebrow}
-              title={values.title}
-              center
-            />
+            <SectionHead eyebrow={values.eyebrow} title={values.title} center />
           </Reveal>
 
           <ul className="grid grid-cols-1 gap-5 mid:grid-cols-2 nav:grid-cols-3 wide:grid-cols-5">

@@ -1,19 +1,28 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, Lock, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import BrandBadge from "@/components/layout/BrandBadge";
 import { CategoryIcon } from "@/components/admin/CategoryIcon";
-import { brand, navCta, navLinks, primaryNavLinks, servicesLinks } from "@/lib/content";
+import {
+  brand,
+  navCta,
+  navLinks,
+  primaryNavLinks,
+  servicesLinks,
+} from "@/lib/content";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const servicesButtonRef = useRef<HTMLButtonElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -28,6 +37,34 @@ export default function Navbar() {
       document.body.style.overflow = "";
     };
   }, [menuOpen]);
+
+  // Focus le bouton de fermeture à l'ouverture du menu mobile, puis rend
+  // le focus au bouton d'ouverture à la fermeture (pas au montage).
+  const wasMenuOpen = useRef(false);
+  useEffect(() => {
+    if (menuOpen) {
+      menuCloseRef.current?.focus();
+    } else if (wasMenuOpen.current) {
+      menuButtonRef.current?.focus();
+    }
+    wasMenuOpen.current = menuOpen;
+  }, [menuOpen]);
+
+  // Échap ferme le menu mobile et le dropdown Services.
+  useEffect(() => {
+    if (!menuOpen && !servicesOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      if (menuOpen) {
+        setMenuOpen(false);
+      } else {
+        setServicesOpen(false);
+        servicesButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen, servicesOpen]);
 
   const openServices = () => {
     if (closeTimeout.current) clearTimeout(closeTimeout.current);
@@ -74,9 +111,12 @@ export default function Navbar() {
               onMouseLeave={scheduleCloseServices}
             >
               <button
+                ref={servicesButtonRef}
                 type="button"
                 onClick={() => setServicesOpen((open) => !open)}
                 aria-expanded={servicesOpen}
+                aria-haspopup="true"
+                aria-controls="menu-services"
                 className="group relative flex items-center gap-1.5 py-1.5 text-[14.5px] font-semibold text-ink-700 transition-colors hover:text-brand-700"
               >
                 Services
@@ -90,6 +130,7 @@ export default function Navbar() {
               <AnimatePresence>
                 {servicesOpen && (
                   <motion.div
+                    id="menu-services"
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 8 }}
@@ -138,14 +179,28 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-4">
-            <Link href={navCta.href} className="btn btn-primary hidden nav:inline-flex">
+            {/* Accès discret à l'espace admin */}
+            <Link
+              href="/admin"
+              aria-label="Espace administrateur"
+              title="Espace administrateur"
+              className="hidden h-10 w-10 items-center justify-center rounded-full border border-line text-ink-500 transition-colors hover:border-brand-300 hover:text-brand-700 nav:flex"
+            >
+              <Lock size={16} />
+            </Link>
+            <Link
+              href={navCta.href}
+              className="btn btn-primary hidden nav:inline-flex"
+            >
               {navCta.label}
             </Link>
             <button
+              ref={menuButtonRef}
               type="button"
               onClick={() => setMenuOpen((open) => !open)}
               aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
               aria-expanded={menuOpen}
+              aria-controls="menu-mobile"
               className="relative z-[1100] flex w-[26px] flex-col gap-[5px] nav:hidden"
             >
               <span
@@ -171,6 +226,10 @@ export default function Navbar() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
+            id="menu-mobile"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu principal"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -178,6 +237,7 @@ export default function Navbar() {
             className="fixed inset-0 z-[1050] flex flex-col justify-center overflow-y-auto bg-white p-10 nav:hidden"
           >
             <button
+              ref={menuCloseRef}
               type="button"
               onClick={() => setMenuOpen(false)}
               aria-label="Fermer le menu"
@@ -185,16 +245,19 @@ export default function Navbar() {
             >
               <X size={20} className="text-brand-900" />
             </button>
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className="border-b border-line py-[1px] font-serif text-[28px] font-semibold text-brand-900"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {/* navLinks moins la cible du CTA (Contact) pour éviter le doublon */}
+            {navLinks
+              .filter((link) => link.href !== navCta.href)
+              .map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="border-b border-line py-[1px] font-serif text-[28px] font-semibold text-brand-900"
+                >
+                  {link.label}
+                </Link>
+              ))}
             <Link
               href={navCta.href}
               onClick={() => setMenuOpen(false)}
@@ -202,10 +265,17 @@ export default function Navbar() {
             >
               {navCta.label}
             </Link>
+            <Link
+              href="/admin"
+              onClick={() => setMenuOpen(false)}
+              className="mt-8 flex w-fit items-center gap-2 text-[13px] font-semibold text-ink-500 transition-colors hover:text-brand-700"
+            >
+              <Lock size={14} />
+              Espace administrateur
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>
     </>
   );
 }
-

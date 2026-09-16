@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import type { ComponentType } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   BarChart3,
@@ -34,7 +34,6 @@ const PRIMARY_NAV: NavItem[] = [
   { href: "/admin/audit-logs", label: "Journal d'audit", icon: Shield },
 ];
 
-
 const TEAM_NAV: NavItem = {
   href: "/admin/users",
   label: "Utilisateurs",
@@ -59,10 +58,12 @@ function initials(name: string): string {
 function NavLink({
   item,
   active,
+  badge,
   onNavigate,
 }: {
   item: NavItem;
   active: boolean;
+  badge?: number;
   onNavigate: () => void;
 }) {
   const Icon = item.icon;
@@ -91,6 +92,11 @@ function NavLink({
         }
       />
       {item.label}
+      {badge ? (
+        <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1.5 text-[10.5px] font-bold text-white">
+          {badge > 99 ? "99+" : badge}
+        </span>
+      ) : null}
     </Link>
   );
 }
@@ -104,9 +110,33 @@ export default function Sidebar({
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    setOpen(false);
+    // Différé en microtâche (react-hooks/set-state-in-effect).
+    queueMicrotask(() => setOpen(false));
+  }, [pathname]);
+
+  // Badge « messages non lus » — rafraîchi à la navigation + toutes les 60 s
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const res = await fetch("/api/admin/messages?perPage=1");
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setUnreadCount(data.unreadCount ?? 0);
+        }
+      } catch {
+        // silencieux : le badge est indicatif
+      }
+    }
+    load();
+    const timer = setInterval(load, 60_000);
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
   }, [pathname]);
 
   useEffect(() => {
@@ -160,6 +190,7 @@ export default function Sidebar({
             key={item.href}
             item={item}
             active={isActive(item)}
+            badge={item.href === "/admin/messages" ? unreadCount : undefined}
             onNavigate={() => setOpen(false)}
           />
         ))}
@@ -178,17 +209,23 @@ export default function Sidebar({
 
         {/* Profil utilisateur */}
         <div className="mt-3 flex items-center gap-3 rounded-[12px] bg-brand-50 px-3.5 py-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-[12px] font-bold text-white shadow-sm">
-            {initials(user.name) || "PV"}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-[13px] font-bold text-brand-900">
-              {user.name}
-            </p>
-            <p className="truncate text-[11px] text-ink-500">
-              {ROLE_LABELS[user.role] ?? user.role}
-            </p>
-          </div>
+          <Link
+            href="/admin/profile"
+            title="Mon profil"
+            className="flex min-w-0 flex-1 items-center gap-3"
+          >
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-[12px] font-bold text-white shadow-sm">
+              {initials(user.name) || "PV"}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[13px] font-bold text-brand-900 transition-colors hover:text-brand-600">
+                {user.name}
+              </p>
+              <p className="truncate text-[11px] text-ink-500">
+                {ROLE_LABELS[user.role] ?? user.role}
+              </p>
+            </div>
+          </Link>
           <LogoutTrigger compact />
         </div>
       </div>
@@ -220,9 +257,12 @@ export default function Sidebar({
 }
 
 function LogoutTrigger({ compact }: { compact?: boolean }) {
+  const router = useRouter();
+
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
-    window.location.href = "/admin/login";
+    router.push("/admin/login");
+    router.refresh();
   }
 
   if (compact) {

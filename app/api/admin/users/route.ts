@@ -1,32 +1,31 @@
 import { NextResponse } from "next/server";
-import type { UserRole } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
-import { hashPassword, ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/auth";
+import { hashPassword, getFreshAdminSession } from "@/lib/auth";
 import { getClientIp, logAudit } from "@/lib/audit";
+import { withApiError } from "@/lib/api";
+import { firstIssueMessage, userCreateSchema } from "@/lib/validation";
 
 export const runtime = "nodejs";
 
-const ALL_ROLES: UserRole[] = ["SUPER_ADMIN", "ADMIN", "EDITOR"];
-
-type UserInput = {
-  name: string;
-  email: string;
-  password: string;
-  role: UserRole;
-};
-
-function validateInput(body: Partial<UserInput>, requirePassword: boolean): string | null {
-  if (!body.name || !body.name.trim()) return "Le nom est requis.";
-  if (!body.email || !body.email.trim()) return "L'email est requis.";
-  if (!body.role || !ALL_ROLES.includes(body.role)) return "Rôle invalide.";
-  if (requirePassword && (!body.password || body.password.length < 8)) {
-    return "Le mot de passe doit contenir au moins 8 caractères.";
+async function requireSuperAdmin(request: Request) {
+  const session = await getFreshAdminSession(request);
+  if (!session) {
+    return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
   }
-  return null;
+  if (session.role !== "SUPER_ADMIN") {
+    return NextResponse.json(
+      { error: "Accès réservé aux super administrateurs." },
+      { status: 403 },
+    );
+  }
+  return session;
 }
 
-export async function GET() {
+export const GET = withApiError(async (request: Request) => {
+  const session = await requireSuperAdmin(request);
+  if (session instanceof NextResponse) return session;
+
   const users = await prisma.user.findMany({
     orderBy: [{ createdAt: "asc" }],
     select: {
@@ -40,42 +39,56 @@ export async function GET() {
     },
   });
   return NextResponse.json({ users });
-}
+});
 
-export async function POST(request: Request) {
-  let body: Partial<UserInput>;
+export const POST = withApiError(async (request: Request) => {
+  const session = await requireSuperAdmin(request);
+  if (session instanceof NextResponse) return session;
+
+  let raw: unknown;
   try {
-    body = await request.json();
+    raw = await request.json();
   } catch {
     return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
   }
 
-  const error = validateInput(body, true);
-  if (error) {
-    return NextResponse.json({ error }, { status: 422 });
+  const parsed = userCreateSchema.safeParse(raw);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: firstIssueMessage(parsed.error) },
+      { status: 422 },
+    );
   }
 
-  const email = body.email!.trim().toLowerCase();
+  const body = parsed.data;
+  const email = body.email.trim().toLowerCase();
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
-    return NextResponse.json({ error: "Un utilisateur avec cet email existe déjà." }, { status: 409 });
+    return NextResponse.json(
+      { error: "Un utilisateur avec cet email existe déjà." },
+      { status: 409 },
+    );
   }
 
-  const passwordHash = await hashPassword(body.password!);
+  const passwordHash = await hashPassword(body.password);
 
   const user = await prisma.user.create({
     data: {
-      name: body.name!.trim(),
+      name: body.name.trim(),
       email,
       passwordHash,
-      role: body.role!,
+      role: body.role,
     },
-    select: { id: true, name: true, email: true, role: true, isActive: true, createdAt: true },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      isActive: true,
+      createdAt: true,
+    },
   });
-
-  const token = request.headers.get("cookie")?.match(new RegExp(`${ADMIN_SESSION_COOKIE}=([^;]+)`))?.[1];
-  const session = await verifyAdminSessionToken(token);
 
   await logAudit({
     userId: session?.userId ?? null,
@@ -87,4 +100,4 @@ export async function POST(request: Request) {
   });
 
   return NextResponse.json({ user }, { status: 201 });
-}
+});

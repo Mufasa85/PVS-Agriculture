@@ -41,17 +41,27 @@ export async function POST(request: Request) {
     }
 
     const { action } = await request.json().catch(() => ({ action: "seed" }));
-    const { clearAnalyticsData, seedSampleAnalyticsData } = await import("@/lib/analytics");
+    const { clearAnalyticsData, seedSampleAnalyticsData } =
+      await import("@/lib/analytics");
 
     if (action === "clear") {
       await clearAnalyticsData();
-      return NextResponse.json({ success: true, message: "Données analytics réinitialisées." });
+      return NextResponse.json({
+        success: true,
+        message: "Données analytics réinitialisées.",
+      });
     } else {
       await seedSampleAnalyticsData();
-      return NextResponse.json({ success: true, message: "Données de test analytics générées avec succès." });
+      return NextResponse.json({
+        success: true,
+        message: "Données de test analytics générées avec succès.",
+      });
     }
   } catch (error) {
     console.error("Failed to reset analytics:", error);
-    return NextResponse.json({ error: "Erreur lors de la réinitialisation." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erreur lors de la réinitialisation." },
+      { status: 500 },
+    );
   }
 }

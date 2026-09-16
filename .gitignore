@@ -20,4 +20,8 @@ yarn-error.log*
 # Uploaded files
 public/uploads/
 
+# Dumps BDD et archive de la maquette d'origine
+*.sql
+files.zip
+
 /packages

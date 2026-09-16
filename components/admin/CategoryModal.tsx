@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import IconSelect from "@/components/admin/IconSelect";
 import { XIcon } from "@/components/ui/icons";
+import { useModalA11y } from "@/lib/use-modal-a11y";
 
 export type CategoryModalData = {
   id?: number;
@@ -38,15 +40,18 @@ export default function CategoryModal({
   const [values, setValues] = useState<CategoryModalData>(emptyData);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const panelRef = useModalA11y(open);
 
   const isEditing = Boolean(values.id);
 
   useEffect(() => {
-    if (open) {
+    if (!open) return;
+    // Différé en microtâche (react-hooks/set-state-in-effect).
+    queueMicrotask(() => {
       setValues(initialData ?? emptyData);
       setError(null);
       setLoading(false);
-    }
+    });
   }, [open, initialData]);
 
   useEffect(() => {
@@ -104,6 +109,7 @@ export default function CategoryModal({
         return;
       }
 
+      toast.success(isEditing ? "Catégorie mise à jour." : "Catégorie créée.");
       router.refresh();
       onClose();
     } catch {
@@ -124,10 +130,19 @@ export default function CategoryModal({
       />
 
       {/* Modal */}
-      <div className="relative z-10 w-full max-w-[640px] max-h-[90vh] overflow-y-auto rounded-pvs border border-line bg-white shadow-card">
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="category-modal-title"
+        className="relative z-10 w-full max-w-[640px] max-h-[90vh] overflow-y-auto rounded-pvs border border-line bg-white shadow-card"
+      >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-line px-6 py-4">
-          <h2 className="font-serif text-[18px] font-bold text-brand-900">
+          <h2
+            id="category-modal-title"
+            className="font-serif text-[18px] font-bold text-brand-900"
+          >
             {isEditing ? "Modifier la catégorie" : "Nouvelle catégorie"}
           </h2>
           <button

@@ -3,17 +3,22 @@ import Link from "next/link";
 
 import Footer from "@/components/layout/Footer";
 import TarifsFilter from "@/components/sections/TarifsFilter";
+import JsonLd from "@/components/seo/JsonLd";
 import Reveal from "@/components/ui/Reveal";
 import { tarifsPage } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
-import { getActiveCategories } from "@/lib/products";
+import { getActiveCategories, serializeProduct } from "@/lib/products";
+import { pageMetadata, productListJsonLd } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// ISR : page servie depuis le cache, régénérée au plus toutes les 60 s
+// (+ invalidation immédiate via revalidatePath lors des mutations admin).
+export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: tarifsPage.metaTitle,
   description: tarifsPage.metaDescription,
-};
+  path: "/tarifs",
+});
 
 function TitleLine({ line }: { line: string }) {
   const emphasis = tarifsPage.hero.titleEmphasis;
@@ -26,9 +31,7 @@ function TitleLine({ line }: { line: string }) {
   return (
     <>
       {line.slice(0, index)}
-      <em className="not-italic text-gold-500">
-        {emphasis}
-      </em>
+      <em className="not-italic text-gold-500">{emphasis}</em>
       {line.slice(index + emphasis.length)}
     </>
   );
@@ -47,11 +50,17 @@ export default async function TarifsPage() {
 
   const filterCategories = [
     { id: "tous" as const, icon: "check", name: "Tous" },
-    ...categories.map((cat) => ({ id: cat.slug, icon: cat.icon, name: cat.name })),
+    ...categories.map((cat) => ({
+      id: cat.slug,
+      icon: cat.icon,
+      name: cat.name,
+    })),
   ];
 
   return (
     <>
+      {products.length > 0 && <JsonLd data={productListJsonLd(products)} />}
+
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-gradient-to-b from-brand-50 to-white pb-[80px] pt-[140px] sm:pt-[168px]">
         <div className="shell text-center">
@@ -75,7 +84,10 @@ export default async function TarifsPage() {
       </section>
 
       {/* ── Filtre + grille de produits ── */}
-      <TarifsFilter products={products} categories={filterCategories} />
+      <TarifsFilter
+        products={products.map(serializeProduct)}
+        categories={filterCategories}
+      />
 
       {/* ── Info ── */}
       <section className="bg-white py-[76px] nav:py-[110px]">

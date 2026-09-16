@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import CategorySelect from "@/components/admin/CategorySelect";
 import ImageUploader from "@/components/admin/ImageUploader";
@@ -69,7 +70,10 @@ export default function ProductForm({
 
   const isEditing = Boolean(values.id);
 
-  function update<K extends keyof ProductFormValues>(key: K, value: ProductFormValues[K]) {
+  function update<K extends keyof ProductFormValues>(
+    key: K,
+    value: ProductFormValues[K],
+  ) {
     setValues((prev) => ({ ...prev, [key]: value }));
   }
 
@@ -83,9 +87,10 @@ export default function ProductForm({
       slug: values.slug || null,
       description: values.description,
       category: values.category,
-      priceAmount: values.comingSoon || values.priceAmount === ""
-        ? null
-        : Number(values.priceAmount),
+      priceAmount:
+        values.comingSoon || values.priceAmount === ""
+          ? null
+          : Number(values.priceAmount),
       currency: values.currency,
       unit: values.unit || null,
       note: values.note || null,
@@ -99,7 +104,9 @@ export default function ProductForm({
       sortOrder: Number(values.sortOrder) || 0,
     };
 
-    const url = isEditing ? `/api/admin/products/${values.id}` : "/api/admin/products";
+    const url = isEditing
+      ? `/api/admin/products/${values.id}`
+      : "/api/admin/products";
     const method = isEditing ? "PUT" : "POST";
 
     try {
@@ -116,6 +123,7 @@ export default function ProductForm({
         return;
       }
 
+      toast.success(isEditing ? "Produit mis à jour." : "Produit créé.");
       router.refresh();
       if (onClose) {
         onClose();
@@ -132,7 +140,9 @@ export default function ProductForm({
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div className="grid gap-5 mid:grid-cols-2">
         <div>
-          <label className="mb-1.5 block text-[13px] font-bold text-brand-900">Nom</label>
+          <label className="mb-1.5 block text-[13px] font-bold text-brand-900">
+            Nom
+          </label>
           <input
             required
             value={values.name}
@@ -142,7 +152,9 @@ export default function ProductForm({
         </div>
 
         <div>
-          <label className="mb-1.5 block text-[13px] font-bold text-brand-900">Catégorie</label>
+          <label className="mb-1.5 block text-[13px] font-bold text-brand-900">
+            Catégorie
+          </label>
           <CategorySelect
             value={values.category}
             categories={categories}
@@ -164,7 +176,9 @@ export default function ProductForm({
       </div>
 
       <div>
-        <label className="mb-1.5 block text-[13px] font-bold text-brand-900">Description</label>
+        <label className="mb-1.5 block text-[13px] font-bold text-brand-900">
+          Description
+        </label>
         <textarea
           required
           rows={3}
@@ -207,7 +221,9 @@ export default function ProductForm({
       {!values.comingSoon && (
         <div className="grid gap-5 mid:grid-cols-3">
           <div>
-            <label className="mb-1.5 block text-[13px] font-bold text-brand-900">Prix</label>
+            <label className="mb-1.5 block text-[13px] font-bold text-brand-900">
+              Prix
+            </label>
             <input
               type="number"
               step="0.01"
@@ -219,7 +235,9 @@ export default function ProductForm({
           </div>
 
           <div>
-            <label className="mb-1.5 block text-[13px] font-bold text-brand-900">Devise</label>
+            <label className="mb-1.5 block text-[13px] font-bold text-brand-900">
+              Devise
+            </label>
             <select
               value={values.currency}
               onChange={(e) => update("currency", e.target.value)}
@@ -297,7 +315,9 @@ export default function ProductForm({
           </label>
           <button
             type="button"
-            onClick={() => update("images", [...values.images, { url: "", alt: "" }])}
+            onClick={() =>
+              update("images", [...values.images, { url: "", alt: "" }])
+            }
             className="inline-flex items-center gap-1.5 rounded-[8px] border border-line px-3 py-1.5 text-[12.5px] font-semibold text-brand-700 transition-colors hover:border-brand-300 hover:bg-brand-50"
           >
             + Ajouter une image
@@ -320,17 +340,26 @@ export default function ProductForm({
                 next[index] = { ...next[index], alt };
                 update("images", next);
               }}
-              onRemove={() => update("images", values.images.filter((_, i) => i !== index))}
+              onRemove={() =>
+                update(
+                  "images",
+                  values.images.filter((_, i) => i !== index),
+                )
+              }
             />
           ))}
           {values.images.length === 0 && (
-            <p className="text-[13px] text-ink-500">Aucune image supplémentaire.</p>
+            <p className="text-[13px] text-ink-500">
+              Aucune image supplémentaire.
+            </p>
           )}
         </div>
       </div>
 
       {error && (
-        <div className="rounded-[10px] border border-red-200 bg-red-50 px-4 py-3 text-[13px] font-semibold text-red-600">{error}</div>
+        <div className="rounded-[10px] border border-red-200 bg-red-50 px-4 py-3 text-[13px] font-semibold text-red-600">
+          {error}
+        </div>
       )}
 
       <div className="flex justify-end gap-3">
@@ -346,7 +375,11 @@ export default function ProductForm({
           disabled={loading}
           className="inline-flex items-center justify-center rounded-[10px] bg-brand-600 px-5 py-2.5 text-[13.5px] font-bold text-white shadow-brand-btn transition-all hover:bg-brand-700 hover:shadow-brand-btn-hover disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {loading ? "Enregistrement..." : isEditing ? "Mettre à jour" : "Créer le produit"}
+          {loading
+            ? "Enregistrement..."
+            : isEditing
+              ? "Mettre à jour"
+              : "Créer le produit"}
         </button>
       </div>
     </form>

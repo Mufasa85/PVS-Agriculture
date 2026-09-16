@@ -23,7 +23,10 @@ export default function CategorySelect({
   useEffect(() => {
     if (!open) return;
     function handleClickOutside(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setOpen(false);
       }
     }
@@ -73,7 +76,9 @@ export default function CategorySelect({
                     setOpen(false);
                   }}
                   className={`flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-[14px] transition-colors hover:bg-brand-50 ${
-                    isActive ? "bg-brand-50/60 font-bold text-brand-900" : "text-ink-700"
+                    isActive
+                      ? "bg-brand-50/60 font-bold text-brand-900"
+                      : "text-ink-700"
                   }`}
                 >
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-[8px] bg-brand-50 text-brand-600">

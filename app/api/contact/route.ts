@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 
 import { prisma } from "@/lib/prisma";
+import { contactSchema } from "@/lib/validation";
+import { escapeHtml, sendMail } from "@/lib/mail";
+import { getClientIp } from "@/lib/audit";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
+
+// 5 messages / IP / 10 minutes — l'endpoint envoie des emails,
+// il ne doit pas servir de relais de spam.
+const CONTACT_RATE_LIMIT = 5;
+const CONTACT_WINDOW_MS = 10 * 60 * 1000;
 
 type ContactPayload = {
   nom?: string;
@@ -11,18 +19,16 @@ type ContactPayload = {
   email?: string;
   sujet?: string;
   message?: string;
+  website?: string;
 };
 
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-function buildEmailHtml(data: Required<ContactPayload>): string {
+function buildEmailHtml(data: {
+  nom: string;
+  telephone: string;
+  email: string;
+  sujet: string;
+  message: string;
+}): string {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
       <h2 style="color: #1a2b5f; border-bottom: 2px solid #d4a73e; padding-bottom: 12px;">
@@ -59,6 +65,19 @@ function buildEmailHtml(data: Required<ContactPayload>): string {
 }
 
 export async function POST(request: Request) {
+  const ip = getClientIp(request) ?? "unknown";
+  const { success, retryAfter } = rateLimit(
+    `contact:${ip}`,
+    CONTACT_RATE_LIMIT,
+    CONTACT_WINDOW_MS,
+  );
+  if (!success) {
+    return NextResponse.json(
+      { error: "Trop de messages envoyés. Réessayez plus tard." },
+      { status: 429, headers: { "Retry-After": String(retryAfter) } },
+    );
+  }
+
   let body: ContactPayload;
 
   try {
@@ -70,40 +89,36 @@ export async function POST(request: Request) {
     );
   }
 
-  const { nom, telephone, email, sujet, message } = body;
-
-  if (!nom || !telephone || !email || !message) {
+  const parsed = contactSchema.safeParse(body);
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: "Tous les champs obligatoires doivent être remplis." },
+      {
+        error: "Tous les champs obligatoires doivent être remplis et valides.",
+      },
       { status: 422 },
     );
   }
 
-  const smtpHost = process.env.SMTP_HOST;
-  const smtpPort = process.env.SMTP_PORT;
-  const smtpUser = process.env.SMTP_USER;
-  const smtpPass = process.env.SMTP_PASS;
-  const toEmail = process.env.CONTACT_TO_EMAIL;
-  const fromEmail = process.env.CONTACT_FROM_EMAIL;
+  const { nom, telephone, email, sujet, message, website } = parsed.data;
 
-  if (!smtpHost || !smtpUser || !smtpPass || !toEmail || !fromEmail) {
-    console.error("[contact] Variables d'environnement SMTP manquantes.");
+  // Honeypot : le champ invisible "website" n'est rempli que par les bots.
+  // On répond succès pour ne pas leur signaler le filtrage.
+  if (website && website.trim().length > 0) {
+    return NextResponse.json({ success: true });
+  }
+
+  const toEmail = process.env.CONTACT_TO_EMAIL;
+
+  if (!toEmail) {
+    console.error("[contact] CONTACT_TO_EMAIL manquant.");
     return NextResponse.json(
       { error: "Configuration email manquante côté serveur." },
       { status: 500 },
     );
   }
 
-  const transporter = nodemailer.createTransport({
-    host: smtpHost,
-    port: Number(smtpPort) || 587,
-    secure: (Number(smtpPort) || 587) === 465,
-    auth: { user: smtpUser, pass: smtpPass },
-  });
-
   try {
-    await transporter.sendMail({
-      from: `"Formulaire PVS ONGD" <${fromEmail}>`,
+    const sent = await sendMail({
       to: toEmail,
       replyTo: email,
       subject: `[Contact] ${sujet ?? "Demande d'information"}`,
@@ -115,6 +130,13 @@ export async function POST(request: Request) {
         message,
       }),
     });
+
+    if (!sent) {
+      return NextResponse.json(
+        { error: "Une erreur est survenue lors de l'envoi de l'email." },
+        { status: 500 },
+      );
+    }
 
     await prisma.contactMessage.create({
       data: {

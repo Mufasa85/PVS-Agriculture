@@ -9,8 +9,7 @@ import { trackQuoteRequest } from "@/lib/track";
 
 const fieldClass =
   "w-full rounded-[10px] border-[1.5px] border-line bg-brand-50 px-[15px] py-[13px] font-sans text-[14.5px] text-ink-900 transition-colors duration-300 focus:border-brand-600 focus:bg-white focus:outline-none";
-const labelClass =
-  "mb-[7px] block text-[13px] font-bold text-brand-900";
+const labelClass = "mb-[7px] block text-[13px] font-bold text-brand-900";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -32,6 +31,7 @@ export default function ContactForm() {
       email: formData.get("email"),
       sujet: sujetStr,
       message: formData.get("message"),
+      website: formData.get("website"),
     };
 
     try {
@@ -49,14 +49,19 @@ export default function ContactForm() {
       // Track quote request event for analytics
       trackQuoteRequest({
         sujet: sujetStr,
-        productName: sujetStr.includes("Devis") || sujetStr.includes("Commande") ? sujetStr : undefined,
+        productName:
+          sujetStr.includes("Devis") || sujetStr.includes("Commande")
+            ? sujetStr
+            : undefined,
       });
 
       form.reset();
       setStatus("success");
       window.setTimeout(() => setStatus("idle"), 4000);
     } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : "Une erreur est survenue.");
+      setErrorMsg(
+        err instanceof Error ? err.message : "Une erreur est survenue.",
+      );
       setStatus("error");
       window.setTimeout(() => setStatus("idle"), 5000);
     }
@@ -72,6 +77,8 @@ export default function ContactForm() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
+            role="status"
+            aria-label="Envoi de votre message en cours"
             className="fixed inset-0 z-[3000] flex items-center justify-center bg-white/95 backdrop-blur-sm"
           >
             <PageLoader caption="Envoi de votre message…" />
@@ -81,9 +88,21 @@ export default function ContactForm() {
 
       <form
         onSubmit={handleSubmit}
+        aria-busy={status === "submitting"}
         className="rounded-pvs-lg bg-white px-[22px] py-7 shadow-float mid:p-[42px]"
       >
-        <h3 className="mb-1.5 text-[22px] text-brand-900">{contactForm.title}</h3>
+        {/* Annonce lecteur d'écran du résultat d'envoi */}
+        <p role="status" aria-live="polite" className="sr-only">
+          {status === "success"
+            ? contactForm.successLabel
+            : status === "error"
+              ? errorMsg || "Échec de l'envoi du message."
+              : ""}
+        </p>
+
+        <h3 className="mb-1.5 text-[22px] text-brand-900">
+          {contactForm.title}
+        </h3>
         <p className="mb-[26px] text-sm text-ink-500">{contactForm.subtitle}</p>
 
         <div className="grid grid-cols-1 gap-[18px] mid:grid-cols-2">
@@ -138,6 +157,21 @@ export default function ContactForm() {
               <option key={subject}>{subject}</option>
             ))}
           </select>
+        </div>
+
+        {/* Honeypot anti-bot : invisible pour les humains */}
+        <div
+          aria-hidden="true"
+          className="absolute -left-[9999px] top-0 h-0 w-0 overflow-hidden"
+        >
+          <label htmlFor="website">Site web</label>
+          <input
+            type="text"
+            id="website"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+          />
         </div>
 
         <div className="mb-[18px]">

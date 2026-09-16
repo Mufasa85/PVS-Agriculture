@@ -4,14 +4,35 @@ import {
   ADMIN_SESSION_COOKIE,
   ADMIN_SESSION_MAX_AGE,
   createAdminSessionToken,
+  createPending2faToken,
   verifyAdminCredentials,
 } from "@/lib/auth";
 import { getClientIp, logAudit } from "@/lib/audit";
 import { prisma } from "@/lib/prisma";
+import { withApiError } from "@/lib/api";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
-export async function POST(request: Request) {
+// 5 tentatives par IP toutes les 5 minutes
+const LOGIN_RATE_LIMIT = 5;
+const LOGIN_WINDOW_MS = 5 * 60 * 1000;
+
+export const POST = withApiError(async (request: Request) => {
+  const ip = getClientIp(request) ?? "unknown";
+  const { success, retryAfter } = rateLimit(
+    `admin-login:${ip}`,
+    LOGIN_RATE_LIMIT,
+    LOGIN_WINDOW_MS,
+  );
+
+  if (!success) {
+    return NextResponse.json(
+      { error: "Trop de tentatives. Réessayez plus tard." },
+      { status: 429, headers: { "Retry-After": String(retryAfter) } },
+    );
+  }
+
   let body: { email?: string; password?: string };
 
   try {
@@ -36,6 +57,13 @@ export async function POST(request: Request) {
       { error: "Identifiants incorrects." },
       { status: 401 },
     );
+  }
+
+  // 2FA activée : le mot de passe est bon mais il faut le code TOTP.
+  // On renvoie un token temporaire (5 min) au lieu de la session.
+  if (user.twoFactorEnabled) {
+    const pendingToken = await createPending2faToken(user.id);
+    return NextResponse.json({ requires2fa: true, pendingToken });
   }
 
   const token = await createAdminSessionToken(user);
@@ -63,4 +91,4 @@ export async function POST(request: Request) {
   });
 
   return response;
-}
+});

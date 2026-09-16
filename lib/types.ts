@@ -81,7 +81,12 @@ export type AgriculturePageContent = {
     tags: string[];
     imageSrc: string;
     imageAlt: string;
-    products: { name: string; description: string; imageSrc: string; imageAlt: string }[];
+    products: {
+      name: string;
+      description: string;
+      imageSrc: string;
+      imageAlt: string;
+    }[];
   };
   features: {
     eyebrow: string;
@@ -214,7 +219,12 @@ export type PisciculturePageContent = {
     tags: string[];
     imageSrc: string;
     imageAlt: string;
-    products: { name: string; description: string; imageSrc: string; imageAlt: string }[];
+    products: {
+      name: string;
+      description: string;
+      imageSrc: string;
+      imageAlt: string;
+    }[];
   };
   features: {
     eyebrow: string;
@@ -226,7 +236,15 @@ export type PisciculturePageContent = {
     eyebrow: string;
     title: string;
     subtitle: string;
-    items: { name: string; description: string; price: string; unit: string; imageSrc: string; imageAlt: string; badge?: string }[];
+    items: {
+      name: string;
+      description: string;
+      price: string;
+      unit: string;
+      imageSrc: string;
+      imageAlt: string;
+      badge?: string;
+    }[];
   };
   stats: Stat[];
   cta: {
@@ -257,7 +275,12 @@ export type ProduitsAnimauxPageContent = {
     tags: string[];
     imageSrc: string;
     imageAlt: string;
-    products: { name: string; description: string; imageSrc: string; imageAlt: string }[];
+    products: {
+      name: string;
+      description: string;
+      imageSrc: string;
+      imageAlt: string;
+    }[];
   };
   features: {
     eyebrow: string;
@@ -269,7 +292,15 @@ export type ProduitsAnimauxPageContent = {
     eyebrow: string;
     title: string;
     subtitle: string;
-    items: { name: string; description: string; price: string; unit: string; imageSrc: string; imageAlt: string; badge?: string }[];
+    items: {
+      name: string;
+      description: string;
+      price: string;
+      unit: string;
+      imageSrc: string;
+      imageAlt: string;
+      badge?: string;
+    }[];
   };
   stats: Stat[];
   cta: {
@@ -300,7 +331,12 @@ export type PorcheriePageContent = {
     tags: string[];
     imageSrc: string;
     imageAlt: string;
-    products: { name: string; description: string; imageSrc: string; imageAlt: string }[];
+    products: {
+      name: string;
+      description: string;
+      imageSrc: string;
+      imageAlt: string;
+    }[];
   };
   features: {
     eyebrow: string;
@@ -312,7 +348,15 @@ export type PorcheriePageContent = {
     eyebrow: string;
     title: string;
     subtitle: string;
-    items: { name: string; description: string; price: string; unit: string; imageSrc: string; imageAlt: string; badge?: string }[];
+    items: {
+      name: string;
+      description: string;
+      price: string;
+      unit: string;
+      imageSrc: string;
+      imageAlt: string;
+      badge?: string;
+    }[];
   };
   stats: Stat[];
   cta: {

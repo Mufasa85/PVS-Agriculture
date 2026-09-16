@@ -1,19 +1,22 @@
 import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
-import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/auth";
+import { getSessionFromRequest } from "@/lib/auth";
 import { getClientIp, logAudit } from "@/lib/audit";
+import { withApiError } from "@/lib/api";
+import { firstIssueMessage, messagePatchSchema } from "@/lib/validation";
 
 export const runtime = "nodejs";
 
-function getSessionFromRequest(request: Request) {
-  const token = request.headers
-    .get("cookie")
-    ?.match(new RegExp(`${ADMIN_SESSION_COOKIE}=([^;]+)`))?.[1];
-  return verifyAdminSessionToken(token);
+function isNotFound(error: unknown): boolean {
+  return (
+    error instanceof Prisma.PrismaClientKnownRequestError &&
+    error.code === "P2025"
+  );
 }
 
-export async function GET(request: Request) {
+export const GET = withApiError(async (request: Request) => {
   const session = await getSessionFromRequest(request);
   if (!session) {
     return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
@@ -22,6 +25,11 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const filter = searchParams.get("filter") || "all";
   const search = searchParams.get("search") || "";
+  const page = Math.max(1, Number(searchParams.get("page") || "1"));
+  const perPage = Math.min(
+    50,
+    Math.max(1, Number(searchParams.get("perPage") || "20")),
+  );
 
   const where: Record<string, unknown> = {};
 
@@ -38,39 +46,59 @@ export async function GET(request: Request) {
     ];
   }
 
-  const messages = await prisma.contactMessage.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
+  const [messages, total, unreadCount] = await Promise.all([
+    prisma.contactMessage.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * perPage,
+      take: perPage,
+    }),
+    prisma.contactMessage.count({ where }),
+    prisma.contactMessage.count({ where: { isRead: false } }),
+  ]);
+
+  return NextResponse.json({
+    messages,
+    unreadCount,
+    total,
+    page,
+    perPage,
+    totalPages: Math.max(1, Math.ceil(total / perPage)),
   });
+});
 
-  const unreadCount = await prisma.contactMessage.count({ where: { isRead: false } });
-
-  return NextResponse.json({ messages, unreadCount });
-}
-
-export async function PATCH(request: Request) {
+export const PATCH = withApiError(async (request: Request) => {
   const session = await getSessionFromRequest(request);
   if (!session) {
     return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
   }
 
-  let body: { id?: number; isRead?: boolean; isStarred?: boolean };
+  let raw: unknown;
   try {
-    body = await request.json();
+    raw = await request.json();
   } catch {
     return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
   }
 
-  if (!body.id) {
-    return NextResponse.json({ error: "ID requis." }, { status: 422 });
+  const parsed = messagePatchSchema.safeParse(raw);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: firstIssueMessage(parsed.error) },
+      { status: 422 },
+    );
   }
+
+  const body = parsed.data;
 
   const data: Record<string, boolean> = {};
   if (typeof body.isRead === "boolean") data.isRead = body.isRead;
   if (typeof body.isStarred === "boolean") data.isStarred = body.isStarred;
 
   if (Object.keys(data).length === 0) {
-    return NextResponse.json({ error: "Aucune donnée à mettre à jour." }, { status: 422 });
+    return NextResponse.json(
+      { error: "Aucune donnée à mettre à jour." },
+      { status: 422 },
+    );
   }
 
   try {
@@ -89,12 +117,18 @@ export async function PATCH(request: Request) {
     });
 
     return NextResponse.json({ message });
-  } catch {
-    return NextResponse.json({ error: "Message introuvable." }, { status: 404 });
+  } catch (error) {
+    if (isNotFound(error)) {
+      return NextResponse.json(
+        { error: "Message introuvable." },
+        { status: 404 },
+      );
+    }
+    throw error;
   }
-}
+});
 
-export async function DELETE(request: Request) {
+export const DELETE = withApiError(async (request: Request) => {
   const session = await getSessionFromRequest(request);
   if (!session) {
     return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
@@ -119,7 +153,13 @@ export async function DELETE(request: Request) {
     });
 
     return NextResponse.json({ success: true });
-  } catch {
-    return NextResponse.json({ error: "Message introuvable." }, { status: 404 });
+  } catch (error) {
+    if (isNotFound(error)) {
+      return NextResponse.json(
+        { error: "Message introuvable." },
+        { status: 404 },
+      );
+    }
+    throw error;
   }
-}
+});

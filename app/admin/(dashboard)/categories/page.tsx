@@ -20,7 +20,5 @@ export default async function AdminCategoriesPage() {
     countMap[c.category] = c._count;
   }
 
-  return (
-    <CategoriesTable categories={categories} countMap={countMap} />
-  );
+  return <CategoriesTable categories={categories} countMap={countMap} />;
 }

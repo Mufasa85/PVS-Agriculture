@@ -28,48 +28,53 @@ export default function ImageUploader({
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
 
-  const handleFile = useCallback(async (file: File) => {
-    setError(null);
+  const handleFile = useCallback(
+    async (file: File) => {
+      setError(null);
 
-    if (!file.type.startsWith("image/")) {
-      setError("Veuillez sélectionner un fichier image.");
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      setError("Le fichier dépasse la taille maximale de 5 Mo.");
-      return;
-    }
-
-    setUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const res = await fetch("/api/admin/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error ?? "Échec de l'upload.");
+      if (!file.type.startsWith("image/")) {
+        setError("Veuillez sélectionner un fichier image.");
         return;
       }
 
-      onUrlChange(data.url);
-
-      if (!alt && file.name) {
-        const baseName = file.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " ");
-        onAltChange(baseName);
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Le fichier dépasse la taille maximale de 5 Mo.");
+        return;
       }
-    } catch {
-      setError("Une erreur est survenue pendant l'upload.");
-    } finally {
-      setUploading(false);
-    }
-  }, [alt, onUrlChange, onAltChange]);
+
+      setUploading(true);
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const res = await fetch("/api/admin/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setError(data.error ?? "Échec de l'upload.");
+          return;
+        }
+
+        onUrlChange(data.url);
+
+        if (!alt && file.name) {
+          const baseName = file.name
+            .replace(/\.[^.]+$/, "")
+            .replace(/[-_]/g, " ");
+          onAltChange(baseName);
+        }
+      } catch {
+        setError("Une erreur est survenue pendant l'upload.");
+      } finally {
+        setUploading(false);
+      }
+    },
+    [alt, onUrlChange, onAltChange],
+  );
 
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
@@ -92,8 +97,12 @@ export default function ImageUploader({
             {label} {required && <span className="text-red-500">*</span>}
           </label>
         )}
-        <div className={`flex gap-3 ${compact ? "items-center" : "items-start"}`}>
-          <div className={`relative shrink-0 overflow-hidden rounded-[10px] border border-line bg-brand-50 ${compact ? "h-16 w-16" : "h-24 w-24"}`}>
+        <div
+          className={`flex gap-3 ${compact ? "items-center" : "items-start"}`}
+        >
+          <div
+            className={`relative shrink-0 overflow-hidden rounded-[10px] border border-line bg-brand-50 ${compact ? "h-16 w-16" : "h-24 w-24"}`}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={url} alt={alt} className="h-full w-full object-cover" />
             <button
@@ -102,8 +111,19 @@ export default function ImageUploader({
               className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-red-500"
               aria-label="Retirer l'image"
             >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden
+              >
+                <path
+                  d="M6 6l12 12M18 6L6 18"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
               </svg>
             </button>
           </div>
@@ -119,8 +139,19 @@ export default function ImageUploader({
               onClick={() => inputRef.current?.click()}
               className="inline-flex w-fit items-center gap-1.5 text-[12px] font-semibold text-brand-600 transition-colors hover:text-brand-700"
             >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden
+              >
+                <path
+                  d="M12 5v14M5 12h14"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
               </svg>
               Remplacer
             </button>
@@ -135,7 +166,13 @@ export default function ImageUploader({
             )}
           </div>
         </div>
-        <input ref={inputRef} type="file" accept="image/*" onChange={handleInputChange} className="hidden" />
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleInputChange}
+          className="hidden"
+        />
       </div>
     );
   }
@@ -148,7 +185,10 @@ export default function ImageUploader({
         </label>
       )}
       <div
-        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
         onClick={() => inputRef.current?.click()}
@@ -161,14 +201,27 @@ export default function ImageUploader({
         {uploading ? (
           <div className="flex flex-col items-center gap-2">
             <div className="h-7 w-7 animate-spin rounded-full border-2 border-brand-200 border-t-brand-600" />
-            <p className="text-[12.5px] font-medium text-ink-500">Upload en cours…</p>
+            <p className="text-[12.5px] font-medium text-ink-500">
+              Upload en cours…
+            </p>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-brand-50">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <path d="M12 16V4m0 0L8 8m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"
-                  stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden
+              >
+                <path
+                  d="M12 16V4m0 0L8 8m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </div>
             <div>
@@ -182,10 +235,14 @@ export default function ImageUploader({
           </div>
         )}
       </div>
-      {error && (
-        <p className="text-[12px] font-medium text-red-500">{error}</p>
-      )}
-      <input ref={inputRef} type="file" accept="image/*" onChange={handleInputChange} className="hidden" />
+      {error && <p className="text-[12px] font-medium text-red-500">{error}</p>}
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleInputChange}
+        className="hidden"
+      />
     </div>
   );
 }

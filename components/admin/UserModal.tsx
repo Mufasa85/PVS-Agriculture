@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import UserForm from "@/components/admin/UserForm";
 import { XIcon } from "@/components/ui/icons";
+import { useModalA11y } from "@/lib/use-modal-a11y";
 
 type UserModalData = {
   id?: number;
@@ -25,17 +26,19 @@ export default function UserModal({
 }) {
   const [initialData, setInitialData] = useState<UserModalData | null>(null);
   const [loading, setLoading] = useState(false);
+  const panelRef = useModalA11y(open);
 
   const isEditing = editId !== null;
 
   useEffect(() => {
     if (!open) {
-      setInitialData(null);
+      // Différé en microtâche (react-hooks/set-state-in-effect).
+      queueMicrotask(() => setInitialData(null));
       return;
     }
 
     if (isEditing) {
-      setLoading(true);
+      queueMicrotask(() => setLoading(true));
       fetch(`/api/admin/users/${editId}`)
         .then((res) => res.json())
         .then((data) => {
@@ -53,7 +56,7 @@ export default function UserModal({
         })
         .finally(() => setLoading(false));
     } else {
-      setInitialData(null);
+      queueMicrotask(() => setInitialData(null));
     }
   }, [open, editId, isEditing]);
 
@@ -79,9 +82,18 @@ export default function UserModal({
         onClick={onClose}
       />
 
-      <div className="relative z-10 w-full max-w-[560px] max-h-[90vh] overflow-y-auto rounded-pvs border border-line bg-white shadow-card">
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="user-modal-title"
+        className="relative z-10 w-full max-w-[560px] max-h-[90vh] overflow-y-auto rounded-pvs border border-line bg-white shadow-card"
+      >
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-white px-6 py-4">
-          <h2 className="font-serif text-[18px] font-bold text-brand-900">
+          <h2
+            id="user-modal-title"
+            className="font-serif text-[18px] font-bold text-brand-900"
+          >
             {isEditing ? "Modifier l'utilisateur" : "Nouvel utilisateur"}
           </h2>
           <button

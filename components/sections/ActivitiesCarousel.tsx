@@ -82,6 +82,7 @@ export default function ActivitiesCarousel({
             type="button"
             onClick={() => scrollToCard(index)}
             aria-label={`Aller à l'activité ${index + 1}`}
+            aria-current={index === activeIndex || undefined}
             className={`h-2 shrink-0 transition-all duration-300 ease-pvs ${
               index === activeIndex
                 ? "w-[22px] rounded-[5px] bg-brand-600"

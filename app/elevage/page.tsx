@@ -15,11 +15,13 @@ import {
   LockIcon,
 } from "@/components/ui/icons";
 import { elevagePage } from "@/lib/content";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: elevagePage.metaTitle,
   description: elevagePage.metaDescription,
-};
+  path: "/elevage",
+});
 
 function TitleLine({ line }: { line: string }) {
   const emphasis = elevagePage.hero.titleEmphasis;
@@ -32,15 +34,16 @@ function TitleLine({ line }: { line: string }) {
   return (
     <>
       {line.slice(0, index)}
-      <em className="not-italic text-gold-500">
-        {emphasis}
-      </em>
+      <em className="not-italic text-gold-500">{emphasis}</em>
       {line.slice(index + emphasis.length)}
     </>
   );
 }
 
-const practiceIcons: Record<string, ComponentType<{ size?: number; className?: string }>> = {
+const practiceIcons: Record<
+  string,
+  ComponentType<{ size?: number; className?: string }>
+> = {
   check: CheckIcon,
   lock: LockIcon,
   feedbag: FeedBagIcon,

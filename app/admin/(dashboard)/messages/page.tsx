@@ -1,7 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
+import { Download } from "lucide-react";
+
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import {
   MailIcon,
   SearchIcon,
@@ -53,18 +57,29 @@ export default function AdminMessagesPage() {
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [deleteTarget, setDeleteTarget] = useState<ContactMessage | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [replyOpen, setReplyOpen] = useState(false);
+  const [replyText, setReplyText] = useState("");
+  const [sendingReply, setSendingReply] = useState(false);
 
-  const fetchMessages = useCallback(async (f: Filter, s: string) => {
+  const fetchMessages = useCallback(async (f: Filter, s: string, p: number) => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
       if (f !== "all") params.set("filter", f);
       if (s.trim()) params.set("search", s);
+      params.set("page", String(p));
       const res = await fetch(`/api/admin/messages?${params}`);
       if (res.ok) {
         const data = await res.json();
         setMessages(data.messages);
         setUnreadCount(data.unreadCount);
+        setTotal(data.total ?? data.messages.length);
+        setTotalPages(data.totalPages ?? 1);
       }
     } catch {
       console.error("Failed to load messages");
@@ -74,8 +89,30 @@ export default function AdminMessagesPage() {
   }, []);
 
   useEffect(() => {
-    fetchMessages(filter, search);
-  }, [filter, search, fetchMessages]);
+    // Différé en microtâche : fetchMessages appelle setLoading/setMessages
+    // (react-hooks/set-state-in-effect interdit le setState synchrone).
+    queueMicrotask(() => fetchMessages(filter, search, page));
+  }, [filter, search, page, fetchMessages]);
+
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  // Raccourci « / » : focus la recherche (hors saisie en cours)
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key !== "/") return;
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable
+      )
+        return;
+      e.preventDefault();
+      searchRef.current?.focus();
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
 
   const selected = messages.find((m) => m.id === selectedId) ?? null;
 
@@ -88,7 +125,9 @@ export default function AdminMessagesPage() {
       });
       if (res.ok) {
         const data = await res.json();
-        setMessages((prev) => prev.map((m) => (m.id === id ? data.message : m)));
+        setMessages((prev) =>
+          prev.map((m) => (m.id === id ? data.message : m)),
+        );
         setUnreadCount((prev) => prev + (isRead ? -1 : 1));
       }
     } catch {
@@ -105,33 +144,75 @@ export default function AdminMessagesPage() {
       });
       if (res.ok) {
         const data = await res.json();
-        setMessages((prev) => prev.map((m) => (m.id === id ? data.message : m)));
+        setMessages((prev) =>
+          prev.map((m) => (m.id === id ? data.message : m)),
+        );
       }
     } catch {
       console.error("Failed to update message");
     }
   }
 
-  async function deleteMessage(id: number) {
-    if (!confirm("Voulez-vous vraiment supprimer ce message ?")) return;
+  async function deleteMessage() {
+    if (!deleteTarget) return;
+    const id = deleteTarget.id;
+    setDeleting(true);
     try {
-      const res = await fetch(`/api/admin/messages?id=${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/admin/messages?id=${id}`, {
+        method: "DELETE",
+      });
       if (res.ok) {
         setMessages((prev) => prev.filter((m) => m.id !== id));
         if (selectedId === id) setSelectedId(null);
         if (!messages.find((m) => m.id === id)?.isRead) {
           setUnreadCount((prev) => Math.max(prev - 1, 0));
         }
+        // La page courante peut être devenue vide après suppression
+        if (messages.length === 1 && page > 1) {
+          setPage(page - 1);
+        } else {
+          fetchMessages(filter, search, page);
+        }
+        setDeleteTarget(null);
       }
     } catch {
       console.error("Failed to delete message");
+    } finally {
+      setDeleting(false);
     }
   }
 
   function handleMessageClick(msg: ContactMessage) {
     setSelectedId(msg.id);
+    setReplyOpen(false);
+    setReplyText("");
     if (!msg.isRead) {
       markRead(msg.id, true);
+    }
+  }
+
+  async function sendReply() {
+    if (!selected || !replyText.trim()) return;
+    setSendingReply(true);
+    try {
+      const res = await fetch(`/api/admin/messages/${selected.id}/reply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: replyText.trim() }),
+      });
+      const data = await res.json().catch(() => null);
+      if (res.ok) {
+        toast.success(`Réponse envoyée à ${selected.email}.`);
+        setReplyOpen(false);
+        setReplyText("");
+        if (!selected.isRead) markRead(selected.id, true);
+      } else {
+        toast.error(data?.error ?? "Échec de l'envoi de la réponse.");
+      }
+    } catch {
+      toast.error("Échec de l'envoi de la réponse.");
+    } finally {
+      setSendingReply(false);
     }
   }
 
@@ -150,16 +231,27 @@ export default function AdminMessagesPage() {
             Suivi des demandes envoyées via le formulaire de contact du site.
           </p>
         </div>
-        {unreadCount > 0 && (
-          <div className="inline-flex items-center gap-2 rounded-[12px] border border-amber-200 bg-amber-50 px-4 py-2.5">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-[11px] font-bold text-white">
-              {unreadCount}
-            </span>
-            <span className="text-[13px] font-semibold text-amber-700">
-              message{unreadCount > 1 ? "s" : ""} non lu{unreadCount > 1 ? "s" : ""}
-            </span>
-          </div>
-        )}
+        <div className="flex items-center gap-2.5">
+          <a
+            href="/api/admin/export?type=messages"
+            title="Exporter les messages en CSV"
+            className="inline-flex items-center gap-2 rounded-[10px] border border-line bg-white px-3.5 py-2 text-[12.5px] font-bold text-brand-900 transition-colors hover:bg-brand-50"
+          >
+            <Download size={14} />
+            Export CSV
+          </a>
+          {unreadCount > 0 && (
+            <div className="inline-flex items-center gap-2 rounded-[12px] border border-amber-200 bg-amber-50 px-4 py-2.5">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-[11px] font-bold text-white">
+                {unreadCount}
+              </span>
+              <span className="text-[13px] font-semibold text-amber-700">
+                message{unreadCount > 1 ? "s" : ""} non lu
+                {unreadCount > 1 ? "s" : ""}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ── Barre de recherche + filtres ── */}
@@ -170,10 +262,14 @@ export default function AdminMessagesPage() {
             className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-500/60"
           />
           <input
+            ref={searchRef}
             type="text"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher dans les messages…"
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+            placeholder="Rechercher dans les messages…  ( / )"
             className="w-full rounded-[12px] border border-line bg-white py-2.5 pl-11 pr-10 text-[14px] text-brand-900 outline-none transition-colors placeholder:text-ink-500/50 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15"
           />
           {search && (
@@ -183,23 +279,37 @@ export default function AdminMessagesPage() {
               className="absolute right-3 top-1/2 -translate-y-1/2 flex h-6 w-6 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-brand-50 hover:text-brand-700"
               aria-label="Effacer la recherche"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden
+              >
+                <path
+                  d="M6 6l12 12M18 6L6 18"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
               </svg>
             </button>
           )}
         </div>
 
         <div className="flex items-center gap-1.5 rounded-[12px] border border-line bg-white p-1 shadow-soft">
-          {([
+          {[
             { label: "Tous", value: "all" as Filter },
             { label: "Non lus", value: "unread" as Filter },
             { label: "Favoris", value: "starred" as Filter },
-          ]).map((item) => (
+          ].map((item) => (
             <button
               key={item.value}
               type="button"
-              onClick={() => setFilter(item.value)}
+              onClick={() => {
+                setFilter(item.value);
+                setPage(1);
+              }}
               className={`rounded-[8px] px-3.5 py-1.5 text-[12.5px] font-bold transition-all ${
                 filter === item.value
                   ? "bg-brand-600 text-white shadow-brand-btn"
@@ -226,9 +336,13 @@ export default function AdminMessagesPage() {
                 <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-brand-50">
                   <MailIcon size={24} className="text-brand-400" />
                 </div>
-                <p className="text-[14px] font-semibold text-ink-700">Aucun message</p>
+                <p className="text-[14px] font-semibold text-ink-700">
+                  Aucun message
+                </p>
                 <p className="mt-1 text-[13px] text-ink-500">
-                  {search ? "Aucun résultat pour cette recherche." : "La boîte de réception est vide."}
+                  {search
+                    ? "Aucun résultat pour cette recherche."
+                    : "La boîte de réception est vide."}
                 </p>
               </div>
             ) : (
@@ -249,13 +363,18 @@ export default function AdminMessagesPage() {
                         {!msg.isRead && (
                           <span className="h-2 w-2 shrink-0 rounded-full bg-brand-600" />
                         )}
-                        <span className={`truncate text-[13.5px] ${msg.isRead ? "font-semibold text-ink-700" : "font-bold text-brand-900"}`}>
+                        <span
+                          className={`truncate text-[13.5px] ${msg.isRead ? "font-semibold text-ink-700" : "font-bold text-brand-900"}`}
+                        >
                           {msg.nom}
                         </span>
                       </div>
                       <div className="flex shrink-0 items-center gap-1.5">
                         {msg.isStarred && (
-                          <StarIcon size={13} className="fill-amber-400 text-amber-400" />
+                          <StarIcon
+                            size={13}
+                            className="fill-amber-400 text-amber-400"
+                          />
                         )}
                         <span className="text-[11px] font-medium text-ink-500">
                           {timeAgo(msg.createdAt)}
@@ -273,6 +392,31 @@ export default function AdminMessagesPage() {
               </div>
             )}
           </div>
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between border-t border-line px-4 py-3">
+              <span className="text-[12px] text-ink-500">
+                {total} message{total > 1 ? "s" : ""} — page {page}/{totalPages}
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={page <= 1}
+                  onClick={() => setPage((p) => p - 1)}
+                  className="rounded-[8px] border border-line px-3 py-1.5 text-[12px] font-semibold text-ink-600 transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Précédent
+                </button>
+                <button
+                  type="button"
+                  disabled={page >= totalPages}
+                  onClick={() => setPage((p) => p + 1)}
+                  className="rounded-[8px] border border-line px-3 py-1.5 text-[12px] font-semibold text-ink-600 transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Suivant
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Détail du message */}
@@ -293,27 +437,48 @@ export default function AdminMessagesPage() {
                   <div className="flex shrink-0 items-center gap-2">
                     <button
                       type="button"
-                      onClick={() => toggleStar(selected.id, !selected.isStarred)}
-                      title={selected.isStarred ? "Retirer des favoris" : "Marquer comme favori"}
+                      onClick={() => setReplyOpen((v) => !v)}
+                      title="Répondre par email"
+                      className="flex h-9 items-center rounded-[10px] border border-brand-200 px-3.5 text-[12.5px] font-bold text-brand-600 transition-colors hover:bg-brand-50 hover:text-brand-700"
+                    >
+                      Répondre
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        toggleStar(selected.id, !selected.isStarred)
+                      }
+                      title={
+                        selected.isStarred
+                          ? "Retirer des favoris"
+                          : "Marquer comme favori"
+                      }
                       className={`flex h-9 w-9 items-center justify-center rounded-[10px] border transition-colors ${
                         selected.isStarred
                           ? "border-amber-200 bg-amber-50 text-amber-500"
                           : "border-line text-ink-500 hover:bg-brand-50 hover:text-brand-700"
                       }`}
                     >
-                      <StarIcon size={16} className={selected.isStarred ? "fill-current" : ""} />
+                      <StarIcon
+                        size={16}
+                        className={selected.isStarred ? "fill-current" : ""}
+                      />
                     </button>
                     <button
                       type="button"
                       onClick={() => markRead(selected.id, !selected.isRead)}
-                      title={selected.isRead ? "Marquer comme non lu" : "Marquer comme lu"}
+                      title={
+                        selected.isRead
+                          ? "Marquer comme non lu"
+                          : "Marquer comme lu"
+                      }
                       className="flex h-9 w-9 items-center justify-center rounded-[10px] border border-line text-ink-500 transition-colors hover:bg-brand-50 hover:text-brand-700"
                     >
                       <MailIcon size={16} />
                     </button>
                     <button
                       type="button"
-                      onClick={() => deleteMessage(selected.id)}
+                      onClick={() => setDeleteTarget(selected)}
                       title="Supprimer"
                       className="flex h-9 w-9 items-center justify-center rounded-[10px] border border-red-200 text-red-500 transition-colors hover:bg-red-50"
                     >
@@ -373,20 +538,62 @@ export default function AdminMessagesPage() {
 
               {/* Actions de réponse */}
               <div className="border-t border-line px-6 py-4">
+                {replyOpen && (
+                  <div className="mb-4">
+                    <textarea
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                      rows={5}
+                      placeholder={`Bonjour ${selected.nom},`}
+                      className="w-full rounded-[12px] border border-line bg-white px-4 py-3 text-[13.5px] text-brand-900 outline-none transition-colors placeholder:text-ink-500/50 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15"
+                    />
+                    <div className="mt-2.5 flex items-center justify-between">
+                      <span className="text-[12px] text-ink-500">
+                        Envoyé à {selected.email}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={sendReply}
+                        disabled={sendingReply || !replyText.trim()}
+                        className="inline-flex items-center gap-2 rounded-[10px] bg-brand-600 px-4 py-2 text-[13px] font-bold text-white transition-all hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {sendingReply && (
+                          <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                        )}
+                        {sendingReply ? "Envoi..." : "Envoyer la réponse"}
+                      </button>
+                    </div>
+                  </div>
+                )}
                 <div className="flex flex-wrap gap-3">
-                  <a
-                    href={`mailto:${selected.email}?subject=Re: ${selected.sujet || "Demande d'information"}`}
-                    className="inline-flex items-center gap-2 rounded-[10px] bg-brand-600 px-5 py-2.5 text-[13.5px] font-bold text-white shadow-brand-btn transition-all hover:bg-brand-700"
-                  >
-                    <MailIcon size={16} />
-                    Répondre par email
-                  </a>
+                  {!replyOpen && (
+                    <button
+                      type="button"
+                      onClick={() => setReplyOpen(true)}
+                      className="inline-flex items-center gap-2 rounded-[10px] bg-brand-600 px-5 py-2.5 text-[13.5px] font-bold text-white shadow-brand-btn transition-all hover:bg-brand-700"
+                    >
+                      <MailIcon size={16} />
+                      Répondre par email
+                    </button>
+                  )}
                   <a
                     href={`tel:${selected.telephone}`}
                     className="inline-flex items-center gap-2 rounded-[10px] border border-line bg-white px-5 py-2.5 text-[13.5px] font-bold text-brand-900 transition-colors hover:bg-brand-50"
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-                      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      aria-hidden
+                    >
+                      <path
+                        d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                     Appeler
                   </a>
@@ -402,12 +609,22 @@ export default function AdminMessagesPage() {
                 Sélectionnez un message
               </p>
               <p className="mt-1.5 max-w-[280px] text-[13px] text-ink-500">
-                Choisissez un message dans la liste pour afficher son contenu complet et les coordonnées de l&apos;expéditeur.
+                Choisissez un message dans la liste pour afficher son contenu
+                complet et les coordonnées de l&apos;expéditeur.
               </p>
             </div>
           )}
         </div>
       </div>
+
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        title="Supprimer le message"
+        message="Voulez-vous vraiment supprimer ce message ? Cette action est irréversible."
+        loading={deleting}
+        onConfirm={deleteMessage}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

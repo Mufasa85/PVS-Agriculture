@@ -1,38 +1,19 @@
 import { NextResponse } from "next/server";
-import type { Currency } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 import { getCategorySlugs, slugify } from "@/lib/products";
-import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/auth";
+import { getSessionFromRequest } from "@/lib/auth";
 import { getClientIp, logAudit } from "@/lib/audit";
+import { withApiError } from "@/lib/api";
+import { revalidatePublicCatalog } from "@/lib/revalidate-catalog";
+import { firstIssueMessage, productInputSchema } from "@/lib/validation";
 
 export const runtime = "nodejs";
 
-type ProductImageInput = {
-  url: string;
-  alt: string;
-};
-
-type ProductInput = {
-  name: string;
-  slug: string | null;
-  description: string;
-  category: string;
-  priceAmount: number | null;
-  currency: Currency;
-  unit: string | null;
-  note: string | null;
-  badge: string | null;
-  imageSrc: string;
-  imageAlt: string;
-  images: ProductImageInput[];
-  comingSoon: boolean;
-  onDemand: boolean;
-  isPublished: boolean;
-  sortOrder: number;
-};
-
-async function generateUniqueSlug(name: string, desired: string | null): Promise<string> {
+async function generateUniqueSlug(
+  name: string,
+  desired: string | null,
+): Promise<string> {
   const base = slugify(desired?.trim() || name);
   let candidate = base || "produit";
   let suffix = 2;
@@ -42,75 +23,98 @@ async function generateUniqueSlug(name: string, desired: string | null): Promise
   return candidate;
 }
 
-function getSessionFromRequest(request: Request) {
-  const token = request.headers
-    .get("cookie")
-    ?.match(new RegExp(`${ADMIN_SESSION_COOKIE}=([^;]+)`))?.[1];
-  return verifyAdminSessionToken(token);
-}
+export const GET = withApiError(async (request: Request) => {
+  const { searchParams } = new URL(request.url);
+  const pageParam = searchParams.get("page");
+  const perPageParam = searchParams.get("perPage");
 
-async function validateInput(body: Partial<ProductInput>): Promise<string | null> {
-  if (!body.name || !body.name.trim()) return "Le nom est requis.";
-  if (!body.description || !body.description.trim())
-    return "La description est requise.";
-  const validSlugs = await getCategorySlugs();
-  if (!body.category || !validSlugs.includes(body.category))
-    return "Catégorie invalide.";
-  if (!body.imageSrc || !body.imageSrc.trim())
-    return "L'URL de l'image est requise.";
-  if (!body.imageAlt || !body.imageAlt.trim())
-    return "Le texte alternatif de l'image est requis.";
-  if (!body.comingSoon && (body.priceAmount === null || body.priceAmount === undefined))
-    return "Le prix est requis sauf si le produit est marqué « à venir ».";
-  return null;
-}
+  // Corbeille : ?trash=1 renvoie les produits supprimés (soft delete)
+  if (searchParams.get("trash") === "1") {
+    const products = await prisma.product.findMany({
+      where: { deletedAt: { not: null } },
+      orderBy: { deletedAt: "desc" },
+      include: { images: { orderBy: { sortOrder: "asc" } } },
+    });
+    return NextResponse.json({ products });
+  }
 
-export async function GET() {
+  // Pagination opt-in : sans ?page, la réponse renvoie tout (rétrocompatible).
+  if (pageParam || perPageParam) {
+    const page = Math.max(1, Number(pageParam || "1"));
+    const perPage = Math.min(100, Math.max(1, Number(perPageParam || "25")));
+    const [products, total] = await Promise.all([
+      prisma.product.findMany({
+        where: { deletedAt: null },
+        orderBy: [{ category: "asc" }, { sortOrder: "asc" }, { name: "asc" }],
+        include: { images: { orderBy: { sortOrder: "asc" } } },
+        skip: (page - 1) * perPage,
+        take: perPage,
+      }),
+      prisma.product.count({ where: { deletedAt: null } }),
+    ]);
+    return NextResponse.json({
+      products,
+      total,
+      page,
+      perPage,
+      totalPages: Math.max(1, Math.ceil(total / perPage)),
+    });
+  }
+
   const products = await prisma.product.findMany({
     where: { deletedAt: null },
     orderBy: [{ category: "asc" }, { sortOrder: "asc" }, { name: "asc" }],
     include: { images: { orderBy: { sortOrder: "asc" } } },
   });
   return NextResponse.json({ products });
-}
+});
 
-export async function POST(request: Request) {
-  let body: Partial<ProductInput>;
+export const POST = withApiError(async (request: Request) => {
+  let raw: unknown;
   try {
-    body = await request.json();
+    raw = await request.json();
   } catch {
     return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
   }
 
-  const error = await validateInput(body);
-  if (error) {
-    return NextResponse.json({ error }, { status: 422 });
+  const parsed = productInputSchema.safeParse(raw);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: firstIssueMessage(parsed.error) },
+      { status: 422 },
+    );
   }
 
-  const slug = await generateUniqueSlug(body.name!.trim(), body.slug ?? null);
-  const images = (body.images ?? []).filter((img) => img.url?.trim());
+  const body = parsed.data;
+  const validSlugs = await getCategorySlugs();
+  if (!validSlugs.includes(body.category)) {
+    return NextResponse.json({ error: "Catégorie invalide." }, { status: 422 });
+  }
+
+  const slug = await generateUniqueSlug(body.name.trim(), body.slug ?? null);
+  const images = body.images.filter((img) => img.url?.trim());
 
   const product = await prisma.product.create({
     data: {
-      name: body.name!.trim(),
+      name: body.name.trim(),
       slug,
-      description: body.description!.trim(),
-      category: body.category!,
+      description: body.description.trim(),
+      category: body.category,
       priceAmount: body.comingSoon ? null : body.priceAmount,
-      currency: body.currency ?? "FC",
+      currency: body.currency,
       unit: body.unit?.trim() || null,
       note: body.note?.trim() || null,
       badge: body.badge?.trim() || null,
-      imageSrc: body.imageSrc!.trim(),
-      imageAlt: body.imageAlt!.trim(),
-      comingSoon: body.comingSoon ?? false,
-      onDemand: body.onDemand ?? false,
-      isPublished: body.isPublished ?? true,
-      sortOrder: body.sortOrder ?? 0,
+      imageSrc: body.imageSrc.trim(),
+      imageAlt: body.imageAlt.trim(),
+      comingSoon: body.comingSoon,
+      onDemand: body.onDemand,
+      isPublished: body.isPublished,
+      sortOrder: body.sortOrder,
       images: {
         create: images.map((img, index) => ({
           url: img.url.trim(),
-          alt: img.alt?.trim() || body.imageAlt!.trim(),
+          alt: img.alt?.trim() || body.imageAlt.trim(),
           sortOrder: index,
         })),
       },
@@ -128,5 +132,7 @@ export async function POST(request: Request) {
     ipAddress: getClientIp(request),
   });
 
+  revalidatePublicCatalog();
+
   return NextResponse.json({ product }, { status: 201 });
-}
+});

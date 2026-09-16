@@ -14,16 +14,21 @@ import {
   LinesIcon,
   LockIcon,
 } from "@/components/ui/icons";
+import JsonLd from "@/components/seo/JsonLd";
 import { agriculturePage } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
 import { formatProductPrice } from "@/lib/products";
+import { pageMetadata, productListJsonLd } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// ISR : page servie depuis le cache, régénérée au plus toutes les 60 s
+// (+ invalidation immédiate via revalidatePath lors des mutations admin).
+export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: agriculturePage.metaTitle,
   description: agriculturePage.metaDescription,
-};
+  path: "/agriculture",
+});
 
 function TitleLine({ line }: { line: string }) {
   const emphasis = agriculturePage.hero.titleEmphasis;
@@ -42,7 +47,10 @@ function TitleLine({ line }: { line: string }) {
   );
 }
 
-const featureIcons: Record<string, ComponentType<{ size?: number; className?: string }>> = {
+const featureIcons: Record<
+  string,
+  ComponentType<{ size?: number; className?: string }>
+> = {
   barn: BarnIcon,
   leaf: LeafIcon,
   lock: LockIcon,
@@ -54,13 +62,19 @@ const featureIcons: Record<string, ComponentType<{ size?: number; className?: st
 export default async function AgriculturePage() {
   const { hero, overview, features, pricing, stats, cta } = agriculturePage;
 
+  // Limité aux 4 premiers produits publiés (la grille tient sur une ligne).
   const pricingItems = await prisma.product.findMany({
     where: { category: "agriculture", deletedAt: null, isPublished: true },
     orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    take: 4,
   });
 
   return (
     <>
+      {pricingItems.length > 0 && (
+        <JsonLd data={productListJsonLd(pricingItems)} />
+      )}
+
       {/* ── Hero plein écran ── */}
       <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden">
         <Image
@@ -320,6 +334,12 @@ export default async function AgriculturePage() {
                   </div>
                 </Reveal>
               ))}
+            </div>
+
+            <div className="mt-12 text-center">
+              <Link href="/tarifs" className="btn btn-gold">
+                Voir tous les tarifs
+              </Link>
             </div>
           </div>
         </section>

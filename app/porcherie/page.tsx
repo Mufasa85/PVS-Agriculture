@@ -13,16 +13,21 @@ import {
   LockIcon,
   PigIcon,
 } from "@/components/ui/icons";
+import JsonLd from "@/components/seo/JsonLd";
 import { porcheriePage } from "@/lib/content";
 import { prisma } from "@/lib/prisma";
 import { formatProductPrice } from "@/lib/products";
+import { pageMetadata, productListJsonLd } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// ISR : page servie depuis le cache, régénérée au plus toutes les 60 s
+// (+ invalidation immédiate via revalidatePath lors des mutations admin).
+export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: porcheriePage.metaTitle,
   description: porcheriePage.metaDescription,
-};
+  path: "/porcherie",
+});
 
 function TitleLine({ line }: { line: string }) {
   const emphasis = porcheriePage.hero.titleEmphasis;
@@ -35,15 +40,16 @@ function TitleLine({ line }: { line: string }) {
   return (
     <>
       {line.slice(0, index)}
-      <em className="not-italic text-gold-500">
-        {emphasis}
-      </em>
+      <em className="not-italic text-gold-500">{emphasis}</em>
       {line.slice(index + emphasis.length)}
     </>
   );
 }
 
-const featureIcons: Record<string, ComponentType<{ size?: number; className?: string }>> = {
+const featureIcons: Record<
+  string,
+  ComponentType<{ size?: number; className?: string }>
+> = {
   check: CheckIcon,
   feedbag: FeedBagIcon,
   cycle: CycleIcon,
@@ -54,13 +60,19 @@ const featureIcons: Record<string, ComponentType<{ size?: number; className?: st
 export default async function PorcheriePage() {
   const { hero, overview, features, pricing, stats, cta } = porcheriePage;
 
+  // Limité aux 4 premiers produits publiés (la grille tient sur une ligne).
   const pricingItems = await prisma.product.findMany({
     where: { category: "porc", deletedAt: null, isPublished: true },
     orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    take: 4,
   });
 
   return (
     <>
+      {pricingItems.length > 0 && (
+        <JsonLd data={productListJsonLd(pricingItems)} />
+      )}
+
       {/* ── Hero plein écran ── */}
       <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden">
         <Image
@@ -157,7 +169,10 @@ export default async function PorcheriePage() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.16} className="relative mx-auto w-full max-w-[420px] nav:mx-0 nav:max-w-none">
+          <Reveal
+            delay={0.16}
+            className="relative mx-auto w-full max-w-[420px] nav:mx-0 nav:max-w-none"
+          >
             <div
               aria-hidden="true"
               className="hero-blob absolute -top-[8%] -left-[14%] z-0 h-[120%] w-[120%] bg-brand-600 opacity-95"
