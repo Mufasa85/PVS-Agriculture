@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import ContactForm from "@/components/sections/ContactForm";
@@ -18,14 +19,26 @@ export default function ContactPage() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-brand-50 to-white pb-[60px] pt-[140px] sm:pt-[168px]">
-        <div className="shell text-center">
+      <section className="relative flex min-h-[52vh] items-center justify-center overflow-hidden">
+        <Image
+          src="/images/photo-1500595046743-cd271d694d30.jpg"
+          alt="Champ agricole verdoyant au lever du soleil"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-brand-900/70" />
+
+        <div className="shell relative z-[1] py-[120px] text-center">
           <Reveal className="mx-auto max-w-[640px]">
-            <span className="eyebrow">{contact.eyebrow}</span>
-            <h1 className="mt-[18px] text-[clamp(36px,5.4vw,56px)] font-bold">
+            <span className="eyebrow text-gold-500 before:bg-gold-500">
+              {contact.eyebrow}
+            </span>
+            <h1 className="mt-[18px] text-[clamp(36px,5.4vw,56px)] font-bold text-white">
               {contact.title}
             </h1>
-            <p className="mx-auto mt-[22px] max-w-[560px] text-[17px] leading-[1.7] text-ink-700">
+            <p className="mx-auto mt-[22px] max-w-[560px] text-[17px] leading-[1.7] text-white/80">
               {contact.subtitle}
             </p>
           </Reveal>
@@ -46,7 +59,7 @@ export default function ContactPage() {
             </p>
 
             <ul className="mt-8 flex flex-col gap-6">
-              <li className="flex items-start gap-4">
+              <Reveal as="li" delay={0.05} className="flex items-start gap-4">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[11px] bg-brand-100 text-brand-700">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <path
@@ -64,14 +77,14 @@ export default function ContactPage() {
                   </span>
                   <Link
                     href={contact.phoneHref}
-                    className="text-[16px] font-bold text-brand-900 hover:text-brand-600"
+                    className="text-[16px] font-bold text-brand-900 transition-colors duration-150 ease-out hover:text-brand-600"
                   >
                     {contact.phone}
                   </Link>
                 </div>
-              </li>
+              </Reveal>
 
-              <li className="flex items-start gap-4">
+              <Reveal as="li" delay={0.1} className="flex items-start gap-4">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[11px] bg-brand-100 text-brand-700">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <path
@@ -94,14 +107,14 @@ export default function ContactPage() {
                   </span>
                   <Link
                     href={`mailto:${contact.email}`}
-                    className="text-[16px] font-bold text-brand-900 hover:text-brand-600"
+                    className="text-[16px] font-bold text-brand-900 transition-colors duration-150 ease-out hover:text-brand-600"
                   >
                     {contact.email}
                   </Link>
                 </div>
-              </li>
+              </Reveal>
 
-              <li className="flex items-start gap-4">
+              <Reveal as="li" delay={0.15} className="flex items-start gap-4">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[11px] bg-brand-100 text-brand-700">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <path
@@ -126,9 +139,9 @@ export default function ContactPage() {
                     {contact.address}
                   </span>
                 </div>
-              </li>
+              </Reveal>
 
-              <li className="flex items-start gap-4">
+              <Reveal as="li" delay={0.2} className="flex items-start gap-4">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[11px] bg-brand-100 text-brand-700">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <circle
@@ -154,7 +167,7 @@ export default function ContactPage() {
                     {contact.hours}
                   </span>
                 </div>
-              </li>
+              </Reveal>
             </ul>
 
             <div className="mt-8 flex flex-wrap gap-3">

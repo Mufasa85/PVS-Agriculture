@@ -32,10 +32,10 @@ export default function Reveal({
   return (
     <MotionTag
       className={className}
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, transform: "translateY(28px)" }}
+      whileInView={{ opacity: 1, transform: "translateY(0px)" }}
       viewport={{ once: true, amount: 0.15, margin: "0px 0px -60px 0px" }}
-      transition={{ duration: 0.8, delay, ease: [0.16, 0.8, 0.24, 1] }}
+      transition={{ duration: 0.5, delay, ease: [0.16, 0.8, 0.24, 1] }}
     >
       {children}
     </MotionTag>

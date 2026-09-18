@@ -18,6 +18,12 @@ export type Cta = {
 export type Stat = {
   value: string;
   label: string;
+  // Pour les stats animées (count-up au scroll). Si présent, la page
+  // utilise le composant CountUp au lieu d'afficher `value` en statique.
+  numericValue?: number;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
 };
 
 export type FeaturePoint = {
@@ -46,6 +52,9 @@ export type ValueProp = {
   tag: string;
   title: string;
   description: string;
+  icon?: string;
+  imageSrc?: string;
+  imageAlt?: string;
 };
 
 export type ContactInfo = {
@@ -139,7 +148,14 @@ export type AboutPageContent = {
     eyebrow: string;
     title: string;
     subtitle: string;
-    items: { icon: string; title: string; description: string }[];
+    items: {
+      icon: string;
+      title: string;
+      description: string;
+      href: string;
+      imageSrc: string;
+      imageAlt: string;
+    }[];
   };
   approach: {
     eyebrow: string;
@@ -150,6 +166,12 @@ export type AboutPageContent = {
     eyebrow: string;
     title: string;
     items: ValueProp[];
+  };
+  history: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    milestones: { year: string; title: string; description: string }[];
   };
   stats: Stat[];
   cta: {

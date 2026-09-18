@@ -150,23 +150,45 @@
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full px-7 py-[15px] text-[15px] font-bold transition-all duration-300 ease-pvs;
+    @apply inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full px-7 py-[15px] text-[15px] font-bold;
+    transition: transform 200ms ease-out, background-color 200ms ease-out,
+      box-shadow 200ms ease-out, border-color 200ms ease-out, color 200ms ease-out;
+  }
+
+  .btn:active {
+    transform: scale(0.97);
   }
 
   .btn-primary {
-    @apply bg-brand-600 text-white shadow-brand-btn hover:-translate-y-[3px] hover:bg-brand-700 hover:shadow-brand-btn-hover;
+    @apply bg-brand-600 text-white shadow-brand-btn;
   }
 
   .btn-ghost {
-    @apply border-[1.5px] border-line bg-transparent text-brand-900 hover:-translate-y-[3px] hover:border-brand-600 hover:text-brand-600;
+    @apply border-[1.5px] border-line bg-transparent text-brand-900;
   }
 
   .btn-gold {
-    @apply bg-gold-500 text-brand-900 shadow-gold hover:-translate-y-[3px] hover:bg-gold-600;
+    @apply bg-gold-500 text-brand-900 shadow-gold;
   }
 
   .btn-sm {
     @apply px-[18px] py-2.5 text-[13.5px];
+  }
+
+  /* Hover effects gated to devices that actually support hover (mouse/trackpad).
+     Touch devices trigger hover on tap, causing false-positive hover states. */
+  @media (hover: hover) and (pointer: fine) {
+    .btn-primary:hover {
+      @apply -translate-y-[3px] bg-brand-700 shadow-brand-btn-hover;
+    }
+
+    .btn-ghost:hover {
+      @apply -translate-y-[3px] border-brand-600 text-brand-600;
+    }
+
+    .btn-gold:hover {
+      @apply -translate-y-[3px] bg-gold-600;
+    }
   }
 
   /* Forme organique derrière l'image du hero (reprise de .hero-blob) */

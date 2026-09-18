@@ -60,7 +60,7 @@ export const primaryNavLinks: NavLink[] = [
   { label: "Accueil", href: "/" },
   { label: "À propos", href: "/a-propos" },
   { label: "Nos tarifs", href: "/tarifs" },
-  // "Contact" n'est pas listé : le bouton CTA « Nous contacter » y mène déjà.
+  { label: "Contact", href: "/contact" },
 ];
 
 /** Contenu du mega-menu "Services" (desktop), regroupant nos 4 activités. */
@@ -399,7 +399,7 @@ export const footer = {
 export const agriculturePage: AgriculturePageContent = {
   metaTitle: "Agriculture — PVS ONGD ASBL",
   metaDescription:
-    "Découvrez l'engagement agricole de PVS ONGD ASBL : production de cultures vivrières, pratiques durables et suivi rigoureux, de la préparation du sol à la récolte.",
+    "Découvrez l'engagement agricole de PVS ONGD ASBL : production de cultures vivrières à Mont Ngafula, pratiques durables et suivi rigoureux, de la préparation du sol à la récolte.",
 
   hero: {
     eyebrow: "Notre cœur de métier",
@@ -407,45 +407,40 @@ export const agriculturePage: AgriculturePageContent = {
     titleEmphasis: "engagement",
     titleLines: ["L'agriculture, au centre", "de notre engagement."],
     paragraph:
-      "De la préparation du sol à la récolte, PVS ONGD ASBL met en œuvre des pratiques agricoles rigoureuses pour produire des cultures saines, tout en respectant les cycles naturels de la terre à Kinshasa.",
-    // [PLACEHOLDER] Photo d'illustration locale
+      "Sur nos parcelles de Mont Ngafula, nous cultivons des légumes-feuilles adaptés au climat de Kinshasa. Chaque plate-bande est suivie individuellement, du semis à la récolte, pour une production saine et traçable.",
     imageSrc: "/images/photo-1500382017468-9049fed747ef.jpg",
     imageAlt: "Champ agricole verdoyant au lever du soleil",
   },
 
   overview: {
     eyebrow: "Notre exploitation",
-    title: "Une production vivrière structurée, à taille humaine",
+    title: "Des plates-bandes suivies une à une, pas une production de masse",
     paragraphs: [
-      "Nos parcelles sont organisées en plates-bandes suivies individuellement, du semis à la récolte. Chaque culture est choisie pour s'adapter au climat et aux sols de Kinshasa, avec un objectif simple : une production saine, régulière et traçable.",
-      "Nous travaillons à la demande pour certaines cultures maraîchères, ce qui nous permet de garantir fraîcheur et disponibilité auprès de nos partenaires, sans gaspillage ni surproduction.",
+      "Nos parcelles sont organisées en plates-bandes individualisées. Chacune est semée, suivie et récoltée séparément — pas de traitement uniforme, pas de pulvérisation aveugle. On s'adapte au sol, au climat, à la culture.",
+      "Nous travaillons à la demande pour nos cultures maraîchères : on sème quand vous commandez. Résultat — fraîcheur garantie, zéro gaspillage, zéro surproduction. C'est plus exigeant, mais c'est ce qu'exige une production responsable.",
     ],
-    tags: ["Production locale", "Cultures diversifiées", "Suivi rigoureux"],
-    // [PLACEHOLDER] Photo d'illustration locale
+    tags: ["Plates-bandes individualisées", "Production à la demande", "Zéro gaspillage"],
     imageSrc: "/images/photo-1515150144380-bca9f1650ed9.jpg",
     imageAlt: "Rangées de cultures dans une exploitation agricole",
     products: [
       {
         name: "Épinard",
         description:
-          "Cultivé en plate-bande et produit à la demande, notre épinard est récolté frais pour préserver toute sa qualité nutritionnelle.",
-        // [PLACEHOLDER] Photo d'illustration locale
+          "Cultivé en plate-bande et produit à la demande, notre épinard est récolté frais le matin même de la livraison, pour préserver toute sa qualité nutritionnelle.",
         imageSrc: "/images/photo-1576045057995-568f588f82fb.jpg",
         imageAlt: "Plate-bande d'épinard",
       },
       {
         name: "Oseille",
         description:
-          "Une culture traditionnelle suivie de près, appréciée pour sa saveur et sa place centrale dans l'alimentation locale.",
-        // [PLACEHOLDER] Photo d'illustration locale
+          "Une culture traditionnelle suivie de près, appréciée pour sa saveur acidulée et sa place centrale dans l'alimentation locale congolaise.",
         imageSrc: "/images/photo-1523348837708-15d4a09cfac2.jpg",
         imageAlt: "Plate-bande d'oseille",
       },
       {
         name: "Nduda",
         description:
-          "Cultivée selon les mêmes standards de rigueur, la nduda complète notre offre de légumes-feuilles produits à la demande.",
-        // [PLACEHOLDER] Photo d'illustration locale
+          "Le nduda est cultivé selon les mêmes standards de rigueur que nos autres légumes-feuilles, et complète notre offre de cultures produites à la demande.",
         imageSrc: "/images/photo-1500382017468-9049fed747ef.jpg",
         imageAlt: "Plate-bande de nduda",
       },
@@ -454,39 +449,45 @@ export const agriculturePage: AgriculturePageContent = {
 
   features: {
     eyebrow: "Nos pratiques agricoles",
-    title: "Une production organisée, du semis à la récolte",
+    title: "Ce qui change quand on suit chaque plate-bande individuellement",
     subtitle:
-      "De la préparation du sol à la récolte, nous mettons en œuvre des pratiques agricoles rigoureuses pour produire des cultures saines, tout en respectant les cycles naturels de la terre.",
+      "La différence entre une production industrielle et la nôtre se voit dans les détails — ceux que personne ne remarque, sauf quand ils manquent.",
     items: [
       {
         icon: "barn",
-        title: "Production agricole",
-        description: "Une production organisée, suivie du semis à la récolte.",
+        title: "Suivi plate-bande par plate-bande",
+        description:
+          "Chaque parcelle est inspectée individuellement. On repère les maladies tôt, on ajuste l'irrigation par zone, on récolte au bon moment pour chaque culture.",
       },
       {
         icon: "leaf",
-        title: "Cultures diversifiées",
-        description: "Un éventail de cultures adaptées au climat local.",
-      },
-      {
-        icon: "lock",
-        title: "Exploitation structurée",
-        description: "Une exploitation organisée pour un rendement stable.",
-      },
-      {
-        icon: "check",
-        title: "Qualité des produits",
-        description: "Un contrôle attentif à chaque étape de production.",
+        title: "Cultures adaptées au terroir",
+        description:
+          "On ne force pas une culture qui ne convient pas au sol. On choisit des variétés adaptées au climat de Kinshasa — moins de pertes, meilleur goût.",
       },
       {
         icon: "cycle",
-        title: "Production durable",
-        description: "Des méthodes respectueuses des sols et des ressources.",
+        title: "Production à la demande",
+        description:
+          "On sème quand vous commandez. Pas de stocks qui pourrissent, pas de légumes invendus. La fraîcheur est garantie par construction.",
+      },
+      {
+        icon: "check",
+        title: "Récolte le matin de la livraison",
+        description:
+          "Les légumes-feuilles sont récoltés le matin même de la livraison. C'est la différence entre un légume qui a 48h et un légume qui a 4 heures.",
+      },
+      {
+        icon: "lock",
+        title: "Traçabilité de bout en bout",
+        description:
+          "On sait quelle plate-bande a produit quel lot, quand elle a été semée, quand récoltée. Vous pouvez demander — on a la réponse.",
       },
       {
         icon: "lines",
-        title: "Suivi rigoureux",
-        description: "Une organisation qui accompagne chaque cycle agricole.",
+        title: "Zéro pulvérisation aveugle",
+        description:
+          "Pas de traitement uniforme sur tout le champ. On intervient uniquement là où c'est nécessaire, sur la plate-bande concernée.",
       },
     ],
   },
@@ -499,9 +500,9 @@ export const agriculturePage: AgriculturePageContent = {
   },
 
   stats: [
-    { value: "3", label: "Cultures suivies" },
-    { value: "100%", label: "Ancrage local" },
-    { value: "ONGD", label: "Engagement durable" },
+    { value: "3", label: "Cultures vivrières", numericValue: 3 },
+    { value: "100%", label: "Récolté le matin de la livraison", numericValue: 100, suffix: "%" },
+    { value: "0", label: "Pulvérisation aveugle", numericValue: 0 },
   ],
 
   cta: {
@@ -509,7 +510,7 @@ export const agriculturePage: AgriculturePageContent = {
     title: "Un projet agricole en tête ?",
     text: "Parlons de vos besoins en production agricole ou approvisionnement. Notre équipe vous accompagne à chaque étape.",
     buttonLabel: "Demander un devis",
-    buttonHref: "/#contact",
+    buttonHref: "/contact",
   },
 };
 
@@ -529,7 +530,6 @@ export const aproposPage: AboutPageContent = {
     ],
     paragraph:
       "PVS ONGD ASBL est une organisation congolaise basée à Kinshasa, active dans l'agriculture, l'élevage, la pisciculture, la porcherie et la fourniture de produits pour animaux. Notre vocation est d'accompagner une production locale saine, structurée et durable.",
-    // [PLACEHOLDER] Photo d'illustration locale
     imageSrc: "/images/photo-1625246333195-78d9c38ad449.jpg",
     imageAlt: "Vue aérienne d'une exploitation agricole",
   },
@@ -545,20 +545,18 @@ export const aproposPage: AboutPageContent = {
 
   vision: {
     eyebrow: "Notre vision",
-    title: "Une production maîtrisée au service des communautés",
+    title: "Bâtir une chaîne de valeur locale, de la terre à l'assiette",
     paragraphs: [
-      "PVS ONGD ASBL est une organisation basée à Kinshasa, active dans l'agriculture, l'élevage, la pisciculture, la porcherie et la fourniture de produits pour animaux. Notre vocation est d'accompagner une production locale saine, structurée et durable.",
-      "Notre vision repose sur une conviction simple : une production maîtrisée à chaque étape profite autant aux communautés qu'à la terre. Nous mettons notre expérience de terrain au service de partenaires et de clients exigeants.",
+      "Nous voyons au-delà de la production : chaque culture, chaque animal, chaque étang est un maillon d'une chaîne qui relie le producteur au consommateur. Notre ambition est de raccourcir cette chaîne, pour qu'elle profite d'abord à ceux qui la font vivre.",
+      "C'est cette conviction qui guide nos choix : privilégier les variétés adaptées au terroir, soigner le bien-être animal, maîtriser chaque étape de la production. Parce qu'une production maîtrisée n'est pas un luxe — c'est la condition d'une nourriture saine et d'un territoire vivant.",
     ],
-    tags: ["Vision durable", "Expertise terrain", "Ancrage local"],
+    tags: ["Chaîne de valeur locale", "Bien-être animal", "Souveraineté alimentaire"],
     images: [
       {
-        // [PLACEHOLDER] Photo d'illustration locale
         src: "/images/photo-1625246333195-78d9c38ad449.jpg",
         alt: "Vue aérienne d'une exploitation agricole",
       },
       {
-        // [PLACEHOLDER] Photo d'illustration locale
         src: "/images/photo-1593113598332-cd288d649433.jpg",
         alt: "Travailleur agricole au champ",
       },
@@ -576,30 +574,45 @@ export const aproposPage: AboutPageContent = {
         title: "Agriculture",
         description:
           "Production et exploitation de cultures vivrières adaptées au terroir local.",
+        href: "/agriculture",
+        imageSrc: "/images/photo-1500382017468-9049fed747ef.jpg",
+        imageAlt: "Champ agricole verdoyant au lever du soleil",
       },
       {
         icon: "cattle",
         title: "Élevage",
         description:
           "Un élevage suivi avec soin pour une croissance saine du cheptel.",
+        href: "/elevage",
+        imageSrc: "/images/photo-1500534623283-312aade485b7.jpg",
+        imageAlt: "Troupeau de bétail dans un pâturage",
       },
       {
         icon: "fish",
         title: "Pisciculture",
         description:
           "Élevage de poissons en étangs contrôlés pour une production maîtrisée.",
+        href: "/pisciculture",
+        imageSrc: "/images/photo-1535473895227-bdecb20fb373.jpg",
+        imageAlt: "Étang de pisciculture avec poissons",
       },
       {
         icon: "pig",
         title: "Porcherie",
         description:
           "Une porcherie gérée selon des normes d'hygiène et de bien-être animal strictes.",
+        href: "/porcherie",
+        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
+        imageAlt: "Porcherie moderne et propre",
       },
       {
         icon: "feedbag",
         title: "Produits pour animaux",
         description:
           "Vente de produits et d'aliments de qualité pour un élevage performant.",
+        href: "/produits-animaux",
+        imageSrc: "/images/photo-1604908554049-29bf08f5d1a9.jpg",
+        imageAlt: "Sacs d'aliment pour animaux",
       },
     ],
   },
@@ -640,42 +653,83 @@ export const aproposPage: AboutPageContent = {
     title: "Pourquoi nous choisir ?",
     items: [
       {
-        tag: "Qualité",
-        title: "Des produits contrôlés",
+        tag: "Ancrage local",
+        title: "Une production congolaise, pas une réexportation",
         description:
-          "Un suivi rigoureux à chaque étape, de la production à la livraison.",
+          "Basés à Mont Ngafula, Kinshasa, nous produisons sur place ce que nous vendons. Pas d'importation déguisée — une vraie production locale qui crée des emplois et nourrit la communauté.",
+        icon: "sunrise",
+        imageSrc: "/images/photo-1593113598332-cd288d649433.jpg",
+        imageAlt: "Travailleur agricole au champ",
       },
       {
-        tag: "Expertise",
-        title: "Un savoir-faire de terrain",
+        tag: "Chaîne intégrée",
+        title: "Cinq activités sous un même toit",
         description:
-          "Une connaissance concrète de l'agriculture et de l'élevage local.",
+          "L'aliment que nous produisons nourrit notre propre élevage. Une traçabilité de bout en bout, du champ à l'assiette.",
+        icon: "warehouse",
       },
       {
-        tag: "Production",
-        title: "Des capacités diversifiées",
+        tag: "Mission ONGD",
+        title: "Un engagement au-delà du chiffre",
         description:
-          "Cinq activités complémentaires pour répondre à vos besoins.",
+          "Notre statut d'ONG de développement nous engage : formation, accompagnement technique, création d'emplois locaux.",
+        icon: "trees",
       },
       {
-        tag: "Fiabilité",
-        title: "Un partenaire de confiance",
+        tag: "Suivi sanitaire",
+        title: "Un vétérinaire conseil, des contrôles réguliers",
         description:
-          "Une organisation présente sur le long terme, aux côtés de ses partenaires.",
+          "Visites sanitaires, contrôle qualité à chaque étape, suivi du cheptel. Pas de production au hasard — chaque lot est encadré.",
+        icon: "droplet",
       },
       {
-        tag: "Accompagnement",
-        title: "À votre écoute",
+        tag: "Partenariat durable",
+        title: "On accompagne, on ne livrene pas et disparaît pas",
         description:
-          "Une équipe disponible pour conseiller et orienter chaque projet.",
+          "Conseil, suivi post-livraison, accompagnement de votre projet sur la durée. Nous restons disponibles bien après la transaction.",
+        icon: "fence",
+      },
+    ],
+  },
+
+  history: {
+    eyebrow: "Notre parcours",
+    title: "Une organisation en constante évolution",
+    subtitle:
+      "Depuis nos débuts, nous n'avons cessé d'étendre nos domaines d'activité et de renforcer notre ancrage local.",
+    milestones: [
+      {
+        year: "2018",
+        title: "Les prémices",
+        description:
+          "L'organisation démarre avec une activité agricole sur un petit périmètre à Mont Ngafula, avec l'ambition de structurer une production locale saine.",
+      },
+      {
+        year: "2020",
+        title: "Diversification vers l'élevage",
+        description:
+          "Premiers cheptels bovins et caprins. Mise en place d'un suivi sanitaire rigoureux et d'un partenariat avec un vétérinaire conseil.",
+      },
+      {
+        year: "2022",
+        title: "Pisciculture & porcherie",
+        description:
+          "Création des premiers étangs de pisciculture et lancement de la porcherie. L'organisation couvre désormais quatre domaines complémentaires.",
+      },
+      {
+        year: "2024",
+        title: "Produits pour animaux",
+        description:
+          "Ouverture de la gamme d'aliments et de produits pour animaux, pour accompagner les éleveurs locaux de bout en bout.",
       },
     ],
   },
 
   stats: [
-    { value: "05", label: "Domaines d'activité" },
-    { value: "100%", label: "Ancrage local" },
-    { value: "ONGD", label: "Engagement durable" },
+    { value: "5+", label: "Domaines d'activité", numericValue: 5, suffix: "+" },
+    { value: "6", label: "Ans d'expérience", numericValue: 6, suffix: " ans" },
+    { value: "4", label: "Sites de production", numericValue: 4 },
+    { value: "100%", label: "Ancrage local", numericValue: 100, suffix: "%" },
   ],
 
   cta: {
@@ -683,7 +737,7 @@ export const aproposPage: AboutPageContent = {
     title: "Un projet en tête ?",
     text: "Parlons de vos besoins en agriculture, élevage, pisciculture ou approvisionnement. Notre équipe vous répond rapidement.",
     buttonLabel: "Nous contacter",
-    buttonHref: "/#contact",
+    buttonHref: "/contact",
   },
 };
 
@@ -836,7 +890,7 @@ export const elevagePage: ElevagePageContent = {
     title: "Besoin d'animaux sains ou de conseils en élevage ?",
     text: "Notre équipe vous accompagne dans vos projets d'élevage, de l'approvisionnement en animaux au conseil sanitaire. Contactez-nous pour en discuter.",
     buttonLabel: "Demander un devis",
-    buttonHref: "/#contact",
+    buttonHref: "/contact",
   },
 };
 
@@ -1012,7 +1066,7 @@ export const tarifsPage: TarifsPageContent = {
     title: "Contactez-nous pour un tarif personnalisé",
     text: "Que vous cherchiez un animal, un produit ou un partenariat, notre équipe vous répond rapidement avec une offre adaptée.",
     buttonLabel: "Demander un devis",
-    buttonHref: "/#contact",
+    buttonHref: "/contact",
   },
 };
 
@@ -1172,9 +1226,9 @@ export const pisciculturePage: PisciculturePageContent = {
   },
 
   stats: [
-    { value: "02", label: "Espèces élevées" },
-    { value: "06", label: "Pratiques rigoureuses" },
-    { value: "100%", label: "Eau contrôlée" },
+    { value: "2", label: "Espèces élevées", numericValue: 2 },
+    { value: "6", label: "Paramètres d'eau contrôlés", numericValue: 6 },
+    { value: "100%", label: "Eau analysée régulièrement", numericValue: 100, suffix: "%" },
   ],
 
   cta: {
@@ -1182,7 +1236,7 @@ export const pisciculturePage: PisciculturePageContent = {
     title: "Besoin de poisson frais ou d'alevins ?",
     text: "Notre équipe vous accompagne dans vos besoins en pisciculture, de l'achat de poisson frais au démarrage de votre propre étang. Contactez-nous pour en discuter.",
     buttonLabel: "Demander un devis",
-    buttonHref: "/#contact",
+    buttonHref: "/contact",
   },
 };
 
@@ -1340,9 +1394,9 @@ export const produitsAnimauxPage: ProduitsAnimauxPageContent = {
   },
 
   stats: [
-    { value: "04", label: "Types d'aliments" },
-    { value: "50 kg", label: "Conditionnement standard" },
-    { value: "100%", label: "Conseil inclus" },
+    { value: "4", label: "Types d'aliments", numericValue: 4 },
+    { value: "50", label: "kg par sac standard", numericValue: 50, suffix: " kg" },
+    { value: "100%", label: "Conseil inclus", numericValue: 100, suffix: "%" },
   ],
 
   cta: {
@@ -1505,9 +1559,9 @@ export const porcheriePage: PorcheriePageContent = {
   },
 
   stats: [
-    { value: "03", label: "Catégories de porcs" },
-    { value: "06", label: "Engagements qualité" },
-    { value: "100%", label: "Hygiène contrôlée" },
+    { value: "3", label: "Catégories de porcs", numericValue: 3 },
+    { value: "6", label: "Engagements qualité", numericValue: 6 },
+    { value: "100%", label: "Enclos désinfectés", numericValue: 100, suffix: "%" },
   ],
 
   cta: {

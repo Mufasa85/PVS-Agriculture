@@ -8,7 +8,7 @@ import { contact, contactForm } from "@/lib/content";
 import { trackQuoteRequest } from "@/lib/track";
 
 const fieldClass =
-  "w-full rounded-[10px] border-[1.5px] border-line bg-brand-50 px-[15px] py-[13px] font-sans text-[14.5px] text-ink-900 transition-colors duration-300 focus:border-brand-600 focus:bg-white focus:outline-none";
+  "w-full rounded-[10px] border-[1.5px] border-line bg-brand-50 px-[15px] py-[13px] font-sans text-[14.5px] text-ink-900 transition-[border-color,background-color] duration-200 ease-out focus:border-brand-600 focus:bg-white focus:outline-none";
 const labelClass = "mb-[7px] block text-[13px] font-bold text-brand-900";
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -190,7 +190,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={status === "submitting"}
-          className={`btn mt-1.5 w-full ${
+          className={`btn mt-1.5 w-full transition-[transform,background-color,opacity] duration-200 ease-out active:scale-[0.97] ${
             status === "success"
               ? "bg-[#2f9e5e] text-white"
               : status === "error"

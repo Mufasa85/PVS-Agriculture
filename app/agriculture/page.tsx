@@ -3,6 +3,7 @@ import type { ComponentType } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import CountUp from "@/components/ui/CountUp";
 import Footer from "@/components/layout/Footer";
 import Reveal from "@/components/ui/Reveal";
 import SectionHead from "@/components/ui/SectionHead";
@@ -85,7 +86,7 @@ export default async function AgriculturePage() {
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-brand-900/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-900/60 via-brand-900/70 to-brand-900/80" />
 
         <div className="shell relative z-[1] py-[120px] text-center">
           <Reveal>
@@ -93,7 +94,7 @@ export default async function AgriculturePage() {
               {hero.eyebrow}
             </span>
 
-            <h1 className="mx-auto mt-[18px] max-w-[760px] text-[clamp(36px,5.4vw,58px)] font-bold text-white">
+            <h1 className="mx-auto mt-[18px] max-w-[760px] text-[clamp(36px,5.4vw,58px)] font-bold tracking-[-0.02em] text-white">
               {hero.titleLines.map((line, i) => (
                 <span key={line} className="block">
                   <TitleLine line={line} />
@@ -118,16 +119,31 @@ export default async function AgriculturePage() {
               </Link>
             </div>
 
-            <dl className="mt-[52px] flex flex-wrap justify-center gap-[40px]">
-              {stats.map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <dt className="font-serif text-[28px] font-bold text-gold-500">
-                    {stat.value}
+            {/* ── Stats animées (count-up au scroll) ── */}
+            <dl className="mx-auto mt-[52px] flex max-w-[640px] flex-wrap items-start justify-center gap-x-[40px] gap-y-8">
+              {stats.map((stat, index) => (
+                <Reveal
+                  key={stat.label}
+                  delay={0.15 + index * 0.1}
+                  className="text-center"
+                >
+                  <dt className="font-serif text-[clamp(28px,3.5vw,36px)] font-bold text-gold-500">
+                    {stat.numericValue !== undefined ? (
+                      <CountUp
+                        to={stat.numericValue}
+                        prefix={stat.prefix}
+                        suffix={stat.suffix}
+                        decimals={stat.decimals}
+                        delay={0.2 + index * 0.1}
+                      />
+                    ) : (
+                      stat.value
+                    )}
                   </dt>
-                  <dd className="text-[13px] font-semibold uppercase tracking-[0.06em] text-white/70">
+                  <dd className="mt-1 text-[13px] font-semibold uppercase tracking-[0.06em] text-white/70">
                     {stat.label}
                   </dd>
-                </div>
+                </Reveal>
               ))}
             </dl>
           </Reveal>
@@ -139,7 +155,7 @@ export default async function AgriculturePage() {
         <div className="shell grid items-center gap-16 nav:grid-cols-[1.1fr_0.9fr]">
           <Reveal>
             <span className="eyebrow">{overview.eyebrow}</span>
-            <h2 className="mt-[14px] text-[clamp(28px,3.6vw,38px)]">
+            <h2 className="mt-[14px] text-[clamp(28px,3.6vw,38px)] tracking-[-0.01em]">
               {overview.title}
             </h2>
 
@@ -190,9 +206,10 @@ export default async function AgriculturePage() {
       <section className="bg-white py-[76px] nav:py-[110px]">
         <div className="shell">
           <Reveal className="mb-14 text-center">
-            <span className="eyebrow">{overview.eyebrow}</span>
-            <h2 className="mt-[14px] text-[clamp(28px,3.6vw,38px)]">
-              Nos cultures produites à la demande
+            {/* Bug corrigé : eyebrow dédié au lieu de reprendre overview.eyebrow */}
+            <span className="eyebrow">Nos cultures</span>
+            <h2 className="mt-[14px] text-[clamp(28px,3.6vw,38px)] tracking-[-0.01em]">
+              Produites à la demande, récoltées le matin de la livraison
             </h2>
           </Reveal>
 
@@ -203,7 +220,7 @@ export default async function AgriculturePage() {
                 <Reveal key={product.name}>
                   <div className="grid items-center gap-10 nav:grid-cols-2 nav:gap-16">
                     <div
-                      className={`relative aspect-[4/3] overflow-hidden rounded-pvs-lg bg-brand-100 shadow-float ${
+                      className={`group relative aspect-[4/3] overflow-hidden rounded-pvs-lg bg-brand-100 shadow-float ${
                         reversed ? "nav:order-2" : ""
                       }`}
                     >
@@ -212,7 +229,7 @@ export default async function AgriculturePage() {
                         alt={product.imageAlt}
                         fill
                         sizes="(max-width: 900px) 90vw, 45vw"
-                        className="object-cover"
+                        className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                       />
                     </div>
 
@@ -220,7 +237,7 @@ export default async function AgriculturePage() {
                       <span className="font-serif text-[15px] font-bold text-gold-600">
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                      <h3 className="mt-3 text-[clamp(22px,2.8vw,30px)] font-bold text-brand-900">
+                      <h3 className="mt-3 text-[clamp(22px,2.8vw,30px)] font-bold tracking-[-0.01em] text-brand-900">
                         {product.name}
                       </h3>
                       <p className="mt-4 text-[15.5px] leading-[1.7] text-ink-700">
@@ -236,7 +253,7 @@ export default async function AgriculturePage() {
       </section>
 
       {/* ── Pratiques agricoles ── */}
-      <section className="bg-white py-[76px] nav:py-[110px]">
+      <section className="bg-brand-50 py-[76px] nav:py-[110px]">
         <div className="shell">
           <Reveal>
             <SectionHead
@@ -254,8 +271,8 @@ export default async function AgriculturePage() {
                 <Reveal
                   key={item.title}
                   as="li"
-                  delay={index * 0.08}
-                  className="rounded-pvs border border-line bg-white px-[22px] py-8 transition-all duration-[350ms] ease-pvs hover:-translate-y-1.5 hover:bg-brand-50 hover:shadow-card"
+                  delay={index * 0.06}
+                  className="rounded-pvs border border-line bg-white px-[22px] py-8 transition-[transform,box-shadow,background-color] duration-200 ease-out active:scale-[0.97] hover:-translate-y-1.5 hover:bg-brand-50 hover:shadow-card"
                 >
                   <span className="mb-[18px] flex h-12 w-12 items-center justify-center rounded-[11px] bg-brand-100 text-brand-700">
                     <Icon size={22} />
@@ -281,7 +298,7 @@ export default async function AgriculturePage() {
               <span className="eyebrow text-gold-500 before:bg-gold-500">
                 {pricing.eyebrow}
               </span>
-              <h2 className="mt-[14px] text-[clamp(28px,3.6vw,38px)] text-white">
+              <h2 className="mt-[14px] text-[clamp(28px,3.6vw,38px)] tracking-[-0.01em] text-white">
                 {pricing.title}
               </h2>
               <p className="mt-4 text-[15px] text-white/70">
@@ -293,8 +310,8 @@ export default async function AgriculturePage() {
               {pricingItems.map((item, index) => (
                 <Reveal
                   key={item.id}
-                  delay={index * 0.08}
-                  className="group overflow-hidden rounded-pvs-lg border border-white/10 bg-white/[0.06] backdrop-blur-sm transition-all duration-[350ms] ease-pvs hover:-translate-y-1.5 hover:border-white/20 hover:bg-white/[0.1]"
+                  delay={index * 0.06}
+                  className="group overflow-hidden rounded-pvs-lg border border-white/10 bg-white/[0.06] backdrop-blur-sm transition-[transform,box-shadow,border-color,background-color] duration-200 ease-out active:scale-[0.97] hover:-translate-y-1.5 hover:border-white/20 hover:bg-white/[0.1]"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden bg-brand-800">
                     <Image
@@ -350,7 +367,7 @@ export default async function AgriculturePage() {
         <div className="shell">
           <Reveal className="mx-auto max-w-[640px] text-center">
             <span className="eyebrow">{cta.eyebrow}</span>
-            <h2 className="mt-[14px] text-[clamp(30px,4vw,44px)]">
+            <h2 className="mt-[14px] text-[clamp(30px,4vw,44px)] tracking-[-0.01em]">
               {cta.title}
             </h2>
             <p className="mt-4 text-[17px] text-ink-500">{cta.text}</p>
