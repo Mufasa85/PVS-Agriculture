@@ -21,7 +21,9 @@ yarn-error.log*
 public/uploads/
 
 # Dumps BDD et archive de la maquette d'origine
+# (mais PAS les migrations Prisma : elles doivent être versionnées)
 *.sql
+!prisma/migrations/**/*.sql
 files.zip
 
 /packages

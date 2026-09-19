@@ -6,10 +6,28 @@ import { contact, siteMeta } from "@/lib/content";
 /**
  * URL publique canonique du site (sans slash final).
  * Définir NEXT_PUBLIC_SITE_URL en production (ex. https://www.pvs-ongd.cd).
+ *
+ * On retombe sur le localhost si la variable est absente OU définie à une
+ * chaîne vide (le `??` ne couvre que `null`/`undefined`, pas `""`).
+ * On valide aussi que l'URL est bien parsable pour éviter
+ * `TypeError: Invalid URL` dans `new URL(siteUrl)` lors du build Next.js.
  */
-export const siteUrl = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
-).replace(/\/+$/, "");
+const FALLBACK_SITE_URL = "http://localhost:3000";
+
+function resolveSiteUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const candidate = raw && raw.length > 0 ? raw : FALLBACK_SITE_URL;
+  const trimmed = candidate.replace(/\/+$/, "");
+  try {
+    // Validation : lève si l'URL est invalide.
+    new URL(trimmed);
+    return trimmed;
+  } catch {
+    return FALLBACK_SITE_URL;
+  }
+}
+
+export const siteUrl = resolveSiteUrl();
 
 export const siteName = "PVS ONGD ASBL";
 
