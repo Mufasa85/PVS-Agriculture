@@ -3,7 +3,9 @@ import type { NextRequest } from "next/server";
 
 import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from "@/lib/auth";
 
-export const runtime = "nodejs";
+// Note : `export const runtime` est interdit dans un fichier `proxy.ts`.
+// Le proxy s'exécute toujours sur le runtime Node.js par défaut sous
+// Next.js 16, donc cette déclaration déclenche une erreur de build.
 
 function buildCsp(nonce: string): string {
   const isDev = process.env.NODE_ENV === "development";
