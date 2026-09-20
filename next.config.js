@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Évite que Turbopack remonte au-delà du projet pour deviner la racine
-  // (un pnpm-lock.yaml traîne dans le dossier utilisateur parent).
-  turbopack: {
-    root: __dirname,
-  },
+  // On force Webpack (au lieu de Turbopack) car les serveurs Hostinger
+  // tournent sur une vieille glibc (< 2.29) qui ne supporte pas les
+  // binaires natifs @next/swc-linux-x64-gnu. Turbopack n'accepte pas
+  // les bindings WASM-only, donc on retombe sur Webpack qui les accepte.
   serverExternalPackages: ["geoip-lite", "i18n-iso-countries"],
   // Toutes les images de contenu sont locales (public/images) — pas de
   // remotePatterns : les seules URLs next/image acceptées sont /images/*

@@ -10,7 +10,7 @@ function buildCsp(nonce: string): string {
   return [
     "default-src 'self'",
     // 'strict-dynamic' : les scripts chargés par un script nonce sont fiables.
-    // unsafe-eval requis en dev (Turbopack HMR).
+    // unsafe-eval requis en dev (Webpack HMR).
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDev ? " 'unsafe-eval'" : ""}`,
     // Tailwind produit du CSS compilé, mais framer-motion et les libs de
     // charts injectent des styles inline.
@@ -26,7 +26,7 @@ function buildCsp(nonce: string): string {
   ].join("; ");
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
