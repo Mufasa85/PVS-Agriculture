@@ -2,41 +2,21 @@ import type { Metadata } from "next";
 import type { Product } from "@prisma/client";
 
 import { contact, siteMeta } from "@/lib/content";
+import { logoAbsoluteUrl, ogCover, siteName, siteUrl } from "@/lib/og";
+
+// `siteUrl` et `siteName` sont définis dans `@/lib/og` (module "feuille"
+// sans dépendance vers ce fichier, pour éviter les cycles d'import).
+// On les réexporte ici pour la rétro-compatibilité avec les imports
+// existants qui font `import { siteUrl } from "@/lib/seo"`.
+export { siteUrl, siteName };
 
 /**
- * URL publique canonique du site (sans slash final).
- * Définir NEXT_PUBLIC_SITE_URL en production (ex. https://www.pvs-ongd.cd).
+ * Image Open Graph de couverture — réexport depuis lib/og.ts pour la
+ * rétro-compatibilité avec les imports existants (`ogImage`).
  *
- * On retombe sur le localhost si la variable est absente OU définie à une
- * chaîne vide (le `??` ne couvre que `null`/`undefined`, pas `""`).
- * On valide aussi que l'URL est bien parsable pour éviter
- * `TypeError: Invalid URL` dans `new URL(siteUrl)` lors du build Next.js.
+ * @deprecated Préférer l'import depuis `@/lib/og` : `import { ogCover } from "@/lib/og"`.
  */
-const FALLBACK_SITE_URL = "http://localhost:3000";
-
-function resolveSiteUrl(): string {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  const candidate = raw && raw.length > 0 ? raw : FALLBACK_SITE_URL;
-  const trimmed = candidate.replace(/\/+$/, "");
-  try {
-    // Validation : lève si l'URL est invalide.
-    new URL(trimmed);
-    return trimmed;
-  } catch {
-    return FALLBACK_SITE_URL;
-  }
-}
-
-export const siteUrl = resolveSiteUrl();
-
-export const siteName = "PVS ONGD ASBL";
-
-export const ogImage = {
-  url: "/images/og-cover.jpg",
-  width: 1200,
-  height: 630,
-  alt: "PVS ONGD ASBL — agriculture, élevage et pisciculture à Kinshasa",
-} as const;
+export const ogImage = ogCover;
 
 /**
  * Métadonnées complètes d'une page publique : title/description + URL
@@ -63,33 +43,81 @@ export function pageMetadata({
       siteName,
       locale: "fr_FR",
       type: "website",
-      images: [ogImage],
+      images: [
+        {
+          url: ogCover.url,
+          width: ogCover.width,
+          height: ogCover.height,
+          alt: ogCover.alt,
+          type: ogCover.type,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [ogImage.url],
+      images: [
+        {
+          url: ogCover.url,
+          alt: ogCover.alt,
+        },
+      ],
     },
   };
 }
 
 /** Données structurées schema.org — organisation (layout racine). */
 export function organizationJsonLd() {
+  // Liste des réseaux sociaux : alimente `sameAs` (Google Knowledge Graph)
+  // et permet à Google d'associer l'entité à vos profils officiels.
+  const sameAs: string[] = [];
+  if (process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK)
+    sameAs.push(process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK);
+  if (process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN)
+    sameAs.push(process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN);
+  if (process.env.NEXT_PUBLIC_SOCIAL_YOUTUBE)
+    sameAs.push(process.env.NEXT_PUBLIC_SOCIAL_YOUTUBE);
+
   return {
     "@context": "https://schema.org",
     "@type": "NGO",
+    "@id": `${siteUrl}/#organization`,
     name: siteName,
-    alternateName: "PVS",
+    alternateName: ["PVS", "PVS ONGD", "PVS ASBL"],
+    legalName: "PVS ONGD ASBL",
     url: siteUrl,
+    logo: {
+      "@type": "ImageObject",
+      url: logoAbsoluteUrl,
+      width: 87,
+      height: 71,
+    },
+    image: logoAbsoluteUrl,
     description: siteMeta.description,
     telephone: contact.phone,
+    email: contact.email,
     address: {
       "@type": "PostalAddress",
       streetAddress: "3 Avenue Dokolo, Q/ Kimwenza gare, C/ Mont Ngafula",
       addressLocality: "Kinshasa",
+      addressRegion: "Kinshasa",
+      postalCode: "—",
       addressCountry: "CD",
     },
+    // Point de contact public pour le formulaire de contact.
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "customer service",
+        telephone: contact.phone,
+        email: contact.email,
+        availableLanguage: ["French", "Lingala"],
+        areaServed: "CD",
+      },
+    ],
+    // Profils sociaux pour Google Knowledge Graph (Knowledge Panel).
+    ...(sameAs.length > 0 ? { sameAs } : {}),
   };
 }
 
