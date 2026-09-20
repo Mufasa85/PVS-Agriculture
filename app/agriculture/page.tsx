@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/icons";
 import JsonLd from "@/components/seo/JsonLd";
 import { agriculturePage } from "@/lib/content";
+import { safeDbCall } from "@/lib/db-resilience";
 import { prisma } from "@/lib/prisma";
 import { formatProductPrice } from "@/lib/products";
 import { pageMetadata, productListJsonLd } from "@/lib/seo";
@@ -64,11 +65,20 @@ export default async function AgriculturePage() {
   const { hero, overview, features, pricing, stats, cta } = agriculturePage;
 
   // Limité aux 4 premiers produits publiés (la grille tient sur une ligne).
-  const pricingItems = await prisma.product.findMany({
-    where: { category: "agriculture", deletedAt: null, isPublished: true },
-    orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
-    take: 4,
-  });
+  // `safeDbCall` évite de faire échouer le build si la DB est inaccessible
+  // au moment du prérendu (ex. credentials non encore configurés sur
+  // l'hébergeur). La grille reste vide dans ce cas, l'ISR la remplira
+  // au premier hit valide.
+  const pricingItems = await safeDbCall(
+    () =>
+      prisma.product.findMany({
+        where: { category: "agriculture", deletedAt: null, isPublished: true },
+        orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+        take: 4,
+      }),
+    [],
+    "agriculture:pricingItems",
+  );
 
   return (
     <>

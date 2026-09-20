@@ -6,6 +6,7 @@ import TarifsFilter from "@/components/sections/TarifsFilter";
 import JsonLd from "@/components/seo/JsonLd";
 import Reveal from "@/components/ui/Reveal";
 import { tarifsPage } from "@/lib/content";
+import { safeDbCall } from "@/lib/db-resilience";
 import { prisma } from "@/lib/prisma";
 import { getActiveCategories, serializeProduct } from "@/lib/products";
 import { pageMetadata, productListJsonLd } from "@/lib/seo";
@@ -40,12 +41,19 @@ function TitleLine({ line }: { line: string }) {
 export default async function TarifsPage() {
   const { hero, info, cta } = tarifsPage;
 
+  // Chaque appel Prisma est protégé individuellement pour ne pas faire
+  // échouer le build si la DB est inaccessible au moment du prérendu.
   const [products, categories] = await Promise.all([
-    prisma.product.findMany({
-      where: { deletedAt: null, isPublished: true },
-      orderBy: [{ category: "asc" }, { sortOrder: "asc" }, { name: "asc" }],
-    }),
-    getActiveCategories(),
+    safeDbCall(
+      () =>
+        prisma.product.findMany({
+          where: { deletedAt: null, isPublished: true },
+          orderBy: [{ category: "asc" }, { sortOrder: "asc" }, { name: "asc" }],
+        }),
+      [],
+      "tarifs:products",
+    ),
+    safeDbCall(() => getActiveCategories(), [], "tarifs:categories"),
   ]);
 
   const filterCategories = [
