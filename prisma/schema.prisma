@@ -4,7 +4,12 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  // `DATABASE_URL` est construite au démarrage de l'application (et de
+  // la CLI Prisma) par `lib/prisma.ts` → `buildDatabaseUrl()` à partir
+  // des variables séparées `DB_HOST` / `DB_USER` / `DB_PASSWORD` /
+  // `DB_NAME` / `DB_PORT`. Si `DATABASE_URL` est déjà définie (ex. dev
+  // local), elle est utilisée telle quelle en priorité.
+  url = env("DATABASE_URL")
 }
 
 enum Currency {
