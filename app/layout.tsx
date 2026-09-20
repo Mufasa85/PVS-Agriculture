@@ -8,7 +8,15 @@ import ServiceWorkerRegister from "@/components/layout/ServiceWorkerRegister";
 import SiteChrome from "@/components/layout/SiteChrome";
 import JsonLd from "@/components/seo/JsonLd";
 import { siteMeta } from "@/lib/content";
-import { ogImage, organizationJsonLd, siteName, siteUrl } from "@/lib/seo";
+import {
+  icons as ogIcons,
+  ogCover,
+  openGraphBase,
+  robots,
+  social,
+  twitterBase,
+} from "@/lib/og";
+import { organizationJsonLd, siteName, siteUrl } from "@/lib/seo";
 
 import "./globals.css";
 
@@ -24,50 +32,113 @@ const fraunces = Fraunces({
   variable: "--font-fraunces",
 });
 
+/**
+ * Viewport : couleurs de la barre du navigateur mobile.
+ * - `themeColor` : medium (Chrome Android, Edge).
+ * - `themeColor: media` : variante sombre (Safari iOS, dark mode).
+ */
 export const viewport: Viewport = {
-  themeColor: "#3b52c4",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#3b52c4" },
+    { media: "(prefers-color-scheme: dark)", color: "#1a2456" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  colorScheme: "light",
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: siteMeta.title,
+  title: {
+    default: siteMeta.title,
+    template: `%s | ${siteName}`,
+  },
   description: siteMeta.description,
-  alternates: { canonical: "/" },
   applicationName: "PVS",
+  keywords: [
+    "PVS",
+    "ONGD",
+    "ASBL",
+    "Kinshasa",
+    "RDC",
+    "République Démocratique du Congo",
+    "agriculture",
+    "élevage",
+    "pisciculture",
+    "porcherie",
+    "produits pour animaux",
+    "ONG congolaise",
+  ],
+  authors: [{ name: siteName, url: siteUrl }],
+  creator: siteName,
+  publisher: siteName,
+  category: "agriculture",
+  robots,
+  alternates: {
+    canonical: "/",
+    // Décommentez et complétez si vous déployez plusieurs langues :
+    // languages: {
+    //   "fr-CD": "/",
+    //   "en-US": "/en",
+    // },
+  },
+  // Lien vers le manifest PWA pour les progressive web apps.
+  manifest: "/pvs-pwa/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "PVS",
   },
-  icons: {
-    icon: [
-      {
-        url: "/pvs-pwa/icons/favicon-32x32.png",
-        sizes: "32x32",
-        type: "image/png",
-      },
-      {
-        url: "/pvs-pwa/icons/favicon-16x16.png",
-        sizes: "16x16",
-        type: "image/png",
-      },
-    ],
-    apple: [{ url: "/pvs-pwa/icons/apple-touch-icon.png", sizes: "180x180" }],
+  formatDetection: {
+    telephone: false,
+    email: false,
+    address: false,
   },
+  icons: ogIcons,
+  // ─── Open Graph (Facebook, LinkedIn, WhatsApp, Discord, Slack…) ───
   openGraph: {
+    ...openGraphBase,
     title: siteMeta.title,
     description: siteMeta.description,
     url: "/",
-    siteName,
-    locale: "fr_FR",
-    type: "website",
-    images: [ogImage],
+    // `logo` n'est PAS un champ OG officiel mais certains crawlers
+    // (Facebook notamment) le lisent comme aperçu alternatif.
+    // On le met quand même via `metadata.other` plus bas.
+    images: [
+      {
+        url: ogCover.url,
+        width: ogCover.width,
+        height: ogCover.height,
+        alt: ogCover.alt,
+        type: ogCover.type,
+      },
+    ],
   },
+  // ─── Twitter Cards ────────────────────────────────────────────────
   twitter: {
-    card: "summary_large_image",
+    ...twitterBase,
     title: siteMeta.title,
     description: siteMeta.description,
-    images: [ogImage.url],
+    // Si vous avez un compte Twitter/X officiel, renseignez :
+    // site: "@pvs_ongd",
+    // creator: "@pvs_ongd",
+    // Pour l'instant on les omet (réduisent les warnings Twitter si
+    // le compte n'existe pas).
+    ...(social.twitter
+      ? { site: social.twitter, creator: social.twitter }
+      : {}),
+  },
+  // ─── Champs additionnels (générés tels quels dans le <head>) ─────
+  other: {
+    // Facebook Open Graph — `og:logo` pour l'aperçu profil/partage.
+    "og:logo": `${siteUrl}/pvs-pwa/logo-fixed.png`,
+    // Bing / Microsoft.
+    "msapplication-TileColor": "#3b52c4",
+    "msapplication-TileImage": "/pvs-pwa/icons/icon-144x144.png",
+    // Sécurité : empêche la transformation automatique des numéros de
+    // téléphone en liens cliquables sur iOS Safari (déjà couvert par
+    // formatDetection ci-dessus).
+    "theme-color": "#3b52c4",
   },
 };
 
