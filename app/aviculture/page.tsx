@@ -13,8 +13,12 @@ import {
   FeedBagIcon,
   LockIcon,
 } from "@/components/ui/icons";
+import JsonLd from "@/components/seo/JsonLd";
 import { aviculturePage } from "@/lib/content";
-import { pageMetadata } from "@/lib/seo";
+import { safeDbCall } from "@/lib/db-resilience";
+import { prisma } from "@/lib/prisma";
+import { formatProductPrice } from "@/lib/products";
+import { pageMetadata, productListJsonLd } from "@/lib/seo";
 
 // ISR : page servie depuis le cache, régénérée au plus toutes les 60 s
 // (+ invalidation immédiate via revalidatePath lors des mutations admin).
@@ -53,11 +57,35 @@ const featureIcons: Record<
   lock: LockIcon,
 };
 
-export default function AviculturePage() {
+export default async function AviculturePage() {
   const { hero, overview, features, pricing, stats, cta } = aviculturePage;
+
+  // Limité aux 4 premiers produits publiés (la grille tient sur une ligne).
+  // On récupère à la fois les poulets et les œufs, l'aviculture regroupant
+  // ces deux familles. `safeDbCall` évite de faire échouer le build si la
+  // DB est inaccessible au moment du prérendu (ex. credentials non encore
+  // configurés sur l'hébergeur). La grille reste vide dans ce cas, l'ISR
+  // la remplira au premier hit valide.
+  const pricingItems = await safeDbCall(
+    () =>
+      prisma.product.findMany({
+        where: {
+          category: { in: ["poulets", "oeufs"] },
+          deletedAt: null,
+          isPublished: true,
+        },
+        orderBy: [{ category: "asc" }, { sortOrder: "asc" }, { name: "asc" }],
+        take: 4,
+      }),
+    [],
+    "aviculture:pricingItems",
+  );
 
   return (
     <>
+      {pricingItems.length > 0 && (
+        <JsonLd data={productListJsonLd(pricingItems)} />
+      )}
       {/* ── Hero plein écran ── */}
       <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden">
         <Image
@@ -290,9 +318,9 @@ export default function AviculturePage() {
           </Reveal>
 
           <div className="grid grid-cols-1 gap-6 mid:grid-cols-2 nav:grid-cols-4">
-            {pricing.items.map((item, index) => (
+            {pricingItems.map((item, index) => (
               <Reveal
-                key={item.name}
+                key={item.id}
                 delay={index * 0.08}
                 className="group overflow-hidden rounded-pvs-lg border border-white/10 bg-white/[0.06] backdrop-blur-sm transition-[transform,box-shadow,border-color,background-color] duration-200 ease-out hover:-translate-y-1.5 hover:border-white/20 hover:bg-white/[0.1] active:scale-[0.97]"
               >
@@ -322,7 +350,7 @@ export default function AviculturePage() {
                   <div className="flex items-end justify-between border-t border-white/10 pt-4">
                     <div>
                       <span className="block font-serif text-[20px] font-bold text-gold-500">
-                        {item.price}
+                        {formatProductPrice(item)}
                       </span>
                       {item.unit && (
                         <span className="text-[12px] text-white/50">
