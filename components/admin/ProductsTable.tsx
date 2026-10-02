@@ -23,12 +23,9 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 import {
-  Copy,
   Download,
-  ExternalLink,
   GripVertical,
   Package,
-  Pencil,
   Plus,
   Search,
   Trash2,
@@ -36,8 +33,10 @@ import {
 } from "lucide-react";
 
 import { CategoryIcon } from "@/components/admin/CategoryIcon";
-import DeleteProductButton from "@/components/admin/DeleteProductButton";
 import ProductModal from "@/components/admin/ProductModal";
+import RowActionsMenu, {
+  rowActionIcons,
+} from "@/components/admin/RowActionsMenu";
 import TrashPanel from "@/components/admin/TrashPanel";
 import { formatProductPrice } from "@/lib/products";
 import type { CategoryInfo } from "@/lib/products";
@@ -72,6 +71,7 @@ function SortableProductRow({
   onEdit: (id: number) => void;
   onDuplicate: (product: ProductRowWithCategory) => void;
 }) {
+  const router = useRouter();
   const {
     attributes,
     listeners,
@@ -150,33 +150,57 @@ function SortableProductRow({
       </div>
 
       {/* Actions */}
-      <div className="flex w-[140px] shrink-0 items-center justify-end gap-1">
-        <a
-          href={`/${product.category}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Voir sur le site"
-          className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-line text-ink-500 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
-        >
-          <ExternalLink size={13} />
-        </a>
-        <button
-          type="button"
-          onClick={() => onDuplicate(product)}
-          title="Dupliquer"
-          className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-line text-ink-500 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
-        >
-          <Copy size={13} />
-        </button>
-        <button
-          type="button"
-          onClick={() => onEdit(product.id)}
-          title="Éditer"
-          className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-line text-ink-500 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
-        >
-          <Pencil size={13} />
-        </button>
-        <DeleteProductButton id={product.id} name={product.name} />
+      <div className="flex w-[60px] shrink-0 items-center justify-end">
+        <RowActionsMenu
+          label={`Actions pour ${product.name}`}
+          actions={[
+            {
+              key: "view",
+              label: "Voir sur le site",
+              icon: rowActionIcons.view,
+              href: `/${product.category}`,
+            },
+            {
+              key: "edit",
+              label: "Modifier",
+              icon: rowActionIcons.edit,
+              onClick: () => onEdit(product.id),
+            },
+            {
+              key: "duplicate",
+              label: "Dupliquer",
+              icon: rowActionIcons.duplicate,
+              onClick: () => onDuplicate(product),
+            },
+            {
+              key: "delete",
+              label: "Supprimer",
+              icon: rowActionIcons.delete,
+              variant: "danger",
+              confirm: {
+                title: "Supprimer le produit",
+                message: `« ${product.name} » sera déplacé dans la corbeille et restera restaurable.`,
+                onConfirm: async () => {
+                  const res = await fetch(
+                    `/api/admin/products/${product.id}`,
+                    { method: "DELETE" },
+                  );
+                  if (res.ok) {
+                    toast.success(
+                      `« ${product.name} » déplacé dans la corbeille.`,
+                    );
+                    router.refresh();
+                  } else {
+                    const data = await res.json().catch(() => null);
+                    toast.error(
+                      data?.error ?? "Erreur lors de la suppression.",
+                    );
+                  }
+                },
+              },
+            },
+          ]}
+        />
       </div>
     </div>
   );
@@ -501,7 +525,7 @@ export default function ProductsTable({
               <span className="hidden flex-[2] nav:block">Catégorie</span>
               <span className="flex-1 text-right nav:text-left">Prix</span>
               <span className="hidden flex-1 nav:block">Statut</span>
-              <span className="flex-shrink-0 w-[140px] text-right">
+              <span className="flex-shrink-0 w-[60px] text-right">
                 Actions
               </span>
             </div>

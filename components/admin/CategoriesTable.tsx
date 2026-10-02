@@ -20,13 +20,15 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import { ExternalLink, GripVertical, Pencil, Plus, Tag } from "lucide-react";
+import { GripVertical, Plus, Tag } from "lucide-react";
 
 import { CategoryIcon } from "@/components/admin/CategoryIcon";
 import CategoryModal, {
   type CategoryModalData,
 } from "@/components/admin/CategoryModal";
-import DeleteCategoryButton from "@/components/admin/DeleteCategoryButton";
+import RowActionsMenu, {
+  rowActionIcons,
+} from "@/components/admin/RowActionsMenu";
 
 type CategoryRow = {
   id: number;
@@ -45,6 +47,7 @@ function SortableCategoryRow({
   count: number;
   onEdit: (cat: CategoryRow) => void;
 }) {
+  const router = useRouter();
   const {
     attributes,
     listeners,
@@ -118,25 +121,51 @@ function SortableCategoryRow({
 
       {/* Actions */}
       <td className="px-5 py-4">
-        <div className="flex items-center justify-end gap-1.5">
-          <a
-            href={`/${cat.slug}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Voir sur le site"
-            className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-line text-ink-500 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
-          >
-            <ExternalLink size={14} />
-          </a>
-          <button
-            type="button"
-            onClick={() => onEdit(cat)}
-            title="Éditer"
-            className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-line text-ink-500 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
-          >
-            <Pencil size={14} />
-          </button>
-          <DeleteCategoryButton id={cat.id} name={cat.name} />
+        <div className="flex items-center justify-end">
+          <RowActionsMenu
+            label={`Actions pour ${cat.name}`}
+            actions={[
+              {
+                key: "view",
+                label: "Voir sur le site",
+                icon: rowActionIcons.view,
+                href: `/${cat.slug}`,
+              },
+              {
+                key: "edit",
+                label: "Modifier",
+                icon: rowActionIcons.edit,
+                onClick: () => onEdit(cat),
+              },
+              {
+                key: "delete",
+                label: "Supprimer",
+                icon: rowActionIcons.delete,
+                variant: "danger",
+                confirm: {
+                  title: "Supprimer la catégorie",
+                  message: `Supprimer la catégorie « ${cat.name} » ? Cette action est irréversible.`,
+                  onConfirm: async () => {
+                    const res = await fetch(
+                      `/api/admin/categories/${cat.id}`,
+                      { method: "DELETE" },
+                    );
+                    if (res.ok) {
+                      toast.success(
+                        `Catégorie « ${cat.name} » supprimée.`,
+                      );
+                      router.refresh();
+                    } else {
+                      const data = await res.json().catch(() => null);
+                      toast.error(
+                        data?.error ?? "Erreur lors de la suppression.",
+                      );
+                    }
+                  },
+                },
+              },
+            ]}
+          />
         </div>
       </td>
     </tr>
