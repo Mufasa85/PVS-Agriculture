@@ -1,6 +1,6 @@
-import geoip from "geoip-lite";
 import { NextResponse } from "next/server";
 import { anonymizeIp, recordAnalyticsEvent } from "@/lib/analytics";
+import { lookupCountry } from "@/lib/geoip";
 import { rateLimit } from "@/lib/rate-limit";
 import { trackEventSchema } from "@/lib/validation";
 
@@ -69,9 +69,9 @@ export async function POST(request: Request) {
       device = "Tablet";
     }
 
-    // Géolocalisation sur l'IP réelle, puis anonymisation avant stockage.
-    const geo = geoip.lookup(realIp);
-    const country = geo?.country || null;
+    // Géolocalisation sur l'IP réelle (offline + fallback réseau), puis
+    // anonymisation avant stockage.
+    const country = await lookupCountry(realIp);
     const ipAddress = anonymizeIp(realIp);
 
     const mergedMetadata = {

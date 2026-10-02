@@ -26,4 +26,12 @@ public/uploads/
 !prisma/migrations/**/*.sql
 files.zip
 
+# Base MaxMind GeoLite2-Country — versionnée pour que Hostinger (sans CLI)
+# puisse la servir sans re-téléchargement. ~22 Mo, à rafraîchir via :
+#   MAXMIND_LICENSE_KEY=... npm run geoip:update
+# puis `git add data/ && git commit`.
+#
+# Les bases GeoLite2-City (qu'on n'utilise pas) restent gitignored.
+/data/geoip-city*.dat
+
 /packages

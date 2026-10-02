@@ -3,28 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
     "build": "next build --webpack",
-    "start": "next start",
-    "lint": "eslint .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
+    "dev": "next dev --webpack",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "geoip:update": "tsx scripts/update-geoip-db.ts",
+    "lint": "eslint .",
+    "start": "next start",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx,mjs}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,css,md,html,yml,yaml}": [
-      "prettier --write"
-    ]
+    "*.{ts,tsx,js,jsx,mjs}": ["eslint --fix", "prettier --write"],
+    "*.{json,css,md,html,yml,yaml}": ["prettier --write"]
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

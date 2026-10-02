@@ -1,5 +1,5 @@
-import geoip from "geoip-lite";
 import { prisma } from "@/lib/prisma";
+import { lookupCountry } from "@/lib/geoip";
 
 async function backfillCountries() {
   console.log("🌍 Backfill: Starting country enrichment for analytics events...");
@@ -29,8 +29,7 @@ async function backfillCountries() {
       continue;
     }
 
-    const geo = geoip.lookup(event.ipAddress);
-    const country = geo?.country || null;
+    const country = await lookupCountry(event.ipAddress);
 
     if (!country) {
       skipped++;

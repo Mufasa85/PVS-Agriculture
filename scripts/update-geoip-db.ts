@@ -78,6 +78,18 @@ if (result.status !== 0) {
   die(`Échec de la mise à jour (code ${result.status}).`);
 }
 
+// Le script upstream de geoip-lite télécharge aussi GeoLite2-City
+// (~175 Mo) qu'on n'utilise pas — on le supprime pour économiser
+// l'espace disque et garder le repo léger.
+for (const cityFile of [
+  resolve(DATA_DIR, "geoip-city.dat"),
+  resolve(DATA_DIR, "geoip-city6.dat"),
+  resolve(DATA_DIR, "geoip-city-names.dat"),
+  resolve(DATA_DIR, "city.checksum"),
+]) {
+  rmSync(cityFile, { force: true });
+}
+
 // Clean tmp
 rmSync(TMP_DIR, { recursive: true, force: true });
 
