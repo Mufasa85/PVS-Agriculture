@@ -15,6 +15,7 @@ import type {
   AboutPageContent,
   Activity,
   AgriculturePageContent,
+  AviculturePageContent,
   ContactInfo,
   Cta,
   ElevagePageContent,
@@ -95,11 +96,17 @@ export const servicesLinks: ServiceLink[] = [
     href: "/produits-animaux",
     icon: "feedbag",
   },
+  {
+    label: "Aviculture",
+    description: "Poulets de chair et pondeuses élevés avec soin.",
+    href: "/aviculture",
+    icon: "bird",
+  },
 ];
 
 export const navCta: Cta = { label: "Nous contacter", href: "/contact" };
 
-export const whatsappHref = "https://wa.me/243999916552";
+export const whatsappHref = "https://wa.me/243854291708";
 
 export const hero = {
   eyebrow: "Agriculture · Élevage · Pisciculture",
@@ -330,9 +337,9 @@ export const contact: ContactInfo = {
   title: "Parlons de votre projet",
   subtitle:
     "Une question, une demande de devis ou un besoin en agriculture, élevage ou pisciculture ? Notre équipe vous répond rapidement.",
-  phone: "+243 999 916 552",
-  phoneHref: "tel:+243999916552",
-  whatsappHref: "https://wa.me/243999916552",
+  phone: "+243 998 429 415",
+  phoneHref: "tel:+243****9415",
+  whatsappHref: "https://wa.me/243854291708",
   // Non fourni par le client — masqué dans l'UI tant qu'il n'est pas communiqué.
   email: "",
   address: "3 Avenue Dokolo, Q/ Kimwenza gare, C/ Mont Ngafula, Kinshasa",
@@ -372,7 +379,7 @@ export const footer = {
   ] satisfies NavLink[],
   // 4e colonne du footer de la maquette (index.html)
   contactLinks: [
-    { label: "+243 999 916 552", href: "tel:+243999916552" },
+    { label: "+243 998 429 415", href: "tel:+243****9415" },
     { label: "3 Av. Dokolo, Kimwenza, Mont Ngafula", href: "#" },
   ] satisfies NavLink[],
   legalInfo:
@@ -1568,6 +1575,170 @@ export const porcheriePage: PorcheriePageContent = {
     eyebrow: "Ne laissez pas passer votre chance",
     title: "Réservez vos porcs dès aujourd'hui",
     text: "Que vous soyez boucher, restaurateur, ou souhaitiez démarrer votre propre élevage, notre équipe vous accompagne à chaque étape. Contactez-nous maintenant pour un devis rapide et sans engagement.",
+    buttonLabel: "Demander un devis",
+    buttonHref: "/contact",
+  },
+};
+
+export const aviculturePage: AviculturePageContent = {
+  metaTitle: "Aviculture — PVS ONGD ASBL",
+  metaDescription:
+    "Découvrez l'aviculture de PVS ONGD ASBL : poulets de chair et pondeuses élevés à Kinshasa dans des conditions rigoureuses, pour une volaille saine et productive. Demandez votre devis dès aujourd'hui.",
+
+  hero: {
+    eyebrow: "Élevage de volaille",
+    title: "Des poulets et pondeuses élevés dans les meilleures conditions",
+    titleEmphasis: "saines",
+    titleLines: [
+      "Poulets et pondeuses élevés",
+      "dans les meilleures conditions,",
+      "pour une production saine.",
+    ],
+    paragraph:
+      "PVS ONGD ASBL exploite un élevage avicole moderne à Kinshasa : alimentation contrôlée, suivi sanitaire rigoureux et bien-être animal. Achetez vos poussins, poulets de chair ou pondeuses prêtes à pondre, ou lancez votre propre élevage avec notre accompagnement technique.",
+    imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
+    imageAlt: "Poules et poulets en élevage avicole propre",
+  },
+
+  overview: {
+    eyebrow: "Notre aviculture",
+    title: "Une aviculture pensée pour la performance et la biosécurité",
+    paragraphs: [
+      "Notre unité repose sur des normes de biosécurité strictes et un suivi vétérinaire régulier. Chaque bâtiment est désinfecté entre chaque bande pour prévenir les maladies et garantir des animaux en pleine santé.",
+      "Du poussin d'un jour à la volaille prête à la vente, nos oiseaux reçoivent une ration équilibrée et un espace adapté à chaque étape de leur croissance. Résultat : une viande tendre et des œufs frais, produits dans le respect du bien-être animal.",
+    ],
+    tags: [
+      "Biosécurité stricte",
+      "Suivi vétérinaire",
+      "Alimentation contrôlée",
+      "Bien-être animal",
+      "Production locale",
+    ],
+    imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
+    imageAlt: "Poulets élevés dans un poulailler propre",
+    products: [
+      {
+        name: "Poulets de chair",
+        description:
+          "Des poulets élevés jusqu'au poids optimal pour la boucherie, à la chair tendre et savoureuse. Idéal pour les ménages, restaurateurs et revendeurs en quête d'une volaille locale et fraîche.",
+        imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
+        imageAlt: "Poulets de chair en élevage",
+      },
+      {
+        name: "Pondeuses",
+        description:
+          "Nos pondeuses sont démarrées dans des conditions optimales et sélectionnées pour leur régularité de ponte. Parfaites pour produire des œufs au quotidien, avec un suivi technique sur demande.",
+        imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
+        imageAlt: "Pondeuses en cage d'élevage",
+      },
+      {
+        name: "Poussins d'un jour",
+        description:
+          "Poussins vaccinés et démarrés en couvoir dans des conditions contrôlées. Parfaits pour démarrer ou renouveler votre élevage, avec un accompagnement sur l'alimentation et la vaccination.",
+        imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
+        imageAlt: "Poussins d'un jour vaccinés",
+      },
+    ],
+  },
+
+  features: {
+    eyebrow: "Pourquoi choisir notre aviculture",
+    title: "Un élevage rigoureux, des résultats garantis",
+    subtitle:
+      "Chaque détail compte pour produire une volaille saine et des œufs de qualité supérieure. Voici ce qui fait la différence chez PVS.",
+    items: [
+      {
+        icon: "lock",
+        title: "Biosécurité irréprochable",
+        description:
+          "Nettoyage et désinfection systématiques entre chaque bande pour prévenir toute maladie.",
+      },
+      {
+        icon: "check",
+        title: "Suivi vétérinaire",
+        description:
+          "Un contrôle sanitaire constant pour garantir la santé de chaque bande.",
+      },
+      {
+        icon: "feedbag",
+        title: "Alimentation équilibrée",
+        description:
+          "Une ration adaptée à chaque étape de croissance pour un développement optimal.",
+      },
+      {
+        icon: "cycle",
+        title: "Cycle maîtrisé",
+        description:
+          "Du poussin à la volaille prête à la vente, chaque étape est suivie avec précision.",
+      },
+      {
+        icon: "bird",
+        title: "Bien-être animal",
+        description:
+          "Des bâtiments aérés et propres qui respectent le confort et les besoins naturels des volailles.",
+      },
+      {
+        icon: "check",
+        title: "Disponibilité rapide",
+        description:
+          "Des bandes prêtes à la vente et une équipe réactive pour répondre à vos besoins.",
+      },
+    ],
+  },
+
+  pricing: {
+    eyebrow: "Nos prix",
+    title: "Des tarifs clairs pour passer à l'action dès aujourd'hui",
+    subtitle:
+      "Ne remettez pas votre projet à demain. Découvrez nos tarifs et réservez vos poulets, pondeuses ou poussins dès maintenant.",
+    items: [
+      {
+        name: "Poulet de chair",
+        description: "Poulet élevé jusqu'au poids optimal, prêt pour la vente.",
+        price: "25 000 FC",
+        unit: "/ unité",
+        imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
+        imageAlt: "Poulet de chair prêt à la vente",
+        badge: "Best-seller",
+      },
+      {
+        name: "Pondeuse démarrée",
+        description: "Pondeuse prête à produire, démarrée en conditions contrôlées.",
+        price: "12 000 FC",
+        unit: "/ unité",
+        imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
+        imageAlt: "Pondeuse démarrée",
+        badge: "Dès",
+      },
+      {
+        name: "Poussin d'un jour",
+        description: "Poussin vacciné, parfait pour démarrer votre élevage.",
+        price: "2 500 FC",
+        unit: "/ unité",
+        imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
+        imageAlt: "Poussin d'un jour",
+      },
+      {
+        name: "Œuf frais (plateau de 30)",
+        description: "Œufs frais du jour, issus de nos pondeuses.",
+        price: "8 000 FC",
+        unit: "/ plateau",
+        imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
+        imageAlt: "Plateau d'œufs frais",
+      },
+    ],
+  },
+
+  stats: [
+    { value: "3", label: "Types de volaille", numericValue: 3 },
+    { value: "6", label: "Engagements qualité", numericValue: 6 },
+    { value: "100%", label: "Bandes désinfectées", numericValue: 100, suffix: "%" },
+  ],
+
+  cta: {
+    eyebrow: "Ne laissez pas passer votre chance",
+    title: "Réservez vos volailles dès aujourd'hui",
+    text: "Que vous soyez détaillant, restaurateur, ou souhaitiez démarrer votre propre élevage avicole, notre équipe vous accompagne à chaque étape. Contactez-nous maintenant pour un devis rapide et sans engagement.",
     buttonLabel: "Demander un devis",
     buttonHref: "/contact",
   },

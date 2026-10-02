@@ -1,7 +1,7 @@
-import geoip from "geoip-lite";
 import countries from "i18n-iso-countries";
 import frLocale from "i18n-iso-countries/langs/fr.json";
 import { prisma } from "@/lib/prisma";
+import { lookupCountrySync } from "@/lib/geoip";
 
 countries.registerLocale(frLocale);
 
@@ -294,8 +294,7 @@ export async function getAnalyticsData(days: AnalyticsTimeframe = 30) {
     // Country (from metadata or IP lookup)
     let country = meta.country as string | undefined;
     if (!country && e.ipAddress && e.ipAddress !== "127.0.0.1") {
-      const geo = geoip.lookup(e.ipAddress);
-      country = geo?.country || undefined;
+      country = lookupCountrySync(e.ipAddress) || undefined;
     }
     if (country) {
       const numeric = alpha2ToNumeric[country] || country;

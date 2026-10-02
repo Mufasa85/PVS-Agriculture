@@ -390,6 +390,8 @@ export type PorcheriePageContent = {
   };
 };
 
+export type AviculturePageContent = PorcheriePageContent;
+
 export type PriceProduct = {
   name: string;
   description: string;
