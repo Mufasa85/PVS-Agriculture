@@ -778,11 +778,10 @@ export const elevagePage: ElevagePageContent = {
         caption: "Porcs dans leurs enclosures",
       },
       {
-        // [PLACEHOLDER] Photo d'illustration locale
-        src: "/images/photo-1548550023-2bdb3c5beed7.jpg",
-        alt: "Poules en élevage libre",
-        caption: "Volailles en élevage libre",
-      },
+              src: "/images/archive/poulailler-pondeuses-1.webp",
+              alt: "Poules en élevage libre",
+              caption: "Volailles en élevage libre",
+            },
       {
         // [PLACEHOLDER] Photo d'illustration locale
         src: "/images/photo-1564492300010-3a6a3f4e1e1e.jpg",
@@ -1431,8 +1430,8 @@ export const porcheriePage: PorcheriePageContent = {
     ],
     paragraph:
       "PVS ONGD ASBL exploite une porcherie moderne à Kinshasa, où hygiène, alimentation contrôlée et bien-être animal se conjuguent pour produire une viande de qualité. Ne cherchez plus : commandez dès maintenant vos porcs ou lancez votre propre élevage avec notre accompagnement.",
-    imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
-    imageAlt: "Porcherie moderne et propre",
+    imageSrc: "/images/archive/truie-porcelets-hero.webp",
+    imageAlt: "Truie avec ses porcelets en porcherie à Kinshasa",
   },
 
   overview: {
@@ -1449,29 +1448,29 @@ export const porcheriePage: PorcheriePageContent = {
       "Bien-être animal",
       "Production locale",
     ],
-    imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
-    imageAlt: "Porcs élevés dans un enclos propre",
+    imageSrc: "/images/archive/truie-porcelets-enclos.webp",
+    imageAlt: "Truie et porcelets en enclos bétonné",
     products: [
       {
         name: "Porcs charcutiers",
         description:
           "Des porcs élevés jusqu'au poids optimal pour la boucherie, à la chair tendre et bien persillée. Idéal pour les grossistes, restaurateurs et particuliers en quête d'une viande fraîche et locale.",
-        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
-        imageAlt: "Porcs charcutiers en enclos",
+        imageSrc: "/images/archive/porc-adulte.webp",
+        imageAlt: "Porc charcutier adulte",
       },
       {
         name: "Porcelets",
         description:
           "Nos porcelets sont sevrés dans des conditions optimales et sélectionnés pour leur vigueur. Parfaits pour démarrer ou renforcer votre propre élevage, avec un accompagnement technique sur demande.",
-        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
+        imageSrc: "/images/archive/truie-porcelets-enclos.webp",
         imageAlt: "Porcelets en bonne santé",
       },
       {
         name: "Reproducteurs",
         description:
           "Truies et verrats sélectionnés pour leurs qualités génétiques : croissance rapide, fertilité élevée et robustesse. Un investissement sûr pour développer durablement votre exploitation porcine.",
-        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
-        imageAlt: "Porcs reproducteurs sélectionnés",
+        imageSrc: "/images/archive/truie-reproductie.webp",
+        imageAlt: "Truie reproductrice sélectionnée",
       },
     ],
   },
@@ -1522,48 +1521,48 @@ export const porcheriePage: PorcheriePageContent = {
   },
 
   pricing: {
-    eyebrow: "Nos prix",
-    title: "Des tarifs clairs pour passer à l'action dès aujourd'hui",
-    subtitle:
-      "Ne remettez pas votre projet à demain. Découvrez nos tarifs et réservez vos porcs ou porcelets dès maintenant.",
-    items: [
-      {
-        name: "Porc charcutier",
-        description:
-          "Porc élevé jusqu'au poids optimal, prêt pour la boucherie.",
-        price: "180 000 FC",
-        unit: "/ unité",
-        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
-        imageAlt: "Porc charcutier",
-        badge: "Best-seller",
-      },
-      {
-        name: "Porcelet sevré",
-        description: "Jeune porcelet sain, idéal pour démarrer votre élevage.",
-        price: "45 000 FC",
-        unit: "/ unité",
-        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
-        imageAlt: "Porcelet sevré",
-        badge: "Dès",
-      },
-      {
-        name: "Truie reproductrice",
-        description: "Truie sélectionnée pour sa fertilité et sa robustesse.",
-        price: "250 000 FC",
-        unit: "/ unité",
-        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
-        imageAlt: "Truie reproductrice",
-      },
-      {
-        name: "Verrat reproducteur",
-        description: "Verrat robuste, choisi pour ses qualités génétiques.",
-        price: "280 000 FC",
-        unit: "/ unité",
-        imageSrc: "/images/photo-1516467508483-a7212febe31a.jpg",
-        imageAlt: "Verrat reproducteur",
-      },
-    ],
-  },
+      eyebrow: "Nos prix",
+      title: "Des tarifs clairs pour passer à l'action dès aujourd'hui",
+      subtitle:
+        "Ne remettez pas votre projet à demain. Découvrez nos tarifs et réservez vos porcs ou porcelets dès maintenant.",
+      items: [
+        {
+          name: "Porc charcutier",
+          description:
+            "Porc élevé jusqu'au poids optimal, prêt pour la boucherie.",
+          price: "180 000 FC",
+          unit: "/ unité",
+          imageSrc: "/images/archive/porc-adulte.webp",
+          imageAlt: "Porc charcutier",
+          badge: "Best-seller",
+        },
+        {
+          name: "Porcelet sevré",
+          description: "Jeune porcelet sain, idéal pour démarrer votre élevage.",
+          price: "45 000 FC",
+          unit: "/ unité",
+          imageSrc: "/images/archive/truie-porcelets-enclos.webp",
+          imageAlt: "Porcelet sevré",
+          badge: "Dès",
+        },
+        {
+          name: "Truie reproductrice",
+          description: "Truie sélectionnée pour sa fertilité et sa robustesse.",
+          price: "250 000 FC",
+          unit: "/ unité",
+          imageSrc: "/images/archive/truie-reproductie.webp",
+          imageAlt: "Truie reproductrice",
+        },
+        {
+          name: "Verrat reproducteur",
+          description: "Verrat robuste, choisi pour ses qualités génétiques.",
+          price: "280 000 FC",
+          unit: "/ unité",
+          imageSrc: "/images/archive/porc-adulte.webp",
+          imageAlt: "Verrat reproducteur",
+        },
+      ],
+    },
 
   stats: [
     { value: "3", label: "Catégories de porcs", numericValue: 3 },
@@ -1596,8 +1595,8 @@ export const aviculturePage: AviculturePageContent = {
     ],
     paragraph:
       "PVS ONGD ASBL exploite un élevage avicole moderne à Kinshasa : alimentation contrôlée, suivi sanitaire rigoureux et bien-être animal. Achetez vos poussins, poulets de chair ou pondeuses prêtes à pondre, ou lancez votre propre élevage avec notre accompagnement technique.",
-    imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
-    imageAlt: "Poules et poulets en élevage avicole propre",
+    imageSrc: "/images/archive/poulailler-interieur-2.webp",
+    imageAlt: "Poulailler professionnel bondé de poules pondeuses à Kinshasa",
   },
 
   overview: {
@@ -1614,28 +1613,28 @@ export const aviculturePage: AviculturePageContent = {
       "Bien-être animal",
       "Production locale",
     ],
-    imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
-    imageAlt: "Poulets élevés dans un poulailler propre",
+    imageSrc: "/images/archive/poulailler-pondeuses-1.webp",
+    imageAlt: "Poules pondeuses en élevage libre dans notre poulailler",
     products: [
       {
         name: "Poulets de chair",
         description:
           "Des poulets élevés jusqu'au poids optimal pour la boucherie, à la chair tendre et savoureuse. Idéal pour les ménages, restaurateurs et revendeurs en quête d'une volaille locale et fraîche.",
-        imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
-        imageAlt: "Poulets de chair en élevage",
+        imageSrc: "/images/archive/poulailler-interieur-2.webp",
+        imageAlt: "Poulets de chair en élevage à Kinshasa",
       },
       {
         name: "Pondeuses",
         description:
           "Nos pondeuses sont démarrées dans des conditions optimales et sélectionnées pour leur régularité de ponte. Parfaites pour produire des œufs au quotidien, avec un suivi technique sur demande.",
-        imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
-        imageAlt: "Pondeuses en cage d'élevage",
+        imageSrc: "/images/archive/poulailler-cages-3.webp",
+        imageAlt: "Pondeuses en cage d'élevage à Kinshasa",
       },
       {
         name: "Poussins d'un jour",
         description:
           "Poussins vaccinés et démarrés en couvoir dans des conditions contrôlées. Parfaits pour démarrer ou renouveler votre élevage, avec un accompagnement sur l'alimentation et la vaccination.",
-        imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
+        imageSrc: "/images/archive/poulailler-pondeuses-1.webp",
         imageAlt: "Poussins d'un jour vaccinés",
       },
     ],
@@ -1687,47 +1686,47 @@ export const aviculturePage: AviculturePageContent = {
   },
 
   pricing: {
-    eyebrow: "Nos prix",
-    title: "Des tarifs clairs pour passer à l'action dès aujourd'hui",
-    subtitle:
-      "Ne remettez pas votre projet à demain. Découvrez nos tarifs et réservez vos poulets, pondeuses ou poussins dès maintenant.",
-    items: [
-      {
-        name: "Poulet de chair",
-        description: "Poulet élevé jusqu'au poids optimal, prêt pour la vente.",
-        price: "25 000 FC",
-        unit: "/ unité",
-        imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
-        imageAlt: "Poulet de chair prêt à la vente",
-        badge: "Best-seller",
-      },
-      {
-        name: "Pondeuse démarrée",
-        description: "Pondeuse prête à produire, démarrée en conditions contrôlées.",
-        price: "12 000 FC",
-        unit: "/ unité",
-        imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
-        imageAlt: "Pondeuse démarrée",
-        badge: "Dès",
-      },
-      {
-        name: "Poussin d'un jour",
-        description: "Poussin vacciné, parfait pour démarrer votre élevage.",
-        price: "2 500 FC",
-        unit: "/ unité",
-        imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
-        imageAlt: "Poussin d'un jour",
-      },
-      {
-        name: "Œuf frais (plateau de 30)",
-        description: "Œufs frais du jour, issus de nos pondeuses.",
-        price: "8 000 FC",
-        unit: "/ plateau",
-        imageSrc: "/images/photo-1484557985045-edf25e08da73.jpg",
-        imageAlt: "Plateau d'œufs frais",
-      },
-    ],
-  },
+      eyebrow: "Nos prix",
+      title: "Des tarifs clairs pour passer à l'action dès aujourd'hui",
+      subtitle:
+        "Ne remettez pas votre projet à demain. Découvrez nos tarifs et réservez vos poulets, pondeuses ou poussins dès maintenant.",
+      items: [
+        {
+          name: "Poulet de chair",
+          description: "Poulet élevé jusqu'au poids optimal, prêt pour la vente.",
+          price: "25 000 FC",
+          unit: "/ unité",
+          imageSrc: "/images/archive/poulailler-interieur-2.webp",
+          imageAlt: "Poulet de chair prêt à la vente",
+          badge: "Best-seller",
+        },
+        {
+          name: "Pondeuse démarrée",
+          description: "Pondeuse prête à produire, démarrée en conditions contrôlées.",
+          price: "12 000 FC",
+          unit: "/ unité",
+          imageSrc: "/images/archive/poulailler-cages-3.webp",
+          imageAlt: "Pondeuse démarrée",
+          badge: "Dès",
+        },
+        {
+          name: "Poussin d'un jour",
+          description: "Poussin vacciné, parfait pour démarrer votre élevage.",
+          price: "2 500 FC",
+          unit: "/ unité",
+          imageSrc: "/images/archive/poulailler-pondeuses-1.webp",
+          imageAlt: "Poussin d'un jour",
+        },
+        {
+          name: "Œuf frais (plateau de 30)",
+          description: "Œufs frais du jour, issus de nos pondeuses.",
+          price: "8 000 FC",
+          unit: "/ plateau",
+          imageSrc: "/images/archive/poulailler-pondeuses-1.webp",
+          imageAlt: "Plateau d'œufs frais",
+        },
+      ],
+    },
 
   stats: [
     { value: "3", label: "Types de volaille", numericValue: 3 },
