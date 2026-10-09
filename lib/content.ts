@@ -136,24 +136,24 @@ export const hero = {
   // Carrousel d'images du hero : alterne entre nos différentes activités.
   images: [
     {
-      src: "/images/photo-1500595046743-cd271d694d30.jpg",
-      alt: "Champ agricole verdoyant au lever du soleil",
+      src: "/images/archive/etang-vert-eau.webp",
+      alt: "Étang de pisciculture PVS à Kinshasa",
     },
     {
-      src: "/images/photo-1500382017468-9049fed747ef.jpg",
-      alt: "Vache dans un pâturage au coucher du soleil",
+      src: "/images/archive/truie-porcelets-hero.webp",
+      alt: "Truie avec ses porcelets en porcherie PVS",
     },
     {
-      src: "/images/photo-1529313780224-1a12b68bed16.jpg",
-      alt: "Plate bande",
+      src: "/images/archive/etang-avec-nenuphars.webp",
+      alt: "Étang avec nénuphars et filet anti-prédateurs",
     },
     {
-      src: "/images/photo-1516467508483-a7212febe31a.jpg",
-      alt: "Porcherie moderne et propre",
+      src: "/images/archive/poulailler-interieur-2.webp",
+      alt: "Poulailler professionnel bondé de poules pondeuses",
     },
     {
-      src: "/images/photo-1515735543535-12664d2453f8.jpg",
-      alt: "Pisciculture moderne et propre",
+      src: "/images/archive/site-pvs-batiments.webp",
+      alt: "Vue des bâtiments d'exploitation PVS à Mont Ngafula",
     },
   ],
   badge: "🌾 Agriculture d'abord",
@@ -269,14 +269,12 @@ export const apropos = {
   tags: ["Vision durable", "Expertise terrain", "Ancrage local"],
   images: [
     {
-      // [PLACEHOLDER] Photo d'illustration locale
-      src: "/images/photo-1625246333195-78d9c38ad449.jpg",
-      alt: "Vue aérienne d'une exploitation agricole",
+      src: "/images/archive/site-pvs-batiments.webp",
+      alt: "Vue des bâtiments d'exploitation PVS",
     },
     {
-      // [PLACEHOLDER] Photo d'illustration locale
-      src: "/images/photo-1593113598332-cd288d649433.jpg",
-      alt: "Travailleur agricole au champ",
+      src: "/images/archive/etang-paysage-manguiers.webp",
+      alt: "Étang bordé de manguiers sur le site PVS",
     },
   ],
 };
@@ -537,8 +535,8 @@ export const aproposPage: AboutPageContent = {
     ],
     paragraph:
       "PVS ONGD ASBL est une organisation congolaise basée à Kinshasa, active dans l'agriculture, l'élevage, la pisciculture, la porcherie et la fourniture de produits pour animaux. Notre vocation est d'accompagner une production locale saine, structurée et durable.",
-    imageSrc: "/images/photo-1625246333195-78d9c38ad449.jpg",
-    imageAlt: "Vue aérienne d'une exploitation agricole",
+    imageSrc: "/images/archive/site-pvs-batiments.webp",
+    imageAlt: "Vue des bâtiments d'exploitation PVS à Kinshasa",
   },
 
   mission: {
@@ -560,12 +558,12 @@ export const aproposPage: AboutPageContent = {
     tags: ["Chaîne de valeur locale", "Bien-être animal", "Souveraineté alimentaire"],
     images: [
       {
-        src: "/images/photo-1625246333195-78d9c38ad449.jpg",
-        alt: "Vue aérienne d'une exploitation agricole",
+        src: "/images/archive/site-pvs-batiments-2.webp",
+        alt: "Vue d'ensemble du site d'exploitation PVS",
       },
       {
-        src: "/images/photo-1593113598332-cd288d649433.jpg",
-        alt: "Travailleur agricole au champ",
+        src: "/images/archive/etang-paysage-manguiers.webp",
+        alt: "Étang bordé de manguiers sur le site PVS",
       },
     ],
   },
@@ -665,8 +663,8 @@ export const aproposPage: AboutPageContent = {
         description:
           "Basés à Mont Ngafula, Kinshasa, nous produisons sur place ce que nous vendons. Pas d'importation déguisée — une vraie production locale qui crée des emplois et nourrit la communauté.",
         icon: "sunrise",
-        imageSrc: "/images/photo-1593113598332-cd288d649433.jpg",
-        imageAlt: "Travailleur agricole au champ",
+        imageSrc: "/images/archive/site-pvs-batiments.webp",
+        imageAlt: "Site d'exploitation PVS à Mont Ngafula",
       },
       {
         tag: "Chaîne intégrée",
@@ -1088,9 +1086,8 @@ export const pisciculturePage: PisciculturePageContent = {
     titleLines: ["Une pisciculture", "maîtrisée en étangs", "contrôlés."],
     paragraph:
       "La pisciculture est l'un de nos métiers de cœur. Nous élevons des poissons en étangs contrôlés, avec une gestion rigoureuse de la qualité de l'eau, de l'alimentation et du suivi sanitaire, pour une production saine et durable.",
-    // [PLACEHOLDER] Photo d'illustration locale
-    imageSrc: "/images/photo-1535473895227-bdecb20fb373.jpg",
-    imageAlt: "Étang de pisciculture avec poissons",
+    imageSrc: "/images/archive/etang-vert-eau.webp",
+    imageAlt: "Étang de pisciculture à eau verdoyante à Kinshasa",
   },
 
   overview: {
@@ -1107,32 +1104,28 @@ export const pisciculturePage: PisciculturePageContent = {
       "Eau de qualité",
       "Production locale",
     ],
-    // [PLACEHOLDER] Photo d'illustration locale
-    imageSrc: "/images/photo-1559473242-3740c6c65e1e.jpg",
-    imageAlt: "Bassin d'élevage de poissons",
+    imageSrc: "/images/archive/etang-avec-cage.webp",
+    imageAlt: "Bassin d'élevage avec cage anti-prédateur en bois",
     products: [
       {
         name: "Tilapia",
         description:
           "Le tilapia est notre espèce phare. Élevé en étang contrôlé, il se distingue par sa chair blanche, tendre et savoureuse. Résistant et à croissance rapide, le tilapia s'adapte parfaitement au climat local et constitue une source de protéines saine et abordable pour les familles congolaises.",
-        // [PLACEHOLDER] Photo d'illustration locale
-        imageSrc: "/images/photo-1535473895227-bdecb20fb373.jpg",
-        imageAlt: "Tilapia frais sur glace",
+        imageSrc: "/images/archive/etang-avec-cage.webp",
+        imageAlt: "Tilapia élevé dans nos étangs",
       },
       {
         name: "Poisson-chat",
         description:
           "Le poisson-chat est apprécié pour sa chair ferme et son goût prononcé. Robuste et résistant aux maladies, il s'épanouit dans nos étangs avec une alimentation adaptée. C'est un poisson idéal pour la préparation de plats traditionnels congolais, riche en saveurs et en nutriments.",
-        // [PLACEHOLDER] Photo d'illustration locale
-        imageSrc: "/images/photo-1574781330855-d0db8cc6a79c.jpg",
-        imageAlt: "Poisson-chat frais",
+        imageSrc: "/images/archive/etang-vert-eau.webp",
+        imageAlt: "Poisson-chat élevé en étang",
       },
       {
         name: "Alevins",
         description:
           "Nous proposons des alevins de tilapia sains et vigoureux, issus de notre propre reproduction. Parfaits pour démarrer ou renforcer votre propre étang, nos alevins sont sélectionnés pour leur taux de survie élevé et leur croissance rapide. Un accompagnement technique est disponible pour les éleveurs débutants.",
-        // [PLACEHOLDER] Photo d'illustration locale
-        imageSrc: "/images/photo-1559473242-3740c6c65e1e.jpg",
+        imageSrc: "/images/archive/etang-bananiers-nenuphars.webp",
         imageAlt: "Alevins dans un bassin d'élevage",
       },
     ],
@@ -1184,52 +1177,48 @@ export const pisciculturePage: PisciculturePageContent = {
   },
 
   pricing: {
-    eyebrow: "Nos prix",
-    title: "Tarifs de nos produits de pisciculture",
-    subtitle:
-      "Un aperçu des prix de nos poissons et alevins. Les prix sont indicatifs et peuvent varier selon la disponibilité et la saison.",
-    items: [
-      {
-        name: "Tilapia frais",
-        description: "Tilapia élevé en étang contrôlé, pêché du jour.",
-        price: "8 000 FC",
-        unit: "/ kg",
-        // [PLACEHOLDER] Photo d'illustration locale
-        imageSrc: "/images/photo-1535473895227-bdecb20fb373.jpg",
-        imageAlt: "Tilapia frais",
-        badge: "Best-seller",
-      },
-      {
-        name: "Poisson-chat",
-        description: "Poisson-chat élevé en étang, chair ferme et savoureuse.",
-        price: "10 000 FC",
-        unit: "/ kg",
-        // [PLACEHOLDER] Photo d'illustration locale
-        imageSrc: "/images/photo-1574781330855-d0db8cc6a79c.jpg",
-        imageAlt: "Poisson-chat",
-      },
-      {
-        name: "Alevins tilapia",
-        description: "Alevins de tilapia pour démarrer votre propre étang.",
-        price: "500 FC",
-        unit: "/ unité",
-        // [PLACEHOLDER] Photo d'illustration locale
-        imageSrc: "/images/photo-1559473242-3740c6c65e1e.jpg",
-        imageAlt: "Alevins dans un bassin",
-        badge: "Dès",
-      },
-      {
-        name: "Aliment poisson",
-        description:
-          "Granulés pour poissons d'élevage, formulation équilibrée.",
-        price: "40 000 FC",
-        unit: "/ sac 25 kg",
-        // [PLACEHOLDER] Photo d'illustration locale
-        imageSrc: "/images/photo-1604908554049-29bf08f5d1a9.jpg",
-        imageAlt: "Granulés pour poissons",
-      },
-    ],
-  },
+      eyebrow: "Nos prix",
+      title: "Tarifs de nos produits de pisciculture",
+      subtitle:
+        "Un aperçu des prix de nos poissons et alevins. Les prix sont indicatifs et peuvent varier selon la disponibilité et la saison.",
+      items: [
+        {
+          name: "Tilapia frais",
+          description: "Tilapia élevé en étang contrôlé, pêché du jour.",
+          price: "8 000 FC",
+          unit: "/ kg",
+          imageSrc: "/images/archive/etang-avec-cage.webp",
+          imageAlt: "Tilapia frais",
+          badge: "Best-seller",
+        },
+        {
+          name: "Poisson-chat",
+          description: "Poisson-chat élevé en étang, chair ferme et savoureuse.",
+          price: "10 000 FC",
+          unit: "/ kg",
+          imageSrc: "/images/archive/etang-vert-eau.webp",
+          imageAlt: "Poisson-chat",
+        },
+        {
+          name: "Alevins tilapia",
+          description: "Alevins de tilapia pour démarrer votre propre étang.",
+          price: "500 FC",
+          unit: "/ unité",
+          imageSrc: "/images/archive/etang-bananiers-nenuphars.webp",
+          imageAlt: "Alevins dans un bassin",
+          badge: "Dès",
+        },
+        {
+          name: "Aliment poisson",
+          description:
+            "Granulés pour poissons d'élevage, formulation équilibrée.",
+          price: "40 000 FC",
+          unit: "/ sac 25 kg",
+          imageSrc: "/images/archive/etang-vert-eau.webp",
+          imageAlt: "Granulés pour poissons",
+        },
+      ],
+    },
 
   stats: [
     { value: "2", label: "Espèces élevées", numericValue: 2 },
