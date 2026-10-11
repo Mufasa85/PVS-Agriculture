@@ -136,23 +136,23 @@ export const hero = {
   // Carrousel d'images du hero : alterne entre nos différentes activités.
   images: [
     {
-      src: "/images/archive/etang-vert-eau.webp",
+      src: "/images/archive/etang-vert-eau-1200.webp",
       alt: "Étang de pisciculture PVS à Kinshasa",
     },
     {
-      src: "/images/archive/truie-porcelets-hero.webp",
+      src: "/images/archive/truie-porcelets-hero-1200.webp",
       alt: "Truie avec ses porcelets en porcherie PVS",
     },
     {
-      src: "/images/archive/etang-avec-nenuphars.webp",
+      src: "/images/archive/etang-avec-nenuphars-1200.webp",
       alt: "Étang avec nénuphars et filet anti-prédateurs",
     },
     {
-      src: "/images/archive/poulailler-interieur-2.webp",
+      src: "/images/archive/poulailler-interieur-2-1200.webp",
       alt: "Poulailler professionnel bondé de poules pondeuses",
     },
     {
-      src: "/images/archive/site-pvs-batiments.webp",
+      src: "/images/archive/site-pvs-batiments-1200.webp",
       alt: "Vue des bâtiments d'exploitation PVS à Mont Ngafula",
     },
   ],
@@ -269,11 +269,11 @@ export const apropos = {
   tags: ["Vision durable", "Expertise terrain", "Ancrage local"],
   images: [
     {
-      src: "/images/archive/site-pvs-batiments.webp",
+      src: "/images/archive/site-pvs-batiments-1200.webp",
       alt: "Vue des bâtiments d'exploitation PVS",
     },
     {
-      src: "/images/archive/etang-paysage-manguiers.webp",
+      src: "/images/archive/etang-paysage-manguiers-1200.webp",
       alt: "Étang bordé de manguiers sur le site PVS",
     },
   ],
@@ -535,7 +535,7 @@ export const aproposPage: AboutPageContent = {
     ],
     paragraph:
       "PVS ONGD ASBL est une organisation congolaise basée à Kinshasa, active dans l'agriculture, l'élevage, la pisciculture, la porcherie et la fourniture de produits pour animaux. Notre vocation est d'accompagner une production locale saine, structurée et durable.",
-    imageSrc: "/images/archive/site-pvs-batiments.webp",
+    imageSrc: "/images/archive/site-pvs-batiments-1200.webp",
     imageAlt: "Vue des bâtiments d'exploitation PVS à Kinshasa",
   },
 
@@ -558,11 +558,11 @@ export const aproposPage: AboutPageContent = {
     tags: ["Chaîne de valeur locale", "Bien-être animal", "Souveraineté alimentaire"],
     images: [
       {
-        src: "/images/archive/site-pvs-batiments-2.webp",
+        src: "/images/archive/site-pvs-batiments-2-1200.webp",
         alt: "Vue d'ensemble du site d'exploitation PVS",
       },
       {
-        src: "/images/archive/etang-paysage-manguiers.webp",
+        src: "/images/archive/etang-paysage-manguiers-1200.webp",
         alt: "Étang bordé de manguiers sur le site PVS",
       },
     ],
@@ -663,7 +663,7 @@ export const aproposPage: AboutPageContent = {
         description:
           "Basés à Mont Ngafula, Kinshasa, nous produisons sur place ce que nous vendons. Pas d'importation déguisée — une vraie production locale qui crée des emplois et nourrit la communauté.",
         icon: "sunrise",
-        imageSrc: "/images/archive/site-pvs-batiments.webp",
+        imageSrc: "/images/archive/site-pvs-batiments-1200.webp",
         imageAlt: "Site d'exploitation PVS à Mont Ngafula",
       },
       {
@@ -776,7 +776,7 @@ export const elevagePage: ElevagePageContent = {
         caption: "Porcs dans leurs enclosures",
       },
       {
-              src: "/images/archive/poulailler-pondeuses-1.webp",
+              src: "/images/archive/poulailler-pondeuses-1-1200.webp",
               alt: "Poules en élevage libre",
               caption: "Volailles en élevage libre",
             },
@@ -1086,7 +1086,7 @@ export const pisciculturePage: PisciculturePageContent = {
     titleLines: ["Une pisciculture", "maîtrisée en étangs", "contrôlés."],
     paragraph:
       "La pisciculture est l'un de nos métiers de cœur. Nous élevons des poissons en étangs contrôlés, avec une gestion rigoureuse de la qualité de l'eau, de l'alimentation et du suivi sanitaire, pour une production saine et durable.",
-    imageSrc: "/images/archive/etang-vert-eau.webp",
+    imageSrc: "/images/archive/etang-vert-eau-1200.webp",
     imageAlt: "Étang de pisciculture à eau verdoyante à Kinshasa",
   },
 
@@ -1104,28 +1104,28 @@ export const pisciculturePage: PisciculturePageContent = {
       "Eau de qualité",
       "Production locale",
     ],
-    imageSrc: "/images/archive/etang-avec-cage.webp",
+    imageSrc: "/images/archive/etang-avec-cage-1200.webp",
     imageAlt: "Bassin d'élevage avec cage anti-prédateur en bois",
     products: [
       {
         name: "Tilapia",
         description:
           "Le tilapia est notre espèce phare. Élevé en étang contrôlé, il se distingue par sa chair blanche, tendre et savoureuse. Résistant et à croissance rapide, le tilapia s'adapte parfaitement au climat local et constitue une source de protéines saine et abordable pour les familles congolaises.",
-        imageSrc: "/images/archive/etang-avec-cage.webp",
+        imageSrc: "/images/archive/etang-avec-cage-1200.webp",
         imageAlt: "Tilapia élevé dans nos étangs",
       },
       {
         name: "Poisson-chat",
         description:
           "Le poisson-chat est apprécié pour sa chair ferme et son goût prononcé. Robuste et résistant aux maladies, il s'épanouit dans nos étangs avec une alimentation adaptée. C'est un poisson idéal pour la préparation de plats traditionnels congolais, riche en saveurs et en nutriments.",
-        imageSrc: "/images/archive/etang-vert-eau.webp",
+        imageSrc: "/images/archive/etang-vert-eau-1200.webp",
         imageAlt: "Poisson-chat élevé en étang",
       },
       {
         name: "Alevins",
         description:
           "Nous proposons des alevins de tilapia sains et vigoureux, issus de notre propre reproduction. Parfaits pour démarrer ou renforcer votre propre étang, nos alevins sont sélectionnés pour leur taux de survie élevé et leur croissance rapide. Un accompagnement technique est disponible pour les éleveurs débutants.",
-        imageSrc: "/images/archive/etang-bananiers-nenuphars.webp",
+        imageSrc: "/images/archive/etang-bananiers-nenuphars-1200.webp",
         imageAlt: "Alevins dans un bassin d'élevage",
       },
     ],
@@ -1187,7 +1187,7 @@ export const pisciculturePage: PisciculturePageContent = {
           description: "Tilapia élevé en étang contrôlé, pêché du jour.",
           price: "8 000 FC",
           unit: "/ kg",
-          imageSrc: "/images/archive/etang-avec-cage.webp",
+          imageSrc: "/images/archive/etang-avec-cage-1200.webp",
           imageAlt: "Tilapia frais",
           badge: "Best-seller",
         },
@@ -1196,7 +1196,7 @@ export const pisciculturePage: PisciculturePageContent = {
           description: "Poisson-chat élevé en étang, chair ferme et savoureuse.",
           price: "10 000 FC",
           unit: "/ kg",
-          imageSrc: "/images/archive/etang-vert-eau.webp",
+          imageSrc: "/images/archive/etang-vert-eau-1200.webp",
           imageAlt: "Poisson-chat",
         },
         {
@@ -1204,7 +1204,7 @@ export const pisciculturePage: PisciculturePageContent = {
           description: "Alevins de tilapia pour démarrer votre propre étang.",
           price: "500 FC",
           unit: "/ unité",
-          imageSrc: "/images/archive/etang-bananiers-nenuphars.webp",
+          imageSrc: "/images/archive/etang-bananiers-nenuphars-1200.webp",
           imageAlt: "Alevins dans un bassin",
           badge: "Dès",
         },
@@ -1214,7 +1214,7 @@ export const pisciculturePage: PisciculturePageContent = {
             "Granulés pour poissons d'élevage, formulation équilibrée.",
           price: "40 000 FC",
           unit: "/ sac 25 kg",
-          imageSrc: "/images/archive/etang-vert-eau.webp",
+          imageSrc: "/images/archive/etang-vert-eau-1200.webp",
           imageAlt: "Granulés pour poissons",
         },
       ],
@@ -1419,7 +1419,7 @@ export const porcheriePage: PorcheriePageContent = {
     ],
     paragraph:
       "PVS ONGD ASBL exploite une porcherie moderne à Kinshasa, où hygiène, alimentation contrôlée et bien-être animal se conjuguent pour produire une viande de qualité. Ne cherchez plus : commandez dès maintenant vos porcs ou lancez votre propre élevage avec notre accompagnement.",
-    imageSrc: "/images/archive/truie-porcelets-hero.webp",
+    imageSrc: "/images/archive/truie-porcelets-hero-1200.webp",
     imageAlt: "Truie avec ses porcelets en porcherie à Kinshasa",
   },
 
@@ -1437,28 +1437,28 @@ export const porcheriePage: PorcheriePageContent = {
       "Bien-être animal",
       "Production locale",
     ],
-    imageSrc: "/images/archive/truie-porcelets-enclos.webp",
+    imageSrc: "/images/archive/truie-porcelets-enclos-1200.webp",
     imageAlt: "Truie et porcelets en enclos bétonné",
     products: [
       {
         name: "Porcs charcutiers",
         description:
           "Des porcs élevés jusqu'au poids optimal pour la boucherie, à la chair tendre et bien persillée. Idéal pour les grossistes, restaurateurs et particuliers en quête d'une viande fraîche et locale.",
-        imageSrc: "/images/archive/porc-adulte.webp",
+        imageSrc: "/images/archive/porc-adulte-1200.webp",
         imageAlt: "Porc charcutier adulte",
       },
       {
         name: "Porcelets",
         description:
           "Nos porcelets sont sevrés dans des conditions optimales et sélectionnés pour leur vigueur. Parfaits pour démarrer ou renforcer votre propre élevage, avec un accompagnement technique sur demande.",
-        imageSrc: "/images/archive/truie-porcelets-enclos.webp",
+        imageSrc: "/images/archive/truie-porcelets-enclos-1200.webp",
         imageAlt: "Porcelets en bonne santé",
       },
       {
         name: "Reproducteurs",
         description:
           "Truies et verrats sélectionnés pour leurs qualités génétiques : croissance rapide, fertilité élevée et robustesse. Un investissement sûr pour développer durablement votre exploitation porcine.",
-        imageSrc: "/images/archive/truie-reproductie.webp",
+        imageSrc: "/images/archive/truie-reproductie-1200.webp",
         imageAlt: "Truie reproductrice sélectionnée",
       },
     ],
@@ -1521,7 +1521,7 @@ export const porcheriePage: PorcheriePageContent = {
             "Porc élevé jusqu'au poids optimal, prêt pour la boucherie.",
           price: "180 000 FC",
           unit: "/ unité",
-          imageSrc: "/images/archive/porc-adulte.webp",
+          imageSrc: "/images/archive/porc-adulte-1200.webp",
           imageAlt: "Porc charcutier",
           badge: "Best-seller",
         },
@@ -1530,7 +1530,7 @@ export const porcheriePage: PorcheriePageContent = {
           description: "Jeune porcelet sain, idéal pour démarrer votre élevage.",
           price: "45 000 FC",
           unit: "/ unité",
-          imageSrc: "/images/archive/truie-porcelets-enclos.webp",
+          imageSrc: "/images/archive/truie-porcelets-enclos-1200.webp",
           imageAlt: "Porcelet sevré",
           badge: "Dès",
         },
@@ -1539,7 +1539,7 @@ export const porcheriePage: PorcheriePageContent = {
           description: "Truie sélectionnée pour sa fertilité et sa robustesse.",
           price: "250 000 FC",
           unit: "/ unité",
-          imageSrc: "/images/archive/truie-reproductie.webp",
+          imageSrc: "/images/archive/truie-reproductie-1200.webp",
           imageAlt: "Truie reproductrice",
         },
         {
@@ -1547,7 +1547,7 @@ export const porcheriePage: PorcheriePageContent = {
           description: "Verrat robuste, choisi pour ses qualités génétiques.",
           price: "280 000 FC",
           unit: "/ unité",
-          imageSrc: "/images/archive/porc-adulte.webp",
+          imageSrc: "/images/archive/porc-adulte-1200.webp",
           imageAlt: "Verrat reproducteur",
         },
       ],
@@ -1584,7 +1584,7 @@ export const aviculturePage: AviculturePageContent = {
     ],
     paragraph:
       "PVS ONGD ASBL exploite un élevage avicole moderne à Kinshasa : alimentation contrôlée, suivi sanitaire rigoureux et bien-être animal. Achetez vos poussins, poulets de chair ou pondeuses prêtes à pondre, ou lancez votre propre élevage avec notre accompagnement technique.",
-    imageSrc: "/images/archive/poulailler-interieur-2.webp",
+    imageSrc: "/images/archive/poulailler-interieur-2-1200.webp",
     imageAlt: "Poulailler professionnel bondé de poules pondeuses à Kinshasa",
   },
 
@@ -1602,28 +1602,28 @@ export const aviculturePage: AviculturePageContent = {
       "Bien-être animal",
       "Production locale",
     ],
-    imageSrc: "/images/archive/poulailler-pondeuses-1.webp",
+    imageSrc: "/images/archive/poulailler-pondeuses-1-1200.webp",
     imageAlt: "Poules pondeuses en élevage libre dans notre poulailler",
     products: [
       {
         name: "Poulets de chair",
         description:
           "Des poulets élevés jusqu'au poids optimal pour la boucherie, à la chair tendre et savoureuse. Idéal pour les ménages, restaurateurs et revendeurs en quête d'une volaille locale et fraîche.",
-        imageSrc: "/images/archive/poulailler-interieur-2.webp",
+        imageSrc: "/images/archive/poulailler-interieur-2-1200.webp",
         imageAlt: "Poulets de chair en élevage à Kinshasa",
       },
       {
         name: "Pondeuses",
         description:
           "Nos pondeuses sont démarrées dans des conditions optimales et sélectionnées pour leur régularité de ponte. Parfaites pour produire des œufs au quotidien, avec un suivi technique sur demande.",
-        imageSrc: "/images/archive/poulailler-cages-3.webp",
+        imageSrc: "/images/archive/poulailler-cages-3-1200.webp",
         imageAlt: "Pondeuses en cage d'élevage à Kinshasa",
       },
       {
         name: "Poussins d'un jour",
         description:
           "Poussins vaccinés et démarrés en couvoir dans des conditions contrôlées. Parfaits pour démarrer ou renouveler votre élevage, avec un accompagnement sur l'alimentation et la vaccination.",
-        imageSrc: "/images/archive/poulailler-pondeuses-1.webp",
+        imageSrc: "/images/archive/poulailler-pondeuses-1-1200.webp",
         imageAlt: "Poussins d'un jour vaccinés",
       },
     ],
@@ -1685,7 +1685,7 @@ export const aviculturePage: AviculturePageContent = {
           description: "Poulet élevé jusqu'au poids optimal, prêt pour la vente.",
           price: "25 000 FC",
           unit: "/ unité",
-          imageSrc: "/images/archive/poulailler-interieur-2.webp",
+          imageSrc: "/images/archive/poulailler-interieur-2-1200.webp",
           imageAlt: "Poulet de chair prêt à la vente",
           badge: "Best-seller",
         },
@@ -1694,7 +1694,7 @@ export const aviculturePage: AviculturePageContent = {
           description: "Pondeuse prête à produire, démarrée en conditions contrôlées.",
           price: "12 000 FC",
           unit: "/ unité",
-          imageSrc: "/images/archive/poulailler-cages-3.webp",
+          imageSrc: "/images/archive/poulailler-cages-3-1200.webp",
           imageAlt: "Pondeuse démarrée",
           badge: "Dès",
         },
@@ -1703,7 +1703,7 @@ export const aviculturePage: AviculturePageContent = {
           description: "Poussin vacciné, parfait pour démarrer votre élevage.",
           price: "2 500 FC",
           unit: "/ unité",
-          imageSrc: "/images/archive/poulailler-pondeuses-1.webp",
+          imageSrc: "/images/archive/poulailler-pondeuses-1-1200.webp",
           imageAlt: "Poussin d'un jour",
         },
         {
@@ -1711,7 +1711,7 @@ export const aviculturePage: AviculturePageContent = {
           description: "Œufs frais du jour, issus de nos pondeuses.",
           price: "8 000 FC",
           unit: "/ plateau",
-          imageSrc: "/images/archive/poulailler-pondeuses-1.webp",
+          imageSrc: "/images/archive/poulailler-pondeuses-1-1200.webp",
           imageAlt: "Plateau d'œufs frais",
         },
       ],

@@ -35,3 +35,4 @@ files.zip
 /data/geoip-city*.dat
 
 /packages
+/Archive*
