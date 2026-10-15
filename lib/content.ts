@@ -407,50 +407,50 @@ export const agriculturePage: AgriculturePageContent = {
     "Découvrez l'engagement agricole de PVS ONGD ASBL : production de cultures vivrières à Mont Ngafula, pratiques durables et suivi rigoureux, de la préparation du sol à la récolte.",
 
   hero: {
-    eyebrow: "Notre cœur de métier",
-    title: "L'agriculture, au centre de notre engagement",
-    titleEmphasis: "engagement",
-    titleLines: ["L'agriculture, au centre", "de notre engagement."],
-    paragraph:
-      "Sur nos parcelles de Mont Ngafula, nous cultivons des légumes-feuilles adaptés au climat de Kinshasa. Chaque plate-bande est suivie individuellement, du semis à la récolte, pour une production saine et traçable.",
-    imageSrc: "/images/photo-1500382017468-9049fed747ef.jpg",
-    imageAlt: "Champ agricole verdoyant au lever du soleil",
-  },
+      eyebrow: "Notre cœur de métier",
+      title: "L'agriculture, au centre de notre engagement",
+      titleEmphasis: "engagement",
+      titleLines: ["L'agriculture, au centre", "de notre engagement."],
+      paragraph:
+        "Sur nos vastes terres de Mont Ngafula, nous cultivons des légumes-feuilles et légumes verts adaptés au climat de Kinshasa. Chaque plate-bande est suivie individuellement, du semis à la récolte, pour une production saine et traçable.",
+      imageSrc: "/images/photo-1500382017468-9049fed747ef.jpg",
+      imageAlt: "Champ agricole verdoyant au lever du soleil",
+    },
 
-  overview: {
-    eyebrow: "Notre exploitation",
-    title: "Des plates-bandes suivies une à une, pas une production de masse",
-    paragraphs: [
-      "Nos parcelles sont organisées en plates-bandes individualisées. Chacune est semée, suivie et récoltée séparément — pas de traitement uniforme, pas de pulvérisation aveugle. On s'adapte au sol, au climat, à la culture.",
-      "Nous travaillons à la demande pour nos cultures maraîchères : on sème quand vous commandez. Résultat — fraîcheur garantie, zéro gaspillage, zéro surproduction. C'est plus exigeant, mais c'est ce qu'exige une production responsable.",
-    ],
-    tags: ["Plates-bandes individualisées", "Production à la demande", "Zéro gaspillage"],
-    imageSrc: "/images/photo-1515150144380-bca9f1650ed9.jpg",
-    imageAlt: "Rangées de cultures dans une exploitation agricole",
-    products: [
-      {
-        name: "Épinard",
-        description:
-          "Cultivé en plate-bande et produit à la demande, notre épinard est récolté frais le matin même de la livraison, pour préserver toute sa qualité nutritionnelle.",
-        imageSrc: "/images/photo-1576045057995-568f588f82fb.jpg",
-        imageAlt: "Plate-bande d'épinard",
-      },
-      {
-        name: "Oseille",
-        description:
-          "Une culture traditionnelle suivie de près, appréciée pour sa saveur acidulée et sa place centrale dans l'alimentation locale congolaise.",
-        imageSrc: "/images/photo-1523348837708-15d4a09cfac2.jpg",
-        imageAlt: "Plate-bande d'oseille",
-      },
-      {
-        name: "Nduda",
-        description:
-          "Le nduda est cultivé selon les mêmes standards de rigueur que nos autres légumes-feuilles, et complète notre offre de cultures produites à la demande.",
-        imageSrc: "/images/photo-1500382017468-9049fed747ef.jpg",
-        imageAlt: "Plate-bande de nduda",
-      },
-    ],
-  },
+    overview: {
+      eyebrow: "Notre exploitation",
+      title: "Des plates-bandes suivies une à une, pas une production de masse",
+      paragraphs: [
+        "Nos parcelles sont organisées en plates-bandes individualisées. Chacune est semée, suivie et récoltée séparément — pas de traitement uniforme, pas de pulvérisation aveugle. On s'adapte au sol, au climat, à la culture.",
+        "Nous cultivons des légumes traditionnels congolais (feuilles de manioc, épinards, aubergines) ainsi que d'autres légumes verts adaptés à notre terroir. Résultat — fraîcheur garantie, des produits de proximité accessibles aux populations locales.",
+      ],
+      tags: ["Légumes-feuilles", "Production locale", "Plates-bandes individualisées"],
+      imageSrc: "/images/photo-1515150144380-bca9f1650ed9.jpg",
+      imageAlt: "Rangées de cultures dans une exploitation agricole",
+      products: [
+        {
+          name: "Feuilles de manioc",
+          description:
+            "Les feuilles de manioc sont cultivées en plate-bande sur notre domaine. Riches en protéines et en nutriments, elles sont récoltées fraîches et à la demande pour préserver toutes leurs qualités nutritionnelles et leur goût authentique.",
+          imageSrc: "/images/archive/etang-paysage-manguiers-1200.webp",
+          imageAlt: "Plate-bande de feuilles de manioc",
+        },
+        {
+          name: "Épinards",
+          description:
+            "Cultivé en plate-bande et produit à la demande, notre épinard est récolté frais le matin même de la livraison, pour préserver toute sa qualité nutritionnelle. Un incontournable de l'alimentation congolaise.",
+          imageSrc: "/images/photo-1576045057995-568f588f82fb.jpg",
+          imageAlt: "Plate-bande d'épinards",
+        },
+        {
+          name: "Aubergines",
+          description:
+            "L'aubergine est cultivée selon les mêmes standards de rigueur que nos autres légumes : sélection variétale, suivi plate-bande par plate-bande, récolte au bon moment. Elle complète notre gamme de légumes verts frais.",
+          imageSrc: "/images/photo-1500382017468-9049fed747ef.jpg",
+          imageAlt: "Plate-bande d'aubergines",
+        },
+      ],
+    },
 
   features: {
     eyebrow: "Nos pratiques agricoles",
@@ -522,40 +522,40 @@ export const agriculturePage: AgriculturePageContent = {
 export const aproposPage: AboutPageContent = {
   metaTitle: "À propos — PVS ONGD ASBL",
   metaDescription:
-    "Découvrez PVS ONGD ASBL : une organisation congolaise basée à Kinshasa, engagée pour une production locale durable en agriculture, élevage, pisciculture et porcherie.",
+    "Découvrez PVS ONGD ASBL : organisation congolaise fondée dans les années 2000 par un couple d'entrepreneurs chrétiens à Mont Ngafula, reconnue ASBL en 2013, active en agriculture, élevage, pisciculture et porcherie à Kinshasa.",
 
   hero: {
     eyebrow: "Qui sommes-nous",
-    title: "Une organisation locale engagée pour une production durable",
-    titleEmphasis: "durable",
+    title: "Une ferme familiale congolaise au service du pays",
+    titleEmphasis: "pays",
     titleLines: [
-      "Une organisation locale",
-      "engagée pour une production",
-      "durable.",
+      "Une ferme familiale",
+      "congolaise au service",
+      "du pays.",
     ],
     paragraph:
-      "PVS ONGD ASBL est une organisation congolaise basée à Kinshasa, active dans l'agriculture, l'élevage, la pisciculture, la porcherie et la fourniture de produits pour animaux. Notre vocation est d'accompagner une production locale saine, structurée et durable.",
+      "Pain de Vie Seigneur (PVS) est une ferme familiale congolaise fondée dans les années 2000, reconnue ASBL en 2013. Implantée à Mont Ngafula sur plus de 1 000 hectares, elle regroupe agriculture, élevage, pisciculture et porcherie pour une production locale diversifiée et de qualité.",
     imageSrc: "/images/archive/site-pvs-batiments-1200.webp",
     imageAlt: "Vue des bâtiments d'exploitation PVS à Kinshasa",
   },
 
   mission: {
     eyebrow: "Notre mission",
-    title: "Accompagner une production locale saine et durable",
+    title: "Promouvoir une production locale saine et accessible",
     statement:
-      "« Nous croyons qu'une production maîtrisée à chaque étape profite autant aux communautés qu'à la terre. Notre rôle est de mettre notre expérience de terrain au service de partenaires et de clients exigeants, pour une agriculture responsable et un élevage sain. »",
+      "« Pain de Vie Seigneur œuvre dans le but de promouvoir une production locale congolaise, dans les meilleures conditions éthiques, en offrant aux populations locales des produits agricoles et animaliers de qualité, accessibles à des prix réduits. »",
     signature: "L'équipe PVS ONGD ASBL",
-    signatureRole: "Organisation non gouvernementale de développement",
+    signatureRole: "Organisation non gouvernementale de développement — fondée dans les années 2000",
   },
 
   vision: {
     eyebrow: "Notre vision",
-    title: "Bâtir une chaîne de valeur locale, de la terre à l'assiette",
+    title: "Devenir une ferme de référence en République Démocratique du Congo",
     paragraphs: [
-      "Nous voyons au-delà de la production : chaque culture, chaque animal, chaque étang est un maillon d'une chaîne qui relie le producteur au consommateur. Notre ambition est de raccourcir cette chaîne, pour qu'elle profite d'abord à ceux qui la font vivre.",
-      "C'est cette conviction qui guide nos choix : privilégier les variétés adaptées au terroir, soigner le bien-être animal, maîtriser chaque étape de la production. Parce qu'une production maîtrisée n'est pas un luxe — c'est la condition d'une nourriture saine et d'un territoire vivant.",
+      "Devenir une ferme de référence en République Démocratique du Congo, reconnue pour son excellence agricole, sa contribution à la sécurité alimentaire locale et à l'économie locale.",
+      "Cette ambition se construit pas à pas : implantation d'un domaine de plus de 1 000 hectares, diversification des pôles de production (aviculture, porcherie, étangs piscicoles, agriculture vivrière), et maintien d'une gestion familiale à taille humaine, fidèle à l'esprit qui anime la ferme depuis sa création.",
     ],
-    tags: ["Chaîne de valeur locale", "Bien-être animal", "Souveraineté alimentaire"],
+    tags: ["Excellence agricole", "Sécurité alimentaire", "Économie locale"],
     images: [
       {
         src: "/images/archive/site-pvs-batiments-2-1200.webp",
@@ -624,117 +624,95 @@ export const aproposPage: AboutPageContent = {
 
   approach: {
     eyebrow: "Notre approche",
-    title: "Une méthode rigoureuse, de la terre à l'assiette",
+    title: "Une gestion complémentaire des ressources du domaine",
     steps: [
       {
         number: "01",
         title: "Analyse du terrain",
         description:
-          "Évaluation des sols, du climat et des besoins locaux pour définir les cultures et élevages les plus adaptés.",
+          "Évaluation des sols, du climat et des besoins locaux pour définir les cultures et élevages les plus adaptés au terroir.",
       },
       {
         number: "02",
         title: "Planification",
         description:
-          "Élaboration d'un plan de production structuré, respectueux des cycles naturels et des ressources disponibles.",
+          "Élaboration d'un plan de production structuré, respectueux des cycles naturels et des ressources disponibles sur le domaine.",
       },
       {
         number: "03",
-        title: "Mise en œuvre",
+        title: "Production intégrée",
         description:
-          "Application de pratiques agricoles et d'élevage rigoureuses, avec un suivi constant à chaque étape.",
+          "Agriculture, élevage et pisciculture fonctionnent de manière complémentaire : les sous-produits d'un pôle nourrissent l'autre.",
       },
       {
         number: "04",
-        title: "Suivi & accompagnement",
+        title: "Suivi & durabilité",
         description:
-          "Contrôle qualité, conseil et accompagnement des partenaires et clients sur le long terme.",
+          "Contrôle qualité, gestion durable des ressources naturelles et engagement auprès des communautés locales.",
       },
     ],
   },
 
   values: {
-    eyebrow: "Nos engagements",
-    title: "Pourquoi nous choisir ?",
+    eyebrow: "Nos valeurs",
+    title: "Ce qui guide chacune de nos décisions",
     items: [
       {
-        tag: "Ancrage local",
-        title: "Une production congolaise, pas une réexportation",
+        tag: "Foi & éthique",
+        title: "Agir avec intégrité et respect",
         description:
-          "Basés à Mont Ngafula, Kinshasa, nous produisons sur place ce que nous vendons. Pas d'importation déguisée — une vraie production locale qui crée des emplois et nourrit la communauté.",
+          "Nous agissons avec intégrité, en accord avec nos convictions chrétiennes, et nous garantissons des pratiques respectueuses des animaux et de l'environnement.",
         icon: "sunrise",
-        imageSrc: "/images/archive/site-pvs-batiments-1200.webp",
-        imageAlt: "Site d'exploitation PVS à Mont Ngafula",
       },
       {
-        tag: "Chaîne intégrée",
-        title: "Cinq activités sous un même toit",
+        tag: "Excellence",
+        title: "Viser la qualité à chaque étape",
         description:
-          "L'aliment que nous produisons nourrit notre propre élevage. Une traçabilité de bout en bout, du champ à l'assiette.",
+          "Nous visons la qualité à chaque étape de la production et contribuons au développement économique et alimentaire de la RDC.",
         icon: "warehouse",
       },
       {
-        tag: "Mission ONGD",
-        title: "Un engagement au-delà du chiffre",
+        tag: "Durabilité",
+        title: "Gérer les ressources pour les générations futures",
         description:
-          "Notre statut d'ONG de développement nous engage : formation, accompagnement technique, création d'emplois locaux.",
+          "Nous gérons les ressources naturelles de manière responsable, pour assurer la pérennité de notre production et la nourrir celle des générations futures.",
         icon: "trees",
-      },
-      {
-        tag: "Suivi sanitaire",
-        title: "Un vétérinaire conseil, des contrôles réguliers",
-        description:
-          "Visites sanitaires, contrôle qualité à chaque étape, suivi du cheptel. Pas de production au hasard — chaque lot est encadré.",
-        icon: "droplet",
-      },
-      {
-        tag: "Partenariat durable",
-        title: "On accompagne, on ne livrene pas et disparaît pas",
-        description:
-          "Conseil, suivi post-livraison, accompagnement de votre projet sur la durée. Nous restons disponibles bien après la transaction.",
-        icon: "fence",
       },
     ],
   },
 
   history: {
     eyebrow: "Notre parcours",
-    title: "Une organisation en constante évolution",
+    title: "Plus de vingt ans au service de la production locale",
     subtitle:
-      "Depuis nos débuts, nous n'avons cessé d'étendre nos domaines d'activité et de renforcer notre ancrage local.",
+      "D'une ferme modeste à un domaine de plus de 1 000 hectares : l'histoire d'une famille engagée pour la RDC.",
     milestones: [
       {
-        year: "2018",
-        title: "Les prémices",
+        year: "Années 2000",
+        title: "Les débuts",
         description:
-          "L'organisation démarre avec une activité agricole sur un petit périmètre à Mont Ngafula, avec l'ambition de structurer une production locale saine.",
+          "Un couple d'entrepreneurs chrétiens se lance dans l'aventure agricole congolaise avec une conviction simple : contribuer au développement local en valorisant les ressources et le savoir-faire du pays.",
       },
       {
-        year: "2020",
-        title: "Diversification vers l'élevage",
+        year: "2013",
+        title: "Reconnaissance ASBL",
         description:
-          "Premiers cheptels bovins et caprins. Mise en place d'un suivi sanitaire rigoureux et d'un partenariat avec un vétérinaire conseil.",
+          "Reconnaissance officielle en tant qu'ONGD (Organisation Non Gouvernementale de Développement) par arrêté ministériel N°088/CAB/MIN/J&DH/2013 du 04 avril 2013.",
       },
       {
-        year: "2022",
-        title: "Pisciculture & porcherie",
+        year: "Aujourd'hui",
+        title: "Un domaine de plus de 1 000 hectares",
         description:
-          "Création des premiers étangs de pisciculture et lancement de la porcherie. L'organisation couvre désormais quatre domaines complémentaires.",
-      },
-      {
-        year: "2024",
-        title: "Produits pour animaux",
-        description:
-          "Ouverture de la gamme d'aliments et de produits pour animaux, pour accompagner les éleveurs locaux de bout en bout.",
+          "Le domaine s'est agrandi progressivement pour regrouper plusieurs pôles de production : poulaillers, porcheries, étangs piscicoles et agriculture vivrière, sur plus de 1 000 hectares.",
       },
     ],
   },
 
   stats: [
-    { value: "5+", label: "Domaines d'activité", numericValue: 5, suffix: "+" },
-    { value: "6", label: "Ans d'expérience", numericValue: 6, suffix: " ans" },
-    { value: "4", label: "Sites de production", numericValue: 4 },
-    { value: "100%", label: "Ancrage local", numericValue: 100, suffix: "%" },
+    { value: "5", label: "Domaines d'activité", numericValue: 5 },
+    { value: "1000+", label: "Hectares de domaine", numericValue: 1000, suffix: "+" },
+    { value: "ONGD", label: "ASBL reconnue (2013)" },
+    { value: "20+", label: "Ans d'engagement", numericValue: 20, suffix: "+" },
   ],
 
   cta: {
@@ -1622,11 +1600,23 @@ export const aviculturePage: AviculturePageContent = {
       {
         name: "Poussins d'un jour",
         description:
-          "Poussins vaccinés et démarrés en couvoir dans des conditions contrôlées. Parfaits pour démarrer ou renouveler votre élevage, avec un accompagnement sur l'alimentation et la vaccination.",
+          "Poussins vaccinés et démarrés en couvoir dans des conditions contrôlées, puis transférés dans notre poussinière pour leur premières semaines de vie. Parfaits pour démarrer ou renouveler votre élevage, avec un accompagnement sur l'alimentation et la vaccination.",
         imageSrc: "/images/archive/poulailler-pondeuses-1-1200.webp",
-        imageAlt: "Poussins d'un jour vaccinés",
+        imageAlt: "Poussins d'un jour vaccinés en poussinière",
       },
     ],
+  },
+
+  poussiniere: {
+    eyebrow: "Notre poussinière",
+    title: "Un bâtiment dédié aux premiers jours des poussins",
+    paragraphs: [
+      "Un bâtiment affecté à la poussinière permet d'assurer l'élevage des poussins dans des conditions optimales dès leurs premiers jours, garantissant ainsi la bonne santé et la croissance du cheptel avicole, de la naissance jusqu'à la maturité.",
+      "Dans notre poussinière, la température, la luminosité, l'alimentation et la ventilation sont contrôlées chaque jour. Les poussins reçoivent un starter adapté, les vaccinations de démarrage sont administrées à date fixe, et un suivi quotidien est assuré pour détecter le moindre signe de faiblesse — un investissement qui se voit sur la vigueur des bandes plus tard.",
+    ],
+    imageSrc: "/images/archive/poulailler-pondeuses-1-1200.webp",
+    imageAlt: "Poussins d'un jour dans notre poussinière PVS",
+    imageCaption: "Poussinière PVS — démarrage contrôlé des bandes",
   },
 
   features: {

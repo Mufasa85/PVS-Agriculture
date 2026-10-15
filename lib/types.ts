@@ -390,7 +390,18 @@ export type PorcheriePageContent = {
   };
 };
 
-export type AviculturePageContent = PorcheriePageContent;
+export type AviculturePageContent = PorcheriePageContent & {
+  // Section dédiée à la poussinière (bâtiment d'accueil des poussins premiers jours),
+  // distincte des produits (chair / pondeuses / œufs).
+  poussiniere: {
+    eyebrow: string;
+    title: string;
+    paragraphs: string[];
+    imageSrc: string;
+    imageAlt: string;
+    imageCaption: string;
+  };
+};
 
 export type PriceProduct = {
   name: string;

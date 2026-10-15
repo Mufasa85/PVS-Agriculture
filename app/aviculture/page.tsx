@@ -58,7 +58,7 @@ const featureIcons: Record<
 };
 
 export default async function AviculturePage() {
-  const { hero, overview, features, pricing, stats, cta } = aviculturePage;
+  const { hero, overview, poussiniere, features, pricing, stats, cta } = aviculturePage;
 
   // Limité aux 4 premiers produits publiés (la grille tient sur une ligne).
   // On récupère à la fois les poulets et les œufs, l'aviculture regroupant
@@ -263,6 +263,47 @@ export default async function AviculturePage() {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* ── Poussinière (bâtiment dédié aux premiers jours) ── */}
+      <section className="bg-brand-50 py-[76px] nav:py-[110px]">
+        <div className="shell grid items-center gap-16 nav:grid-cols-[0.95fr_1.05fr]">
+          <Reveal className="relative mx-auto w-full max-w-[460px] nav:mx-0 nav:max-w-none">
+            <div
+              aria-hidden="true"
+              className="hero-blob absolute -top-[8%] -left-[14%] z-0 h-[120%] w-[120%] bg-brand-600 opacity-95"
+            />
+            <figure className="relative z-[1] overflow-hidden rounded-pvs-lg bg-gradient-to-br from-brand-500 to-brand-700 shadow-float">
+              <div className="relative aspect-[4/4.4]">
+                <Image
+                  src={poussiniere.imageSrc}
+                  alt={poussiniere.imageAlt}
+                  fill
+                  sizes="(max-width: 900px) 460px, 45vw"
+                  className="object-cover"
+                />
+              </div>
+              <figcaption className="bg-brand-900/85 px-5 py-3 text-[13px] text-white/85">
+                {poussiniere.imageCaption}
+              </figcaption>
+            </figure>
+          </Reveal>
+
+          <Reveal delay={0.16}>
+            <span className="eyebrow">{poussiniere.eyebrow}</span>
+            <h2 className="mt-[14px] text-[clamp(28px,3.6vw,38px)] tracking-[-0.01em]">
+              {poussiniere.title}
+            </h2>
+            {poussiniere.paragraphs.map((paragraph) => (
+              <p
+                key={paragraph}
+                className="mb-[18px] mt-[18px] text-base text-ink-700"
+              >
+                {paragraph}
+              </p>
+            ))}
+          </Reveal>
         </div>
       </section>
 
