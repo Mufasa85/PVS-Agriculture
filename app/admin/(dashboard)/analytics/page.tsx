@@ -732,10 +732,10 @@ function TrafficChart({
         </defs>
 
         {/* Lignes de grille horizontales */}
-        {gridSteps.map((val) => {
+        {gridSteps.map((val, idx) => {
           const y = padding.top + graphH - (val / maxVal) * graphH;
           return (
-            <g key={val}>
+            <g key={`grid-${idx}-${val}`}>
               <line
                 x1={padding.left}
                 y1={y}
