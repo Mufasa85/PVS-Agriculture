@@ -46,7 +46,7 @@ export default function ContactPage() {
       </section>
 
       {/* ── Contact : infos + formulaire ── */}
-      <section className="bg-white pb-[76px] pt-0 nav:pb-[110px]">
+      <section className="bg-white pb-[76px] pt-[64px] nav:pb-[110px] nav:pt-[96px]">
         <div className="shell grid gap-12 nav:grid-cols-[0.85fr_1.15fr] nav:gap-16">
           {/* Infos de contact */}
           <Reveal>
@@ -58,8 +58,8 @@ export default function ContactPage() {
               convient le mieux.
             </p>
 
-            <ul className="mt-8 flex flex-col gap-6">
-              <Reveal as="li" delay={0.05} className="flex items-start gap-4">
+            <ul className="mt-10 flex flex-col gap-7">
+              <Reveal as="li" delay={0.05} className="flex items-start gap-5">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[11px] bg-brand-100 text-brand-700">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <path
@@ -77,14 +77,14 @@ export default function ContactPage() {
                   </span>
                   <Link
                     href={contact.phoneHref}
-                    className="text-[16px] font-bold text-brand-900 transition-colors duration-150 ease-out hover:text-brand-600"
+                    className="mt-1.5 block text-[16px] font-bold leading-[1.4] text-brand-900 transition-colors duration-150 ease-out hover:text-brand-600"
                   >
                     {contact.phone}
                   </Link>
                 </div>
               </Reveal>
 
-              <Reveal as="li" delay={0.1} className="flex items-start gap-4">
+              <Reveal as="li" delay={0.1} className="flex items-start gap-5">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[11px] bg-brand-100 text-brand-700">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <path
@@ -107,14 +107,14 @@ export default function ContactPage() {
                   </span>
                   <Link
                     href={`mailto:${contact.email}`}
-                    className="text-[16px] font-bold text-brand-900 transition-colors duration-150 ease-out hover:text-brand-600"
+                    className="mt-1.5 block text-[16px] font-bold leading-[1.4] text-brand-900 transition-colors duration-150 ease-out hover:text-brand-600"
                   >
                     {contact.email}
                   </Link>
                 </div>
               </Reveal>
 
-              <Reveal as="li" delay={0.15} className="flex items-start gap-4">
+              <Reveal as="li" delay={0.15} className="flex items-start gap-5">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[11px] bg-brand-100 text-brand-700">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <path
@@ -135,13 +135,13 @@ export default function ContactPage() {
                   <span className="block text-[13px] font-bold uppercase tracking-[0.04em] text-ink-500">
                     Adresse
                   </span>
-                  <span className="text-[16px] font-bold text-brand-900">
+                  <span className="mt-1.5 block text-[16px] font-bold leading-[1.4] text-brand-900">
                     {contact.address}
                   </span>
                 </div>
               </Reveal>
 
-              <Reveal as="li" delay={0.2} className="flex items-start gap-4">
+              <Reveal as="li" delay={0.2} className="flex items-start gap-5">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[11px] bg-brand-100 text-brand-700">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                     <circle
@@ -163,14 +163,14 @@ export default function ContactPage() {
                   <span className="block text-[13px] font-bold uppercase tracking-[0.04em] text-ink-500">
                     Horaires
                   </span>
-                  <span className="text-[16px] font-bold text-brand-900">
+                  <span className="mt-1.5 block text-[16px] font-bold leading-[1.4] text-brand-900">
                     {contact.hours}
                   </span>
                 </div>
               </Reveal>
             </ul>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-10 flex flex-wrap gap-3">
               <Link
                 href={contact.whatsappHref}
                 target="_blank"
