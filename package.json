@@ -40,7 +40,7 @@
     "@types/topojson-client": "^3.1.5",
     "@visx/brush": "^4.0.0",
     "@visx/curve": "^4.0.1-alpha.0",
-    "@visx/event": "^4.0.1-alpha.0",
+    "@visx/event": "^4.0.0",
     "@visx/geo": "^4.0.1-alpha.0",
     "@visx/gradient": "^4.0.1-alpha.0",
     "@visx/grid": "^4.0.1-alpha.0",
@@ -105,6 +105,7 @@
   "overrides": {
     "deepmerge-ts": "8.0.0",
     "braces": "npm:@dieub/braces-depth-guard@3.0.3-pn.3",
-    "postcss-selector-parser": "^7.1.6"
+    "postcss-selector-parser": "^7.1.6",
+    "@visx/point": "4.0.0"
   }
 }
