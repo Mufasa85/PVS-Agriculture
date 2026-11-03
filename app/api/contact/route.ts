@@ -5,6 +5,7 @@ import { contactSchema } from "@/lib/validation";
 import { escapeHtml, sendMail } from "@/lib/mail";
 import { getClientIp } from "@/lib/audit";
 import { rateLimit } from "@/lib/rate-limit";
+import { purgeExpiredPersonalData } from "@/lib/retention";
 
 export const runtime = "nodejs";
 
@@ -147,6 +148,10 @@ export async function POST(request: Request) {
         message: message.trim(),
       },
     });
+
+    // Purge opportuniste des données dépassant leur durée de conservation
+    // (politique de confidentialité, section 7). Ne bloque pas la réponse.
+    void purgeExpiredPersonalData();
 
     return NextResponse.json({ success: true });
   } catch (err) {

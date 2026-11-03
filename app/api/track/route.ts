@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { anonymizeIp, recordAnalyticsEvent } from "@/lib/analytics";
 import { lookupCountry } from "@/lib/geoip";
 import { rateLimit } from "@/lib/rate-limit";
+import { purgeExpiredPersonalData } from "@/lib/retention";
 import { trackEventSchema } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -88,6 +89,10 @@ export async function POST(request: Request) {
       ipAddress,
       metadata: mergedMetadata,
     });
+
+    // Purge opportuniste des données dépassant leur durée de conservation
+    // (politique de confidentialité, section 7). Ne bloque pas la réponse.
+    void purgeExpiredPersonalData();
 
     return NextResponse.json({ success: true, eventId: event?.id });
   } catch (error) {
