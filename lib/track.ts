@@ -2,7 +2,14 @@
 
 /**
  * Client-side helper for tracking analytics events to POST /api/track
+ *
+ * ⚠️ Toute mesure d'audience est conditionnée au consentement de
+ * l'utilisateur (cookie « pvs-consent »). Voir `lib/consent.ts` et la
+ * section « Mesure d'audience » de la politique de confidentialité
+ * (/confidentialite) : sans accord, aucune donnée n'est transmise.
  */
+import { hasAnalyticsConsent } from "@/lib/consent";
+
 export async function trackEvent(
   type:
     | "PAGE_VIEW"
@@ -15,6 +22,9 @@ export async function trackEvent(
   path?: string,
   metadata?: Record<string, any>,
 ) {
+  // Point de passage central : sans consentement, on n'émet rien.
+  if (!hasAnalyticsConsent()) return;
+
   try {
     const currentPath =
       path || (typeof window !== "undefined" ? window.location.pathname : "");
