@@ -16,6 +16,7 @@ import type {
   Activity,
   AgriculturePageContent,
   AviculturePageContent,
+  ConfidentialitePageContent,
   ContactInfo,
   Cta,
   ElevagePageContent,
@@ -156,7 +157,7 @@ export const hero = {
       alt: "Vue des bâtiments d'exploitation PVS à Mont Ngafula",
     },
   ],
-  badge: "🌾 Agriculture d'abord",
+  badge: "Agriculture d'abord",
   floatingCardTitle: "Production durable",
   floatingCardText: "Une agriculture responsable, ancrée localement",
 };
@@ -328,6 +329,15 @@ export const contactForm = {
   },
   submitLabel: "Envoyer le message",
   successLabel: "Votre message a été envoyé ✓",
+  // Case de consentement explicite (art. 196 du Code du numérique) :
+  // non pré-cochée, liée à la politique de confidentialité.
+  consentLabel:
+    "J'accepte que mes coordonnées soient utilisées pour traiter ma demande, conformément à la",
+  consentLinkLabel: "politique de confidentialité",
+  consentLinkHref: "/confidentialite",
+  // Rappel : ne pas transmettre de données sensibles (art. 195).
+  sensitiveNotice:
+    "Merci de ne pas inclure dans votre message d'informations de santé, d'opinions politiques, de convictions religieuses ou d'appartenance syndicale.",
 };
 
 export const contact: ContactInfo = {
@@ -352,8 +362,6 @@ export const contact: ContactInfo = {
     "Produits pour animaux",
     "Autre",
   ],
-  consentText:
-    "En envoyant ce formulaire, vous acceptez d'être recontacté par notre équipe.",
 };
 
 export const footer = {
@@ -390,7 +398,7 @@ export const footer = {
   ] satisfies Social[],
   legalLinks: [
     { label: "Mentions légales", href: "#" }, // contenu à créer
-    { label: "Politique de confidentialité", href: "#" }, // contenu à créer
+    { label: "Politique de confidentialité", href: "/confidentialite" },
   ] satisfies NavLink[],
   columnTitles: {
     quickLinks: "Liens rapides",
@@ -407,50 +415,54 @@ export const agriculturePage: AgriculturePageContent = {
     "Découvrez l'engagement agricole de PVS ONGD ASBL : production de cultures vivrières à Mont Ngafula, pratiques durables et suivi rigoureux, de la préparation du sol à la récolte.",
 
   hero: {
-      eyebrow: "Notre cœur de métier",
-      title: "L'agriculture, au centre de notre engagement",
-      titleEmphasis: "engagement",
-      titleLines: ["L'agriculture, au centre", "de notre engagement."],
-      paragraph:
-        "Sur nos vastes terres de Mont Ngafula, nous cultivons des légumes-feuilles et légumes verts adaptés au climat de Kinshasa. Chaque plate-bande est suivie individuellement, du semis à la récolte, pour une production saine et traçable.",
-      imageSrc: "/images/photo-1500382017468-9049fed747ef.jpg",
-      imageAlt: "Champ agricole verdoyant au lever du soleil",
-    },
+    eyebrow: "Notre cœur de métier",
+    title: "L'agriculture, au centre de notre engagement",
+    titleEmphasis: "engagement",
+    titleLines: ["L'agriculture, au centre", "de notre engagement."],
+    paragraph:
+      "Sur nos vastes terres de Mont Ngafula, nous cultivons des légumes-feuilles et légumes verts adaptés au climat de Kinshasa. Chaque plate-bande est suivie individuellement, du semis à la récolte, pour une production saine et traçable.",
+    imageSrc: "/images/photo-1500382017468-9049fed747ef.jpg",
+    imageAlt: "Champ agricole verdoyant au lever du soleil",
+  },
 
-    overview: {
-      eyebrow: "Notre exploitation",
-      title: "Des plates-bandes suivies une à une, pas une production de masse",
-      paragraphs: [
-        "Nos parcelles sont organisées en plates-bandes individualisées. Chacune est semée, suivie et récoltée séparément — pas de traitement uniforme, pas de pulvérisation aveugle. On s'adapte au sol, au climat, à la culture.",
-        "Nous cultivons des légumes traditionnels congolais (feuilles de manioc, épinards, aubergines) ainsi que d'autres légumes verts adaptés à notre terroir. Résultat — fraîcheur garantie, des produits de proximité accessibles aux populations locales.",
-      ],
-      tags: ["Légumes-feuilles", "Production locale", "Plates-bandes individualisées"],
-      imageSrc: "/images/photo-1515150144380-bca9f1650ed9.jpg",
-      imageAlt: "Rangées de cultures dans une exploitation agricole",
-      products: [
-        {
-          name: "Feuilles de manioc",
-          description:
-            "Les feuilles de manioc sont cultivées en plate-bande sur notre domaine. Riches en protéines et en nutriments, elles sont récoltées fraîches et à la demande pour préserver toutes leurs qualités nutritionnelles et leur goût authentique.",
-          imageSrc: "/images/archive/vue-elevage.png",
-          imageAlt: "Plate-bande de feuilles de manioc",
-        },
-        {
-          name: "Épinards",
-          description:
-            "Cultivé en plate-bande et produit à la demande, notre épinard est récolté frais le matin même de la livraison, pour préserver toute sa qualité nutritionnelle. Un incontournable de l'alimentation congolaise.",
-          imageSrc: "/images/photo-1576045057995-568f588f82fb.jpg",
-          imageAlt: "Plate-bande d'épinards",
-        },
-        {
-          name: "Aubergines",
-          description:
-            "L'aubergine est cultivée selon les mêmes standards de rigueur que nos autres légumes : sélection variétale, suivi plate-bande par plate-bande, récolte au bon moment. Elle complète notre gamme de légumes verts frais.",
-          imageSrc: "/images/photo-1500382017468-9049fed747ef.jpg",
-          imageAlt: "Plate-bande d'aubergines",
-        },
-      ],
-    },
+  overview: {
+    eyebrow: "Notre exploitation",
+    title: "Des plates-bandes suivies une à une, pas une production de masse",
+    paragraphs: [
+      "Nos parcelles sont organisées en plates-bandes individualisées. Chacune est semée, suivie et récoltée séparément — pas de traitement uniforme, pas de pulvérisation aveugle. On s'adapte au sol, au climat, à la culture.",
+      "Nous cultivons des légumes traditionnels congolais (feuilles de manioc, épinards, aubergines) ainsi que d'autres légumes verts adaptés à notre terroir. Résultat — fraîcheur garantie, des produits de proximité accessibles aux populations locales.",
+    ],
+    tags: [
+      "Légumes-feuilles",
+      "Production locale",
+      "Plates-bandes individualisées",
+    ],
+    imageSrc: "/images/photo-1515150144380-bca9f1650ed9.jpg",
+    imageAlt: "Rangées de cultures dans une exploitation agricole",
+    products: [
+      {
+        name: "Feuilles de manioc",
+        description:
+          "Les feuilles de manioc sont cultivées en plate-bande sur notre domaine. Riches en protéines et en nutriments, elles sont récoltées fraîches et à la demande pour préserver toutes leurs qualités nutritionnelles et leur goût authentique.",
+        imageSrc: "/images/archive/vue-elevage.png",
+        imageAlt: "Plate-bande de feuilles de manioc",
+      },
+      {
+        name: "Épinards",
+        description:
+          "Cultivé en plate-bande et produit à la demande, notre épinard est récolté frais le matin même de la livraison, pour préserver toute sa qualité nutritionnelle. Un incontournable de l'alimentation congolaise.",
+        imageSrc: "/images/photo-1576045057995-568f588f82fb.jpg",
+        imageAlt: "Plate-bande d'épinards",
+      },
+      {
+        name: "Aubergines",
+        description:
+          "L'aubergine est cultivée selon les mêmes standards de rigueur que nos autres légumes : sélection variétale, suivi plate-bande par plate-bande, récolte au bon moment. Elle complète notre gamme de légumes verts frais.",
+        imageSrc: "/images/photo-1500382017468-9049fed747ef.jpg",
+        imageAlt: "Plate-bande d'aubergines",
+      },
+    ],
+  },
 
   features: {
     eyebrow: "Nos pratiques agricoles",
@@ -506,7 +518,12 @@ export const agriculturePage: AgriculturePageContent = {
 
   stats: [
     { value: "3", label: "Cultures vivrières", numericValue: 3 },
-    { value: "100%", label: "Récolté le matin de la livraison", numericValue: 100, suffix: "%" },
+    {
+      value: "100%",
+      label: "Récolté le matin de la livraison",
+      numericValue: 100,
+      suffix: "%",
+    },
     { value: "0", label: "Pulvérisation aveugle", numericValue: 0 },
   ],
 
@@ -528,11 +545,7 @@ export const aproposPage: AboutPageContent = {
     eyebrow: "Qui sommes-nous",
     title: "Une ferme familiale congolaise au service du pays",
     titleEmphasis: "pays",
-    titleLines: [
-      "Une ferme familiale",
-      "congolaise au service",
-      "du pays.",
-    ],
+    titleLines: ["Une ferme familiale", "congolaise au service", "du pays."],
     paragraph:
       "Pain de Vie Seigneur (PVS) est une ferme familiale congolaise fondée dans les années 2000, reconnue ASBL en 2013. Implantée à Mont Ngafula sur plus de 1 000 hectares, elle regroupe agriculture, élevage, pisciculture et porcherie pour une production locale diversifiée et de qualité.",
     imageSrc: "/images/archive/site-pvs-batiments-1200.webp",
@@ -545,7 +558,8 @@ export const aproposPage: AboutPageContent = {
     statement:
       "« Pain de Vie Seigneur œuvre dans le but de promouvoir une production locale congolaise, dans les meilleures conditions éthiques, en offrant aux populations locales des produits agricoles et animaliers de qualité, accessibles à des prix réduits. »",
     signature: "L'équipe PVS ONGD ASBL",
-    signatureRole: "Organisation non gouvernementale de développement — fondée dans les années 2000",
+    signatureRole:
+      "Organisation non gouvernementale de développement — fondée dans les années 2000",
   },
 
   vision: {
@@ -710,7 +724,12 @@ export const aproposPage: AboutPageContent = {
 
   stats: [
     { value: "5", label: "Domaines d'activité", numericValue: 5 },
-    { value: "1000+", label: "Hectares de domaine", numericValue: 1000, suffix: "+" },
+    {
+      value: "1000+",
+      label: "Hectares de domaine",
+      numericValue: 1000,
+      suffix: "+",
+    },
     { value: "ONGD", label: "ASBL reconnue (2013)" },
     { value: "20+", label: "Ans d'engagement", numericValue: 20, suffix: "+" },
   ],
@@ -754,10 +773,10 @@ export const elevagePage: ElevagePageContent = {
         caption: "Porcs dans leurs enclosures",
       },
       {
-              src: "/images/archive/poulailler-pondeuses-1-1200.webp",
-              alt: "Poules en élevage libre",
-              caption: "Volailles en élevage libre",
-            },
+        src: "/images/archive/poulailler-pondeuses-1-1200.webp",
+        alt: "Poules en élevage libre",
+        caption: "Volailles en élevage libre",
+      },
       {
         // [PLACEHOLDER] Photo d'illustration locale
         src: "/images/photo-1564492300010-3a6a3f4e1e1e.jpg",
@@ -1155,53 +1174,58 @@ export const pisciculturePage: PisciculturePageContent = {
   },
 
   pricing: {
-      eyebrow: "Nos prix",
-      title: "Tarifs de nos produits de pisciculture",
-      subtitle:
-        "Un aperçu des prix de nos poissons et alevins. Les prix sont indicatifs et peuvent varier selon la disponibilité et la saison.",
-      items: [
-        {
-          name: "Tilapia frais",
-          description: "Tilapia élevé en étang contrôlé, pêché du jour.",
-          price: "8 000 FC",
-          unit: "/ kg",
-          imageSrc: "/images/archive/etang-avec-cage-1200.webp",
-          imageAlt: "Tilapia frais",
-          badge: "Best-seller",
-        },
-        {
-          name: "Poisson-chat",
-          description: "Poisson-chat élevé en étang, chair ferme et savoureuse.",
-          price: "10 000 FC",
-          unit: "/ kg",
-          imageSrc: "/images/archive/etang-vert-eau-1200.webp",
-          imageAlt: "Poisson-chat",
-        },
-        {
-          name: "Alevins tilapia",
-          description: "Alevins de tilapia pour démarrer votre propre étang.",
-          price: "500 FC",
-          unit: "/ unité",
-          imageSrc: "/images/archive/etang-bananiers-nenuphars-1200.webp",
-          imageAlt: "Alevins dans un bassin",
-          badge: "Dès",
-        },
-        {
-          name: "Aliment poisson",
-          description:
-            "Granulés pour poissons d'élevage, formulation équilibrée.",
-          price: "40 000 FC",
-          unit: "/ sac 25 kg",
-          imageSrc: "/images/archive/etang-vert-eau-1200.webp",
-          imageAlt: "Granulés pour poissons",
-        },
-      ],
-    },
+    eyebrow: "Nos prix",
+    title: "Tarifs de nos produits de pisciculture",
+    subtitle:
+      "Un aperçu des prix de nos poissons et alevins. Les prix sont indicatifs et peuvent varier selon la disponibilité et la saison.",
+    items: [
+      {
+        name: "Tilapia frais",
+        description: "Tilapia élevé en étang contrôlé, pêché du jour.",
+        price: "8 000 FC",
+        unit: "/ kg",
+        imageSrc: "/images/archive/etang-avec-cage-1200.webp",
+        imageAlt: "Tilapia frais",
+        badge: "Best-seller",
+      },
+      {
+        name: "Poisson-chat",
+        description: "Poisson-chat élevé en étang, chair ferme et savoureuse.",
+        price: "10 000 FC",
+        unit: "/ kg",
+        imageSrc: "/images/archive/etang-vert-eau-1200.webp",
+        imageAlt: "Poisson-chat",
+      },
+      {
+        name: "Alevins tilapia",
+        description: "Alevins de tilapia pour démarrer votre propre étang.",
+        price: "500 FC",
+        unit: "/ unité",
+        imageSrc: "/images/archive/etang-bananiers-nenuphars-1200.webp",
+        imageAlt: "Alevins dans un bassin",
+        badge: "Dès",
+      },
+      {
+        name: "Aliment poisson",
+        description:
+          "Granulés pour poissons d'élevage, formulation équilibrée.",
+        price: "40 000 FC",
+        unit: "/ sac 25 kg",
+        imageSrc: "/images/archive/etang-vert-eau-1200.webp",
+        imageAlt: "Granulés pour poissons",
+      },
+    ],
+  },
 
   stats: [
     { value: "2", label: "Espèces élevées", numericValue: 2 },
     { value: "6", label: "Paramètres d'eau contrôlés", numericValue: 6 },
-    { value: "100%", label: "Eau analysée régulièrement", numericValue: 100, suffix: "%" },
+    {
+      value: "100%",
+      label: "Eau analysée régulièrement",
+      numericValue: 100,
+      suffix: "%",
+    },
   ],
 
   cta: {
@@ -1368,7 +1392,12 @@ export const produitsAnimauxPage: ProduitsAnimauxPageContent = {
 
   stats: [
     { value: "4", label: "Types d'aliments", numericValue: 4 },
-    { value: "50", label: "kg par sac standard", numericValue: 50, suffix: " kg" },
+    {
+      value: "50",
+      label: "kg par sac standard",
+      numericValue: 50,
+      suffix: " kg",
+    },
     { value: "100%", label: "Conseil inclus", numericValue: 100, suffix: "%" },
   ],
 
@@ -1488,53 +1517,58 @@ export const porcheriePage: PorcheriePageContent = {
   },
 
   pricing: {
-      eyebrow: "Nos prix",
-      title: "Des tarifs clairs pour passer à l'action dès aujourd'hui",
-      subtitle:
-        "Ne remettez pas votre projet à demain. Découvrez nos tarifs et réservez vos porcs ou porcelets dès maintenant.",
-      items: [
-        {
-          name: "Porc charcutier",
-          description:
-            "Porc élevé jusqu'au poids optimal, prêt pour la boucherie.",
-          price: "180 000 FC",
-          unit: "/ unité",
-          imageSrc: "/images/archive/porc-adulte-1200.webp",
-          imageAlt: "Porc charcutier",
-          badge: "Best-seller",
-        },
-        {
-          name: "Porcelet sevré",
-          description: "Jeune porcelet sain, idéal pour démarrer votre élevage.",
-          price: "45 000 FC",
-          unit: "/ unité",
-          imageSrc: "/images/archive/truie-porcelets-enclos-1200.webp",
-          imageAlt: "Porcelet sevré",
-          badge: "Dès",
-        },
-        {
-          name: "Truie reproductrice",
-          description: "Truie sélectionnée pour sa fertilité et sa robustesse.",
-          price: "250 000 FC",
-          unit: "/ unité",
-          imageSrc: "/images/archive/truie-reproductie-1200.webp",
-          imageAlt: "Truie reproductrice",
-        },
-        {
-          name: "Verrat reproducteur",
-          description: "Verrat robuste, choisi pour ses qualités génétiques.",
-          price: "280 000 FC",
-          unit: "/ unité",
-          imageSrc: "/images/archive/porc-adulte-1200.webp",
-          imageAlt: "Verrat reproducteur",
-        },
-      ],
-    },
+    eyebrow: "Nos prix",
+    title: "Des tarifs clairs pour passer à l'action dès aujourd'hui",
+    subtitle:
+      "Ne remettez pas votre projet à demain. Découvrez nos tarifs et réservez vos porcs ou porcelets dès maintenant.",
+    items: [
+      {
+        name: "Porc charcutier",
+        description:
+          "Porc élevé jusqu'au poids optimal, prêt pour la boucherie.",
+        price: "180 000 FC",
+        unit: "/ unité",
+        imageSrc: "/images/archive/porc-adulte-1200.webp",
+        imageAlt: "Porc charcutier",
+        badge: "Best-seller",
+      },
+      {
+        name: "Porcelet sevré",
+        description: "Jeune porcelet sain, idéal pour démarrer votre élevage.",
+        price: "45 000 FC",
+        unit: "/ unité",
+        imageSrc: "/images/archive/truie-porcelets-enclos-1200.webp",
+        imageAlt: "Porcelet sevré",
+        badge: "Dès",
+      },
+      {
+        name: "Truie reproductrice",
+        description: "Truie sélectionnée pour sa fertilité et sa robustesse.",
+        price: "250 000 FC",
+        unit: "/ unité",
+        imageSrc: "/images/archive/truie-reproductie-1200.webp",
+        imageAlt: "Truie reproductrice",
+      },
+      {
+        name: "Verrat reproducteur",
+        description: "Verrat robuste, choisi pour ses qualités génétiques.",
+        price: "280 000 FC",
+        unit: "/ unité",
+        imageSrc: "/images/archive/porc-adulte-1200.webp",
+        imageAlt: "Verrat reproducteur",
+      },
+    ],
+  },
 
   stats: [
     { value: "3", label: "Catégories de porcs", numericValue: 3 },
     { value: "6", label: "Engagements qualité", numericValue: 6 },
-    { value: "100%", label: "Enclos désinfectés", numericValue: 100, suffix: "%" },
+    {
+      value: "100%",
+      label: "Enclos désinfectés",
+      numericValue: 100,
+      suffix: "%",
+    },
   ],
 
   cta: {
@@ -1665,52 +1699,58 @@ export const aviculturePage: AviculturePageContent = {
   },
 
   pricing: {
-      eyebrow: "Nos prix",
-      title: "Des tarifs clairs pour passer à l'action dès aujourd'hui",
-      subtitle:
-        "Ne remettez pas votre projet à demain. Découvrez nos tarifs et réservez vos poulets, pondeuses ou poussins dès maintenant.",
-      items: [
-        {
-          name: "Poulet de chair",
-          description: "Poulet élevé jusqu'au poids optimal, prêt pour la vente.",
-          price: "25 000 FC",
-          unit: "/ unité",
-          imageSrc: "/images/archive/poulailler-interieur-2-1200.webp",
-          imageAlt: "Poulet de chair prêt à la vente",
-          badge: "Best-seller",
-        },
-        {
-          name: "Pondeuse démarrée",
-          description: "Pondeuse prête à produire, démarrée en conditions contrôlées.",
-          price: "12 000 FC",
-          unit: "/ unité",
-          imageSrc: "/images/archive/poulailler-cages-3-1200.webp",
-          imageAlt: "Pondeuse démarrée",
-          badge: "Dès",
-        },
-        {
-          name: "Poussin d'un jour",
-          description: "Poussin vacciné, parfait pour démarrer votre élevage.",
-          price: "2 500 FC",
-          unit: "/ unité",
-          imageSrc: "/images/archive/poulailler-pondeuses-1-1200.webp",
-          imageAlt: "Poussin d'un jour",
-        },
-        {
-          name: "Œuf frais (plateau de 30)",
-          description: "Œufs frais du jour, issus de nos pondeuses.",
-          price: "8 000 FC",
-          unit: "/ plateau",
-          imageSrc: "/images/archive/poulailler-pondeuses-1-1200.webp",
-          imageAlt: "Plateau d'œufs frais",
-        },
-      ],
-    },
+    eyebrow: "Nos prix",
+    title: "Des tarifs clairs pour passer à l'action dès aujourd'hui",
+    subtitle:
+      "Ne remettez pas votre projet à demain. Découvrez nos tarifs et réservez vos poulets, pondeuses ou poussins dès maintenant.",
+    items: [
+      {
+        name: "Poulet de chair",
+        description: "Poulet élevé jusqu'au poids optimal, prêt pour la vente.",
+        price: "25 000 FC",
+        unit: "/ unité",
+        imageSrc: "/images/archive/poulailler-interieur-2-1200.webp",
+        imageAlt: "Poulet de chair prêt à la vente",
+        badge: "Best-seller",
+      },
+      {
+        name: "Pondeuse démarrée",
+        description:
+          "Pondeuse prête à produire, démarrée en conditions contrôlées.",
+        price: "12 000 FC",
+        unit: "/ unité",
+        imageSrc: "/images/archive/poulailler-cages-3-1200.webp",
+        imageAlt: "Pondeuse démarrée",
+        badge: "Dès",
+      },
+      {
+        name: "Poussin d'un jour",
+        description: "Poussin vacciné, parfait pour démarrer votre élevage.",
+        price: "2 500 FC",
+        unit: "/ unité",
+        imageSrc: "/images/archive/poulailler-pondeuses-1-1200.webp",
+        imageAlt: "Poussin d'un jour",
+      },
+      {
+        name: "Œuf frais (plateau de 30)",
+        description: "Œufs frais du jour, issus de nos pondeuses.",
+        price: "8 000 FC",
+        unit: "/ plateau",
+        imageSrc: "/images/archive/poulailler-pondeuses-1-1200.webp",
+        imageAlt: "Plateau d'œufs frais",
+      },
+    ],
+  },
 
   stats: [
     { value: "3", label: "Types de volaille", numericValue: 3 },
     { value: "6", label: "Engagements qualité", numericValue: 6 },
-    { value: "100%", label: "Bandes désinfectées", numericValue: 100, suffix: "%" },
+    {
+      value: "100%",
+      label: "Bandes désinfectées",
+      numericValue: 100,
+      suffix: "%",
+    },
   ],
 
   cta: {
@@ -1718,6 +1758,165 @@ export const aviculturePage: AviculturePageContent = {
     title: "Réservez vos volailles dès aujourd'hui",
     text: "Que vous soyez détaillant, restaurateur, ou souhaitiez démarrer votre propre élevage avicole, notre équipe vous accompagne à chaque étape. Contactez-nous maintenant pour un devis rapide et sans engagement.",
     buttonLabel: "Demander un devis",
+    buttonHref: "/contact",
+  },
+};
+
+/**
+ * Politique de confidentialité — page /confidentialite
+ *
+ * Le contenu décrit EXACTEMENT les traitements réellement implémentés
+ * dans le code (routes /api/track, /api/contact, cookie pvs-consent,
+ * sessionStorage du splash). Toute évolution du code doit être
+ * répercutée ici, sinon la page devient fausse.
+ *
+ * Structure volontairement compacte : 5 sections, le détail dans les
+ * tableaux. Le cadre juridique est en RDC (Code du numérique, Livre III).
+ */
+export const confidentialitePage: ConfidentialitePageContent = {
+  metaTitle: "Politique de confidentialité — PVS ONGD ASBL",
+  metaDescription:
+    "Politique de confidentialité de PVS ONGD ASBL : quelles données sont collectées, pourquoi, combien de temps elles sont conservées, et comment exercer vos droits.",
+
+  hero: {
+    eyebrow: "Vos données",
+    title: "Politique de confidentialité",
+    paragraph:
+      "Cette page explique simplement quelles données PVS ONGD ASBL collecte, pourquoi, combien de temps, et comment vous gardez le contrôle.",
+    imageSrc: "/images/photo-1492496913980-501348b61469.jpg",
+    imageAlt: "Mains tenant de la terre fertile",
+    updatedLabel: "Dernière mise à jour",
+    updatedAt: "31 octobre 2026",
+  },
+
+  intro: {
+    title: "En résumé",
+    paragraphs: [
+      "PVS ONGD ASBL, organisation non gouvernementale basée à Kinshasa, collecte les données personnelles que vous nous transmettez volontairement, et quelques statistiques anonymisées pour comprendre l'audience du site. Rien d'autre.",
+      "Nous ne vous demandons jamais de données sensibles — santé, opinions politiques, convictions religieuses — nous ne vendons rien, et nous ne transmettons vos données à aucun service publicitaire. Le cadre applicable est le Code du numérique de la République Démocratique du Congo (Ordonnance-loi n° 23/010 du 13 mars 2023, Livre III).",
+    ],
+  },
+
+  keyFacts: [
+    { label: "Responsable", value: "PVS ONGD ASBL" },
+    {
+      label: "Ce que nous collectons",
+      value: "Vos coordonnées si vous nous écrivez, + des stats anonymisées",
+    },
+    { label: "Base légale", value: "Votre consentement" },
+    { label: "Durée maximale", value: "13 mois" },
+    { label: "Cookies publicitaires", value: "Aucun" },
+    { label: "Vente de données", value: "Aucune" },
+  ],
+
+  data: {
+    eyebrow: "Ce que nous collectons",
+    title: "Chaque donnée, sa raison et sa durée",
+    paragraph:
+      "Voici l'intégralité de ce que le site collecte. Rien d'autre n'est enregistré.",
+    note: "Les données sensibles (santé, opinions politiques, convictions religieuses, appartenance syndicale) ne sont jamais demandées. Merci de ne pas en inclure dans vos messages : elles seraient supprimées si nous les repérions.",
+    table: {
+      head: ["Donnée", "Pourquoi", "Combien de temps"],
+      rows: [
+        [
+          "Nom, téléphone, e-mail, sujet, message",
+          "Traiter votre demande (information, devis, commande) et vous répondre",
+          "3 ans à compter de la réception",
+        ],
+        [
+          "Adresse IP anonymisée, type d'appareil, page visitée, page de provenance",
+          "Mesurer l'audience et comprendre les pages les plus consultées",
+          "13 mois",
+        ],
+        [
+          "Pays de connexion",
+          "Repérer les pays d'où nos visiteurs nous écrivent",
+          "13 mois",
+        ],
+        [
+          "Termes de recherche dans le catalogue",
+          "Identifier les produits les plus recherchés",
+          "13 mois",
+        ],
+        [
+          "Canal de contact choisi (WhatsApp, téléphone, e-mail)",
+          "Mesurer l'efficacité de nos canaux",
+          "13 mois",
+        ],
+        [
+          "Votre choix accepter / refuser (cookie local)",
+          "Mémoriser votre décision, ne plus vous redemander",
+          "12 mois",
+        ],
+      ],
+    },
+  },
+
+  choices: {
+    eyebrow: "Votre choix",
+    title: "La mesure d'audience attend votre accord",
+    paragraphs: [
+      "Le site affiche un bandeau au premier passage. Tant que vous n'avez pas répondu, aucune statistique n'est enregistrée : le site fonctionne normalement, sans rien transmettre.",
+      "Si vous acceptez, nous mesurons les pages consultées. Si vous refusez, c'est pareil, et le bandeau ne réapparaît plus. Vous pouvez changer d'avis à tout moment depuis la section Cookies ci-dessous.",
+    ],
+    bullets: [
+      "Aucune donnée n'est envoyée à un service tiers d'analyse d'audience : tout reste sur nos serveurs.",
+      "L'adresse IP est tronquée avant d'être enregistrée (dernier octet mis à zéro en IPv4, trois premiers blocs seulement en IPv6).",
+      "Le pays de connexion est déduit d'une base géographique hébergée sur nos serveurs. Dans le cas rare où elle ne couvre pas votre adresse, une source publique de géolocalisation est interrogée pour obtenir ce seul code pays — aucune autre information n'est transmise.",
+      "Le cookie de consentement ne contient qu'un mot : « accepted » ou « refused ».",
+    ],
+  },
+
+  privacy: {
+    recipients: {
+      title: "Qui y a accès",
+      paragraphs: [
+        "Vos données sont accessibles uniquement aux membres de l'équipe qui doivent y répondre. Elles ne sont ni vendues, ni louées, ni échangées à des fins commerciales.",
+      ],
+      bullets: [
+        "Le prestataire d'envoi d'e-mails, au moment où vous envoyez un message.",
+        "Le prestataire d'hébergement, qui conserve les données du site et les sauvegardes.",
+        "La source publique de géolocalisation, uniquement pour déterminer un code pays, comme expliqué ci-dessus.",
+      ],
+    },
+    security: {
+      title: "Comment elles sont protégées",
+      paragraphs: [
+        "Nous mettons en œuvre les mesures techniques et organisationnelles appropriées pour protéger vos données contre la perte, l'accès non autorisé, la divulgation ou l'altération.",
+      ],
+      bullets: [
+        "Chiffrement des échanges entre votre navigateur et nos serveurs (HTTPS), et blocage des requêtes provenant de sites tiers non autorisés.",
+        "Mots de passe internes stockés sous forme de condensats non réversibles, avec authentification renforcée à deux facteurs pour l'administration.",
+        "Accès aux données réservé aux personnes habilitées, avec journalisation des actions d'administration.",
+        "Limitation du volume de données acceptables et du nombre de requêtes autorisées.",
+        "Contrôle automatique des contenus transmis par les formulaires.",
+      ],
+    },
+  },
+
+  contact: {
+    title: "Nous écrire",
+    paragraphs: [
+      "Pour toute question sur cette politique ou pour exercer l'un de vos droits, utilisez le canal qui vous convient. Indiquez l'objet de votre demande, votre nom et vos coordonnées afin que nous puissions vous identifier et vous répondre.",
+      "Nous vous communiquons les suites de votre demande dans les meilleurs délais et, en tout état de cause, dans un délai de 30 jours, prolongeable de 60 jours en cas de complexité, dont vous seriez alors informé.",
+      "Si après notre réponse vous estimez que vos droits n'ont pas été respectés, vous pouvez introduire une réclamation auprès de l'Autorité de protection des données (article 249 du Code du numérique), former un recours devant le tribunal de paix de votre ressort (article 251), et demander réparation du préjudice subi (article 252).",
+    ],
+    channels: [
+      { label: "Téléphone", value: contact.phone, href: contact.phoneHref },
+      { label: "Adresse", value: contact.address },
+      { label: "Horaires", value: contact.hours },
+    ],
+    note: "La boîte e-mail de contact n'étant pas encore renseignée sur le site, merci de privilégier le téléphone ou le formulaire de contact pour joindre notre équipe.",
+    legalTitle: "Cadre juridique",
+    legalText:
+      "Ordonnance-loi n° 23/010 du 13 mars 2023 portant Code du numérique de la République Démocratique du Congo, Livre III (articles 183 à 270) ; Décision n° 039/ARPTC/CLG/2025 de l'Autorité de Régulation de la Poste et des Télécommunications du Congo du 11 septembre 2025.",
+  },
+
+  cta: {
+    eyebrow: "Une question ?",
+    title: "Nous répondons sans délai",
+    text: "Notre équipe est disponible pour toute question sur la protection de vos données ou l'exercice de vos droits.",
+    buttonLabel: "Nous contacter",
     buttonHref: "/contact",
   },
 };
