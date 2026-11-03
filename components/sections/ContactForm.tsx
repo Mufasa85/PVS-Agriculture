@@ -3,6 +3,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 
+import Link from "next/link";
+
 import PageLoader from "@/components/ui/PageLoader";
 import { contact, contactForm } from "@/lib/content";
 import { trackQuoteRequest } from "@/lib/track";
@@ -16,6 +18,9 @@ type Status = "idle" | "submitting" | "success" | "error";
 export default function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  // Case de consentement explicite (art. 196 du Code du numérique) :
+  // jamais pré-cochée, et bloquante pour l'envoi.
+  const [consent, setConsent] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -24,6 +29,16 @@ export default function ContactForm() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+
+    // Garde-fou : le navigateur bloque l'envoi si la case n'est pas
+    // cochée (attribut `required`). Ce test couvre le cas d'un envoi
+    // déclenché sans interaction (autofill, script).
+    if (!consent) {
+      setStatus("error");
+      setErrorMsg("Merci d'accepter le traitement de vos coordonnées.");
+      window.setTimeout(() => setStatus("idle"), 5000);
+      return;
+    }
     const sujetStr = String(formData.get("sujet") || "");
     const payload = {
       nom: formData.get("nom"),
@@ -56,6 +71,7 @@ export default function ContactForm() {
       });
 
       form.reset();
+      setConsent(false);
       setStatus("success");
       window.setTimeout(() => setStatus("idle"), 4000);
     } catch (err) {
@@ -207,9 +223,39 @@ export default function ContactForm() {
                 : contactForm.submitLabel}
         </button>
 
-        <p className="mt-3.5 text-center text-xs text-ink-500">
-          {contact.consentText}
-        </p>
+        {/* Case de consentement explicite — art. 196 du Code du numérique.
+            Non pré-cochée : le consentement doit être libre et explicite. */}
+        <div className="mt-5">
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              name="consent"
+              checked={consent}
+              onChange={(event) => setConsent(event.target.checked)}
+              required
+              aria-describedby="pvs-consent-notice"
+              className="mt-[3px] h-[17px] w-[17px] shrink-0 cursor-pointer accent-brand-600"
+            />
+            <span className="text-[13px] leading-[1.6] text-ink-700">
+              {contactForm.consentLabel}{" "}
+              <Link
+                href={contactForm.consentLinkHref}
+                className="font-bold text-brand-600 underline underline-offset-2 hover:text-brand-700"
+              >
+                {contactForm.consentLinkLabel}
+              </Link>
+              .
+            </span>
+          </label>
+
+          {/* Rappel : ne pas transmettre de données sensibles. */}
+          <p
+            id="pvs-consent-notice"
+            className="mt-3 border-l-[3px] border-line pl-3 text-[12px] leading-[1.6] text-ink-500"
+          >
+            {contactForm.sensitiveNotice}
+          </p>
+        </div>
       </form>
     </div>
   );
