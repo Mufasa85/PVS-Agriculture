@@ -11,6 +11,7 @@ import { siteMeta } from "@/lib/content";
 import {
   icons as ogIcons,
   ogCover,
+  ogLogo,
   openGraphBase,
   robots,
   social,
@@ -131,7 +132,7 @@ export const metadata: Metadata = {
   // ─── Champs additionnels (générés tels quels dans le <head>) ─────
   other: {
     // Facebook Open Graph — `og:logo` pour l'aperçu profil/partage.
-    "og:logo": `${siteUrl}/pvs-pwa/logo-fixed.png`,
+    "og:logo": ogLogo.url,
     // Bing / Microsoft.
     "msapplication-TileColor": "#3b52c4",
     "msapplication-TileImage": "/pvs-pwa/icons/icon-144x144.png",
