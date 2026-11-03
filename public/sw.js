@@ -2,11 +2,14 @@
 // network-first pour les navigations publiques (fallback hors-ligne).
 // N'intercepte JAMAIS /api/* ni /admin/* (réponses authentifiées).
 
-const STATIC_CACHE = "pvs-static-v1";
-const PAGE_CACHE = "pvs-pages-v1";
+// `v2` : bump à chaque changement d'asset logo/icône (npm run logos:regen),
+// sinon le navigateur continue de servir l'ancien logo depuis le cache.
+const STATIC_CACHE = "pvs-static-v2";
+const PAGE_CACHE = "pvs-pages-v2";
 
 const PRECACHE = [
   "/manifest.webmanifest",
+  "/pvs-pwa/logo-transparent.png",
   "/pvs-pwa/icons/icon-192x192.png",
   "/pvs-pwa/icons/icon-512x512.png",
 ];
