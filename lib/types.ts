@@ -68,7 +68,6 @@ export type ContactInfo = {
   address: string;
   hours: string;
   formSubjects: string[];
-  consentText: string;
 };
 
 export type AgriculturePageContent = {
@@ -417,6 +416,81 @@ export type PriceCategory = {
   id: string;
   label: string;
   icon: string;
+};
+
+/** Tableau à deux dimensions (en-tête + lignes) rendu dans les pages légales. */
+export type LegalTable = {
+  head: string[];
+  rows: string[][];
+};
+
+/**
+ * Politique de confidentialité — page /confidentialite
+ *
+ * Structure volontairement « courte » : le détail juridique est dans les
+ * tableaux, pas dans des paragraphes. Toute évolution du code de
+ * collecte doit être répercutée dans `confidentialitePage` (lib/content.ts).
+ */
+export type ConfidentialitePageContent = {
+  metaTitle: string;
+  metaDescription: string;
+  hero: {
+    eyebrow: string;
+    title: string;
+    paragraph: string;
+    imageSrc: string;
+    imageAlt: string;
+    updatedLabel: string;
+    updatedAt: string;
+  };
+  intro: {
+    title: string;
+    paragraphs: string[];
+  };
+  keyFacts: { label: string; value: string }[];
+  /** Ce que nous collectons, pourquoi, et combien de temps. */
+  data: {
+    eyebrow: string;
+    title: string;
+    paragraph: string;
+    note: string;
+    table: LegalTable;
+  };
+  /** Cookies et mesure d'audience : le choix de l'utilisateur. */
+  choices: {
+    eyebrow: string;
+    title: string;
+    paragraphs: string[];
+    bullets: string[];
+  };
+  /** Destinataires et sécurité, présentés côte à côte. */
+  privacy: {
+    recipients: {
+      title: string;
+      paragraphs: string[];
+      bullets: string[];
+    };
+    security: {
+      title: string;
+      paragraphs: string[];
+      bullets: string[];
+    };
+  };
+  contact: {
+    title: string;
+    paragraphs: string[];
+    channels: { label: string; value: string; href?: string }[];
+    note: string;
+    legalTitle: string;
+    legalText: string;
+  };
+  cta: {
+    eyebrow: string;
+    title: string;
+    text: string;
+    buttonLabel: string;
+    buttonHref: string;
+  };
 };
 
 export type TarifsPageContent = {
