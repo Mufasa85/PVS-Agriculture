@@ -725,9 +725,9 @@ export const aproposPage: AboutPageContent = {
   stats: [
     { value: "5", label: "Domaines d'activité", numericValue: 5 },
     {
-      value: "1000+",
+      value: "50+",
       label: "Hectares de domaine",
-      numericValue: 1000,
+      numericValue: 50,
       suffix: "+",
     },
     { value: "ONGD", label: "ASBL reconnue (2013)" },
