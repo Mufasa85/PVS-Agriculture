@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import InitialLoader from "@/components/layout/InitialLoader";
 import Navbar from "@/components/layout/Navbar";
 import WhatsAppButton from "@/components/layout/WhatsAppButton";
+import ConsentBanner from "@/components/layout/ConsentBanner";
 
 export default function SiteChrome() {
   const pathname = usePathname();
@@ -18,6 +19,7 @@ export default function SiteChrome() {
       <InitialLoader />
       <Navbar />
       <WhatsAppButton />
+      <ConsentBanner />
     </>
   );
 }
