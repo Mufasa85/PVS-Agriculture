@@ -12,6 +12,11 @@ const config = [
       "files/**",
       // Dossier de backup hors périmètre (imports cassés, non utilisé par l'app)
       "components/charts_backup/**",
+      // Dossier `packages/` : monorepo annexe non versionné (gitignoré),
+      // sans rapport avec l'app PVS. Ignoré comme dans tsconfig.json,
+      // sinon `npm run lint` remonte ses erreurs et casse le pre-commit.
+      "packages/**",
+      "Archive/**",
     ],
   },
   ...next,

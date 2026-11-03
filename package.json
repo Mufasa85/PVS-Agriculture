@@ -12,6 +12,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "geoip:update": "tsx scripts/update-geoip-db.ts",
+    "logos:regen": "node scripts/regen-pvs-logos.mjs",
     "lint": "eslint .",
     "start": "next start",
     "test": "vitest run",
