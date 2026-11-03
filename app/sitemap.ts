@@ -5,7 +5,7 @@ import { siteUrl } from "@/lib/seo";
 /** Pages publiques indexables — l'admin et l'API sont exclus via robots.ts. */
 const PUBLIC_ROUTES: {
   path: string;
-  changeFrequency: "weekly" | "monthly";
+  changeFrequency: "weekly" | "monthly" | "yearly";
   priority: number;
 }[] = [
   { path: "/", changeFrequency: "weekly", priority: 1 },
@@ -17,6 +17,7 @@ const PUBLIC_ROUTES: {
   { path: "/tarifs", changeFrequency: "weekly", priority: 0.8 },
   { path: "/a-propos", changeFrequency: "monthly", priority: 0.6 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/confidentialite", changeFrequency: "yearly", priority: 0.3 },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
